@@ -1,5 +1,5 @@
 # Inspiration: https://github.com/gdiepen/python_plugin_example
-import pkgutil, inspect
+import os, importlib, pkgutil
 
 class plugin:
     """All plugins will have to inherit this class and implement 
@@ -31,7 +31,6 @@ class plugin_system:
 
     def __init__(self, plugins_location):
         self.plugins_location = plugins_location
-        self.reload()
 
 
     def reload(self):
@@ -39,25 +38,26 @@ class plugin_system:
         provided plugin package to load all available plugins
         """
         self.plugins = []
-        self.seen_paths = []
-        print()
         print(f'Looking for plugins under package {self.plugins_location}')
-        self.walk_package(self.plugins_location)
+        for plugin_folder in os.listdir(self.plugins_location):
+            self.import_plugin(self.plugins_location + "." + plugin_folder)
+        return self.plugins
 
 
-    def walk_package(self, plugins_location):
-        """Recursively walk the supplied package to retrieve all plugins
+    def import_plugin(self, plugin_folder):
+        """Find the file which inherit plugin and import it
         """
-        imported_package = __import__(plugins_location)
-
-        for _, pluginname, ispkg in pkgutil.iter_modules(imported_package.__path__, imported_package.__name__ + '.'):
-            if not ispkg:
-                plugin_module = __import__(pluginname, inspect.isclass)
-                clsmembers = inspect.getmembers(plugin_module)
-                for (_, c) in clsmembers:
-                    # Only add classes that are a sub class of Plugin, but NOT Plugin itself
-                    if issubclass(c, plugin) & (c is not plugin):
-                        print('Found plugin class: {c.__module__}.{c.__name__}')
-                        self.plugins.append(c())
-
+        # Plugin_folder - the folder containing the
+        try:
+            plugin_module = importlib.import_module(plugin_folder+"."+plugin_folder[plugin_folder.index('.') + 1:])
+            plugin_class = plugin_module.__getattribute__(plugin_folder[plugin_folder.index('.') + 1:])
+            # Check if the module is not subclass of plugin or is plugin
+            if not issubclass(plugin_class, plugin) or plugin_class is plugin:
+                del plugin_module
+                raise Exception(f"The plugin {plugin_class} is not a child of plugin or is plugin itself")
+        except ImportError as e:
+            print(e)
+        except Exception as e:
+            print(e)
+        self.plugins.append(plugin_class)
         
