@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <tins/tins.h>
 
+//TabNine::no_sem
+
 using Tins::Sniffer;
 using Tins::ARP;
 using Tins::PDU;
@@ -13,9 +15,9 @@ using std::endl;
 using std::map;
 
 bool analyze(Tins::PDU& packet);
+void print_map();
 
 map<std::string, std::string>* arp_table;
-int i=0;
 
 int main()
 {
@@ -44,16 +46,34 @@ bool analyze(PDU& packet)
 {
 	const ARP& arp = packet.rfind_pdu<ARP>();
 	uint16_t opcode = arp.opcode();
-	if(opcode == 1)
+	map<std::string, std::string>::iterator it;
+	if(opcode == 1 || opcode == 2)
 	{
-		cout << "who is at " << arp.target_ip_addr() << "? tell " << arp.sender_ip_addr() << " (" << arp.sender_hw_addr() << ")" << endl;
-	}
-	else if(opcode == 2)
-	{
-		cout << arp.sender_ip_addr() << " is at " << arp.sender_hw_addr() << endl;
+		if((it = arp_table->find(arp.sender_ip_addr().to_string())) == arp_table->end())
+		{
+			arp_table->insert(std::pair<std::string, std::string>(arp.sender_ip_addr().to_string(), arp.sender_hw_addr().to_string()));
+			print_map();
+		}
+		else if(it->second != arp.sender_hw_addr().to_string())
+		{
+			cout << "Detected spoofing attempt of " << it->first << "\npossible addresses " << it->second << "  /  " << arp.sender_hw_addr() << endl;
+			return false;
+		}
 	}
 	else
 		cout << "unknown arp packet" << endl;
-	i++;
-	return i > 4;
+
+	return true;
+}
+
+void print_map()
+{
+	cout << "----------" << endl;
+	for(map<std::string, std::string>::iterator it = arp_table->begin(); it != arp_table->end(); it++) 
+	{
+		cout << "| ";
+		cout << it->first << "  :  " << it->second;
+		cout << " |" << endl;
+	}
+	cout << "----------" << endl;
 }
