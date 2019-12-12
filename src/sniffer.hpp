@@ -14,7 +14,7 @@ namespace pinat {
 		Sniffer(string interface, string filter);
 		~Sniffer();
 
-		void cool(string what) const;
+		Tins::PDU* getPacket() const;
 	private:
 		Tins::Sniffer* _sniffer;
 	};

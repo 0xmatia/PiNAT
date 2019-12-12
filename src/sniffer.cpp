@@ -2,16 +2,16 @@
 
 pinat::Sniffer::Sniffer(string interface, string filter)
 {
-	cout << "created" << endl;
-	this->_sniffer = nullptr;
+	this->_sniffer = new Tins::Sniffer(interface);
+	this->_sniffer->set_filter(filter);
 }
 
 pinat::Sniffer::~Sniffer()
 {
-	cout << "deleted" << endl;
+	delete this->_sniffer;
 }
 
-void pinat::Sniffer::cool(string what) const
+Tins::PDU* pinat::Sniffer::getPacket() const
 {
-	cout << what << endl;
+	return this->_sniffer->next_packet();
 }
