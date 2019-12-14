@@ -11,4 +11,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    os.system("cp build/lib.linux-x86_64-3.6/pynat.cpython-36m-x86_64-linux-gnu.so pynat.so && rm -rf build")
