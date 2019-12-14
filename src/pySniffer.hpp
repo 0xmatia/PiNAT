@@ -1,12 +1,11 @@
 #pragma once
 
 #include <Python.h>
-#include <structmember.h>
 #include "sniffer.hpp"
 
 typedef struct snifferObject{
     PyObject_HEAD
-    int* a;
+    pinat::Sniffer* sniffer;
 } SnifferObject;
 
 int Sniffer_InitType(PyObject* module);
@@ -15,18 +14,11 @@ extern "C" {
 	static void Sniffer_dealloc(snifferObject* self);
 	static PyObject* Sniffer_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 	static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds);
-	static PyObject* Sniffer_xnum(SnifferObject* self);
-	static PyObject* Sniffer_getnum(SnifferObject *self, void *closure);
-	static int Sniffer_setnum(SnifferObject *self, PyObject *value, void *closure);
+	static PyObject* Sniffer_getPacket(SnifferObject* self);
 }
 
 static PyMethodDef Sniffer_methods[] = {
-    {"xnum", (PyCFunction)Sniffer_xnum, METH_NOARGS, "Returns num"},
-    {NULL}  /* Sentinel */
-};
-
-static PyGetSetDef Sniffer_getseters[] = {
-    {(char*)"num", (getter)Sniffer_getnum, (setter)Sniffer_setnum, (char*)"sniffer num", NULL},
+    {"get_packet", (PyCFunction)Sniffer_getPacket, METH_NOARGS, "Returns a single packet"},
     {NULL}  /* Sentinel */
 };
 
@@ -60,7 +52,7 @@ static PyTypeObject SnifferType = {
     0,                 		        /* tp_iternext */
     Sniffer_methods,				/* tp_methods */
     0,			     		        /* tp_members */
-    Sniffer_getseters,				/* tp_getset */
+    0,								/* tp_getset */
     0,                 		        /* tp_base */
     0,                 		        /* tp_dict */
     0,                 		        /* tp_descr_get */

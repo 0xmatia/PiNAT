@@ -2,22 +2,6 @@
 #include <string>
 #include "pySniffer.hpp"
 
-extern "C" {
-	static PyObject *method_Vsniffer(PyObject *self, PyObject *args) {
-    	std::string a("what");
-   	 	a += "walabi";
-    	return PyUnicode_FromString(a.c_str());
-	}
-}
-
-/*
-methods information.
-*/
-static PyMethodDef pynatMethods[] = {
-    {"vsniffer", method_Vsniffer, METH_NOARGS, "Sniffer constructor"},
-    {NULL, NULL, 0, NULL}
-};
-
 /*
 module information.
 */
@@ -26,7 +10,7 @@ static struct PyModuleDef pynatModule = {
     "pynat",
     "Python PiNAT library",
     -1,
-    pynatMethods
+    NULL, NULL, NULL, NULL, NULL
 };
 
 /*
@@ -38,7 +22,7 @@ PyMODINIT_FUNC PyInit_pynat(void) {
     if(module == NULL)
         return NULL;
 
-    if(Sniffer_InitType(module) != 0)
+    if(Sniffer_InitType(module) != 0) //initializing our created object
         return NULL;
 
     return module;

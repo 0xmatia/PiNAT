@@ -1,5 +1,9 @@
 #include "sniffer.hpp"
 #include <unistd.h>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 int main()
 {
@@ -25,6 +29,7 @@ int main()
 		{
 			cout << "ping: ";
 			cout << i->type() << " " << i->sequence() << endl;
+			cout << s->getLayers(p) << endl;
 		}
 
 		delete p;

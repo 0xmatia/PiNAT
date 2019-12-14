@@ -13,7 +13,7 @@ int Sniffer_InitType(PyObject* module)
 
 static void Sniffer_dealloc(SnifferObject* self)
 {
-	delete self->a;
+	delete self->sniffer;
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -24,15 +24,7 @@ static PyObject* Sniffer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 	self = (SnifferObject*)type->tp_alloc(type, 0);
 	if(self != NULL)
 	{
-		self->a = nullptr;
-		try{
-			self->a = new int;
-		} catch(...) {
-			Py_DECREF(self);
-            return NULL;
-		}
-
-		*(self->a) = 0;
+		self->sniffer = nullptr;
 	}
 
 	return (PyObject*)self;
@@ -40,43 +32,22 @@ static PyObject* Sniffer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 {
-	int num = 0;
-	char *kwlist[] = {(char*)"num", NULL};
+	char* interface;
+	char* filter;
+	char *kwlist[] = {(char*)"interface", (char*)"filter", NULL};
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "|i", kwlist, &num))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ss", kwlist, &interface, &filter))
 		return -1;
 
-	*(self->a) = num;
+	self->sniffer = new pinat::Sniffer(interface, filter);
+
 	return 0;
 }
 
-static PyObject* Sniffer_xnum(SnifferObject* self)
+static PyObject* Sniffer_getPacket(SnifferObject* self)
 {
-	return PyLong_FromLong(*(self->a));
-}
-
-static PyObject* Sniffer_getnum(SnifferObject *self, void *closure)
-{
-	return PyLong_FromLong(*(self->a));
-}
-
-static int Sniffer_setnum(SnifferObject *self, PyObject *value, void *closure)
-{
-	int val;
-
-	if(value == NULL)
-	{
-		PyErr_SetString(PyExc_TypeError, "Cannot delete num");
-    	return -1;
-	}
-
-	val = (int)PyLong_AsLong(value);
-	if(val == -1)
-	{
-		PyErr_SetString(PyExc_TypeError, "expected a number");
-    	return -1;
-	}
-
-	*(self->a) = val;
-	return 0;
+	Tins::PDU* p = self->sniffer->getPacket();
+	PyObject* ret = PyUnicode_FromString(self->sniffer->getLayers(p).c_str());
+	delete p;
+	return ret;
 }

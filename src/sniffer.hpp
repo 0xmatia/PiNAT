@@ -2,11 +2,8 @@
 
 #include <tins/tins.h>
 #include <string>
-#include <iostream>
 
 using std::string;
-using std::cout;
-using std::endl;
 
 namespace pinat {
 	class Sniffer {
@@ -15,6 +12,7 @@ namespace pinat {
 		~Sniffer();
 
 		Tins::PDU* getPacket() const;
+		string getLayers(Tins::PDU* packet) const;
 	private:
 		Tins::Sniffer* _sniffer;
 	};
