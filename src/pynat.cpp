@@ -38,7 +38,7 @@ PyMODINIT_FUNC PyInit_pynat(void) {
     if(module == NULL)
         return NULL;
 
-    if(sniffer_InitType(module) != 0)
+    if(Sniffer_InitType(module) != 0)
         return NULL;
 
     return module;
