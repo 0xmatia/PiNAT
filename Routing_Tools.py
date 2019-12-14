@@ -1,4 +1,5 @@
 import subprocess
+from time import sleep
 
 def _get_interface():
     """
@@ -27,6 +28,7 @@ def _get_password():
     return passphrase
 
 
+
 def _get_ssid():
 #     """
 #     Returns a valid SSID
@@ -48,7 +50,7 @@ def _turn_on(shared_adapter, ssid, password):
     
 
 def cleanup():
-    """
+    """ 
     Turns off the hotspot if neccessry
     """
     # Check if the hotspot is on:
@@ -59,20 +61,19 @@ def cleanup():
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     (adapter_status, _) = proc.communicate()
     
+    # I probably need to find a better way to close the hotspot
+    # other than relying on the fact that the local name is Hotspot everytime
     if "Hotspot" in adapter_status.decode(): #only now close the hotspot
+        sleep(3) # wait if the hotspot hasn't been fully activated
+        # rare cases only
         subprocess.Popen(close_hotspot.split(), stdout=subprocess.DEVNULL)
         subprocess.Popen(delete_hotspot.split(), stdout=subprocess.DEVNULL)
         print("Hotspot closed.")
 
 
 def init_hotspot():
-    shared_adapter = ""
-    ssid = ""
-    password = ""
-    
     shared_adapter = _get_interface()
     ssid = _get_ssid()
     password = _get_password()
     # Start hotspot:
     _turn_on(shared_adapter, ssid, password)
-
