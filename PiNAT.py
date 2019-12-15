@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-# Imports: We need PyNAT in order to connect the program to the CPP interface
+from sys import path
+path.append("src/python")
+
 import Routing_Tools
 from Plugin_Observer import plugin_system
 from bin import pynat
@@ -25,14 +27,13 @@ def main():
         sniffer = pynat.Sniffer(adapter, "")
         while True:
             packet = sniffer.get_packet()
-            print(packet)
             for plugin in plugins.values():
                 plugin.proccess(packet)
             
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:
-        pass
+        print("Exception happened, terminating now")
     
     Routing_Tools.cleanup()
 

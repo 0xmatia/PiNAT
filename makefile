@@ -6,7 +6,7 @@
 
 COMP = g++
 ODIR = obj
-SDIR = src
+SDIR = src/cpp
 BDIR = bin
 
 BIN := ${BDIR}/pynat.so
@@ -31,10 +31,10 @@ ${BIN}: ${SRC}
 	rm -rf build
 
 ${ODIR}/%.o: ${SDIR}/%.cpp
-	${COMP} -c $< -o $@
+	${COMP} -c $< -o $@ -Iexternals
 
 ${DBIN}: ${DOBJ}
-	${COMP} -o $@ $^ -ltins
+	${COMP} -o $@ $^ -L/home/magshimim/Documents/1402-pinat-/externals/ -ltins
 
 clean:
 	@rm -rvf ${ODIR}
