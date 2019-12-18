@@ -2,12 +2,13 @@
 # make			# compile everything
 # make clean 	# remove all binaries and objects
 
-.PHONY: all setup clean cleanall debug
+.PHONY: all setup clean cleanall debug install
 
 COMP = g++
 ODIR = obj
 SDIR = src/cpp
 BDIR = bin
+EDIR = externals
 
 BIN := ${BDIR}/pynat.so
 SRC = sniffer.cpp pySniffer.cpp pynat.cpp
@@ -26,15 +27,14 @@ setup: ${SDIR}/
 	@if [ ! -d "${BDIR}" ]; then mkdir ${BDIR}; fi
 
 ${BIN}: ${SRC}
-	CC=g++ python3 setup.py build --build-temp=${ODIR} && \
-	cp build/lib.linux-x86_64-3.6/pynat.cpython-36m-x86_64-linux-gnu.so ${BDIR}/pynat.so && \
-	rm -rf build
+	CC=g++ python3 setup.py build --build-temp=${ODIR} --build-lib=${BDIR} && \
+	mv ${BDIR}/pynat.cpython* ${BDIR}/pynat.so
 
 ${ODIR}/%.o: ${SDIR}/%.cpp
-	${COMP} -c $< -o $@ -Iexternals
+	${COMP} -c $< -o $@ -I${EDIR}
 
 ${DBIN}: ${DOBJ}
-	${COMP} -o $@ $^ -L/home/magshimim/Documents/1402-pinat-/externals/ -ltins
+	${COMP} -o $@ $^ -L${EDIR} -ltins
 
 clean:
 	@rm -rvf ${ODIR}
@@ -42,3 +42,7 @@ clean:
 cleanall:
 	@rm -rvf ${ODIR}
 	@rm -rvf ${BDIR}
+
+install:
+	cp ${EDIR}/libtins.so /usr/lib/
+	ln -s /usr/lib/libtins.so /usr/lib/libtins.so.4.3
