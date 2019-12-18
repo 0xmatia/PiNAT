@@ -5,7 +5,7 @@
 using std::cout;
 using std::endl;
 
-int main()
+int main(int argc, char** argv)
 {
 	string a = "";
 	if(getuid() != 0)
@@ -14,7 +14,13 @@ int main()
 		return 1;
 	}
 
-	pinat::Sniffer* s = new pinat::Sniffer("wlp2s0", "");
+	if(argc != 2)
+	{
+		cout << "usage: sniffer <interface>" << endl;
+		return 1;
+	}
+
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
 	Tins::PDU* p = nullptr;
 	Tins::ICMP* i = nullptr;
 

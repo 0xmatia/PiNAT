@@ -35,6 +35,7 @@ def main():
     except Exception:
         print("Exception happened, terminating now")
     
+    sniffer = 0;  # freeing sniffer
     Routing_Tools.cleanup()
 
 
