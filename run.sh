@@ -5,4 +5,4 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-externals/python3.6 -B PiNAT.py
+python3 -B PiNAT.py
