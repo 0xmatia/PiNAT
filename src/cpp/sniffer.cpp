@@ -64,6 +64,23 @@ pinat::Sniffer::Sniffer(string interface, string filter)
 	this->_sniffer->set_filter(filter);
 }
 
+void pinat::Sniffer::startSniffing()
+{
+    std::thread sniffer(&pinat::Sniffer::sniff);
+    sniffer.detach(); //run in a loop in the background
+}
+
+void pinat::Sniffer::sniff()
+{
+    //TODO: How to exit the loop?
+    while (true)
+    {
+        Tins::PDU* packet = this->_sniffer->next_packet(); //add lock
+        //What do we do next?
+        // we need to 
+    }
+}
+
 pinat::Sniffer::~Sniffer()
 {
 	delete this->_sniffer;
@@ -71,7 +88,7 @@ pinat::Sniffer::~Sniffer()
 
 Tins::PDU* pinat::Sniffer::getPacket() const
 {
-	return this->_sniffer->next_packet();
+	return this->_sniffer->next_packet(); //change later - pull from data structure
 }
 
 string pinat::Sniffer::getLayers(Tins::PDU* packet) const
