@@ -45,7 +45,7 @@ def _turn_on(shared_adapter, ssid, password):
 #     Turns hotspot on
 #     """
     subprocess.Popen(["nmcli", "dev", "wifi", "hotspot", "ifname", \
-        shared_adapter, "ssid", ssid, "password", password], stdout=subprocess.DEVNULL)
+        shared_adapter, "ssid", ssid, "password", password], stdout=subprocess.DEVNULL).wait()
     print("Hotspot has been activated")
     
 
@@ -64,8 +64,8 @@ def cleanup():
     # I probably need to find a better way to close the hotspot
     # other than relying on the fact that the local name is Hotspot everytime
     if "Hotspot" in adapter_status.decode(): #only now close the hotspot
-        subprocess.Popen(close_hotspot.split(), stdout=subprocess.DEVNULL)
-        subprocess.Popen(delete_hotspot.split(), stdout=subprocess.DEVNULL)
+        subprocess.Popen(close_hotspot.split(), stdout=subprocess.DEVNULL).wait()
+        subprocess.Popen(delete_hotspot.split(), stdout=subprocess.DEVNULL).wait()
         print("Hotspot closed.")
 
 
