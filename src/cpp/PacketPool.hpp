@@ -23,12 +23,12 @@ namespace pinat
         /**
         * Adds new packet the queue (wraps the packet with the Packet class)
         */
-        void addPacket(Tins::PDU*& packet);
+        unsigned long addPacket(Tins::PDU*& packet);
 
         /**
         * the function returns the next packet ID so the plugins will know how to access it
         */
-        unsigned long getNextPacket();
+        Tins::PDU* getPacket(const unsigned long id) const;
 
         /**
          * Forwards the packet to the next adapter

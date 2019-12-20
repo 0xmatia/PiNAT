@@ -3,6 +3,7 @@
 #include <tins/tins.h>
 #include <string>
 #include <thread>
+#include "PacketPool.hpp"
 
 using std::string;
 
@@ -10,13 +11,12 @@ namespace pinat {
 	class Sniffer {
 	public:
 		Sniffer(string interface, string filter);
-        void startSniffing();
-        void sniff();
 		~Sniffer();
 
-		Tins::PDU* getPacket() const;
+		unsigned long getPacket() const;
 		string getLayers(Tins::PDU* packet) const;
 	private:
 		Tins::Sniffer* _sniffer;
+        PacketPool* _packetPool;
 	};
 }

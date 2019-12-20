@@ -16,7 +16,7 @@ namespace pinat
         unsigned long id; //reset the value at some point
 
     public:
-        Packet(Tins::PDU*& p);
+        Packet(Tins::PDU*& p, unsigned long& temp_id);
         ~Packet();
     };
 }
