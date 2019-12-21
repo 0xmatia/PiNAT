@@ -5,9 +5,10 @@
 using std::cout;
 using std::endl;
 
+void checkSniffing(char* interface);
+
 int main(int argc, char** argv)
 {
-	string a = "";
 	if(getuid() != 0)
 	{
 		cout << "call as root" << endl;
@@ -20,7 +21,15 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
+	checkSniffing(argv[1]);
+
+	return 0;
+}
+
+void checkSniffing(char* interface)
+{
+	string a;
+	pinat::Sniffer* s = new pinat::Sniffer(interface, "");
 	Tins::PDU* p = nullptr;
 	Tins::ICMP* i = nullptr;
 
@@ -37,6 +46,8 @@ int main(int argc, char** argv)
 			cout << "ping: ";
 			cout << i->type() << " " << i->sequence() << endl;
 			cout << s->getLayers(p) << endl;
+
+			s->forwardPacket(p);
 		}
 
 		delete p;
@@ -45,5 +56,4 @@ int main(int argc, char** argv)
 	}
 	
 	delete s;
-	return 0;
 }

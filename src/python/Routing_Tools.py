@@ -11,16 +11,16 @@ def _get_interface():
     shared_adapter = input("Please enter the adapter's name: ")
 
     # # Does the adapter exists?
-    if shared_adapter not in available_adapters.decode():
+    if shared_adapter + " " not in available_adapters.decode():
          raise Exception("The specified network device does not exist!")
     
     return shared_adapter
 
 
 def _get_password():
-#     """
-#     Returns a valid WPA2 password
-#     """
+    """
+    Returns a valid WPA2 password
+    """
     passphrase = input("Wifi password: ")
     if len(passphrase) > 63 or len(passphrase) < 8:
         raise Exception("Invalid WPA2 password. Password must be 8-63 chars long.")
@@ -30,9 +30,9 @@ def _get_password():
 
 
 def _get_ssid():
-#     """
-#     Returns a valid SSID
-#     """
+    """
+    Returns a valid SSID
+    """
     ssid = input("Wifi Name: ")
     if len(ssid) > 32 or len(ssid) < 1 or '|' in ssid:
         raise Exception("Invalid SSID.")
@@ -41,15 +41,11 @@ def _get_ssid():
 
 
 def _turn_on(shared_adapter, ssid, password):
-#     """
-#     Turns hotspot on
-#     """
+    """
+    Turns hotspot on
+    """
     subprocess.Popen(["nmcli", "dev", "wifi", "hotspot", "ifname", \
         shared_adapter, "ssid", ssid, "password", password], stdout=subprocess.DEVNULL).wait()
-
-    ## TODO:
-    ## change table name and maybe other things to variables
-    ##
 
     create_new = False
     with open("/etc/iproute2/rt_tables", "r") as tables_file:

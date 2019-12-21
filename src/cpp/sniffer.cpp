@@ -62,11 +62,13 @@ pinat::Sniffer::Sniffer(string interface, string filter)
 {
 	this->_sniffer = new Tins::Sniffer(interface);
 	this->_sniffer->set_filter(filter);
+    this->_sender = new Tins::PacketSender(interface);
 }
 
 pinat::Sniffer::~Sniffer()
 {
 	delete this->_sniffer;
+    delete this->_sender;
 }
 
 Tins::PDU* pinat::Sniffer::getPacket() const
@@ -86,4 +88,13 @@ string pinat::Sniffer::getLayers(Tins::PDU* packet) const
 	}
 
 	return layers;
+}
+
+void pinat::Sniffer::forwardPacket(Tins::PDU* packet) const
+{
+    Tins::IP* ip = packet->find_pdu<Tins::IP>();
+    if (ip != NULL)
+    {
+        _sender->send(*packet, Tins::NetworkInterface(ip->dst_addr()));
+    }    
 }

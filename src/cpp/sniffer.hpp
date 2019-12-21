@@ -13,7 +13,9 @@ namespace pinat {
 
 		Tins::PDU* getPacket() const;
 		string getLayers(Tins::PDU* packet) const;
+		void forwardPacket(Tins::PDU* packet) const;
 	private:
 		Tins::Sniffer* _sniffer;
+		Tins::PacketSender* _sender;
 	};
 }

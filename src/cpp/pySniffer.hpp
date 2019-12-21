@@ -15,10 +15,12 @@ extern "C" {
 	static PyObject* Sniffer_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 	static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds);
 	static PyObject* Sniffer_getPacket(SnifferObject* self);
+    static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args);
 }
 
 static PyMethodDef Sniffer_methods[] = {
     {"get_packet", (PyCFunction)Sniffer_getPacket, METH_NOARGS, "Returns a single packet"},
+    {"forward_packet", (PyCFunction)Sniffer_forwardPacket, METH_VARARGS, "Forwards a packet"},
     {NULL}  /* Sentinel */
 };
 
