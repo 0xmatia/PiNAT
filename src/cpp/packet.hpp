@@ -18,7 +18,7 @@ namespace pinat
     public:
         Packet(Tins::PDU*& p, unsigned long& temp_id);
         unsigned long getID() const;
-        Tins::PDU*& getPacket() const;
+        Tins::PDU*& getPacket();
         ~Packet();
     };
 }

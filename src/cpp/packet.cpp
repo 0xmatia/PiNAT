@@ -15,7 +15,7 @@ unsigned long pinat::Packet::getID() const
     return this->id;
 }
 
-Tins::PDU*& pinat::Packet::getPacket()  
+Tins::PDU*& pinat::Packet::getPacket()
 {
     return this->_packet;
 }
