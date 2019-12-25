@@ -29,13 +29,13 @@ def main():
             packet = sniffer.get_packet()
             for plugin in plugins.values():
                 plugin.proccess(packet)
+            sniffer.forward_packet(0)
             
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:
         print("Exception happened, terminating now")
     
-    sniffer = 0;  # freeing sniffer
     Routing_Tools.cleanup()
 
 

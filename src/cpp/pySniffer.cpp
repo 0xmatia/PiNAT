@@ -50,3 +50,14 @@ static PyObject* Sniffer_getPacket(SnifferObject* self)
 	PyObject* ret = PyLong_FromUnsignedLong(p);
 	return ret;
 }
+
+static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
+{
+	unsigned int id = 0;
+	if(!PyArg_ParseTuple(args, "I", &id)) {
+        return NULL;
+    }
+
+	//sniffer->forward(id);
+	return PyLong_FromUnsignedLong(id);
+}

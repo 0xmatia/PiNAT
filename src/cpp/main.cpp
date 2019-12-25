@@ -5,9 +5,10 @@
 using std::cout;
 using std::endl;
 
+void checkSniffing(char* interface);
+
 int main(int argc, char** argv)
 {
-	string a = "";
 	if(getuid() != 0)
 	{
 		cout << "call as root" << endl;
@@ -40,5 +41,4 @@ int main(int argc, char** argv)
 	}
 	
 	delete s;
-	return 0;
 }
