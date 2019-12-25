@@ -21,7 +21,8 @@ int main(int argc, char** argv)
 	}
 
 	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
-	Tins::PDU* p = nullptr;
+	pinat::PacketPool* pp = new pinat::PacketPool();
+	unsigned long id = 0;
 	Tins::ICMP* i = nullptr;
 
 	cout << "enter: ";
@@ -29,15 +30,9 @@ int main(int argc, char** argv)
 
 	while(a != "exit")
 	{
-		p = s->getPacket();
-		cout << s->getLayers(p);
-		i = p->find_pdu<Tins::ICMP>();
-		if(i != NULL)
-		{
-			cout << "ping: ";
-			cout << i->type() << " " << i->sequence() << endl;
-			cout << s->getLayers(p) << endl;
-		}
+		id = s->getPacket();
+		Tins::PDU* p = pp->getPacket(id);
+		cout << s->getLayers(p) << endl;
 
 		delete p;
 		cout << "enter: ";

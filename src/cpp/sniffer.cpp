@@ -62,16 +62,16 @@ pinat::Sniffer::Sniffer(string interface, string filter)
 {
 	this->_sniffer = new Tins::Sniffer(interface);
 	this->_sniffer->set_filter(filter);
+    this->_packetPool = new PacketPool();
 }
 
-pinat::Sniffer::~Sniffer()
-{
-	delete this->_sniffer;
-}
-
-Tins::PDU* pinat::Sniffer::getPacket() const
-{
-	return this->_sniffer->next_packet();
+unsigned long pinat::Sniffer::getPacket() const
+{   
+    //Push to queue, return ID
+    Tins::PDU* p = this->_sniffer->next_packet(); // getting the packet from the sniffer
+    return this->_packetPool->addPacket(p); //adding the packet to the pool, returning it id
+    // so other parts of the code will know how to reference it.
+    
 }
 
 string pinat::Sniffer::getLayers(Tins::PDU* packet) const
@@ -86,4 +86,10 @@ string pinat::Sniffer::getLayers(Tins::PDU* packet) const
 	}
 
 	return layers;
+}
+
+pinat::Sniffer::~Sniffer()
+{
+	delete this->_sniffer;
+    delete this->_packetPool;
 }
