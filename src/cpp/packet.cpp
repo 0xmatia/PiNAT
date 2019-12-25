@@ -1,4 +1,4 @@
-#include "Packet.hpp"
+#include "packet.hpp"
 
 pinat::Packet::Packet(Tins::PDU*& p, unsigned long& temp_id)
 {
@@ -8,6 +8,16 @@ pinat::Packet::Packet(Tins::PDU*& p, unsigned long& temp_id)
     this->id = currentID;
     temp_id = currentID;
     currentID++;
+}
+
+unsigned long pinat::Packet::getID() const 
+{
+    return this->id;
+}
+
+Tins::PDU*& pinat::Packet::getPacket()  
+{
+    return this->_packet;
 }
 
 pinat::Packet::~Packet()

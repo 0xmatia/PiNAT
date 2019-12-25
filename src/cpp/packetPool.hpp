@@ -3,17 +3,17 @@
 #include <iostream>
 #include <string>
 #include <thread>
-#include <queue>
+#include <vector>
 #include <mutex>
 #include <tins/tins.h>
-#include "Packet.hpp"
+#include "packet.hpp"
 
 namespace pinat
 {
     class PacketPool
     {
     private:
-        static std::queue<Packet*> packets;
+        static std::vector<Packet*> packets;
         std::mutex packetsMutex;
 
     public:
