@@ -21,16 +21,9 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	checkSniffing(argv[1]);
-
-	return 0;
-}
-
-void checkSniffing(char* interface)
-{
-	string a;
-	pinat::Sniffer* s = new pinat::Sniffer(interface, "");
-	Tins::PDU* p = nullptr;
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
+	pinat::PacketPool* pp = new pinat::PacketPool();
+	unsigned long id = 0;
 	Tins::ICMP* i = nullptr;
 
 	cout << "enter: ";
@@ -38,17 +31,9 @@ void checkSniffing(char* interface)
 
 	while(a != "exit")
 	{
-		p = s->getPacket();
-		cout << s->getLayers(p);
-		i = p->find_pdu<Tins::ICMP>();
-		if(i != NULL)
-		{
-			cout << "ping: ";
-			cout << i->type() << " " << i->sequence() << endl;
-			cout << s->getLayers(p) << endl;
-
-			s->forwardPacket(p);
-		}
+		id = s->getPacket();
+		Tins::PDU* p = pp->getPacket(id);
+		cout << s->getLayers(p) << endl;
 
 		delete p;
 		cout << "enter: ";

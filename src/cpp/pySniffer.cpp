@@ -46,9 +46,8 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 
 static PyObject* Sniffer_getPacket(SnifferObject* self)
 {
-	Tins::PDU* p = self->sniffer->getPacket();
-	PyObject* ret = PyUnicode_FromString(self->sniffer->getLayers(p).c_str());
-	delete p;
+	unsigned long p = self->sniffer->getPacket();
+	PyObject* ret = PyLong_FromUnsignedLong(p);
 	return ret;
 }
 
