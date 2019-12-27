@@ -13,11 +13,10 @@ namespace pinat
     class PacketPool
     {
     private:
-        static std::vector<Packet*> packets;
+        std::vector<Packet*> packets;
         std::mutex packetsMutex;
 
     public:
-        PacketPool(/* args */); 
         ~PacketPool();
 
         /**

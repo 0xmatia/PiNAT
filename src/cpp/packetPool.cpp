@@ -15,7 +15,7 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
     {
         if ((*i)->getID() == id)
         {
-            return (*i)->getPacket;
+            return (*i)->getPacket();
         }
         
     }
@@ -30,4 +30,14 @@ void pinat::PacketPool::forward(const unsigned long id)
 void pinat::PacketPool::drop(const unsigned long id)
 {
     //TODO 
+}
+
+pinat::PacketPool::~PacketPool()
+{
+    for (auto i = this->packets.begin(); i != this->packets.end(); i++)
+    {
+        delete *i; //delete all the packet that remained in queue
+        //Maybe in the future change it to forward or something
+        
+    }
 }

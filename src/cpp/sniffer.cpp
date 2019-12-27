@@ -58,11 +58,11 @@ const char* typeToString[] = {
 };
 
 
-pinat::Sniffer::Sniffer(string interface, string filter)
+pinat::Sniffer::Sniffer(string interface, string filter, PacketPool*& m_packetPool)
 {
 	this->_sniffer = new Tins::Sniffer(interface);
 	this->_sniffer->set_filter(filter);
-    this->_packetPool = new PacketPool();
+    this->_packetPool = m_packetPool;
 }
 
 unsigned long pinat::Sniffer::getPacket() const
@@ -91,5 +91,4 @@ string pinat::Sniffer::getLayers(Tins::PDU* packet) const
 pinat::Sniffer::~Sniffer()
 {
 	delete this->_sniffer;
-    delete this->_packetPool;
 }

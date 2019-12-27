@@ -10,7 +10,7 @@ using std::string;
 namespace pinat {
 	class Sniffer {
 	public:
-		Sniffer(string interface, string filter);
+		Sniffer(string interface, string filter, PacketPool*& m_packetPool);
 		~Sniffer();
 
 		unsigned long getPacket() const;
