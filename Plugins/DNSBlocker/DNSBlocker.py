@@ -1,4 +1,5 @@
 from Plugin_Observer import plugin
+from bin import pynat
 
 class DNSBlocker(plugin):
 
@@ -11,4 +12,4 @@ class DNSBlocker(plugin):
 
     def proccess(self, packet):
         print(f"This is {self.name}, and I am {self.description}")
-        print("Printing packet: {}".format(packet))
+        print("Src MAC: {}".format(pynat.get_src_mac(packet)))

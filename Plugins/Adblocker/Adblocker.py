@@ -1,4 +1,5 @@
 from Plugin_Observer import plugin
+from bin import pynat
 
 class Adblocker(plugin):
 
@@ -11,4 +12,4 @@ class Adblocker(plugin):
 
     def proccess(self, packet):
         print(f"This is {self.name}, and I am {self.description}")
-        print("Printing packet: {}".format(packet))
+        print("Dst IP: {}".format(pynat.get_dst_ip(packet)))

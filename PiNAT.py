@@ -23,14 +23,14 @@ def main():
     plugin_system_instance = plugin_system('Plugins')
     plugins = plugin_system_instance.reload()
 
+    sniffer = pynat.Sniffer(adapter, "")
+    pynat.init_core(sniffer.get_pool())
     try:
-        sniffer = pynat.Sniffer(adapter, "")
         while True:
             packet = sniffer.get_packet()
             for plugin in plugins.values():
                 plugin.proccess(packet)
-            sniffer.forward_packet(0)
-            
+            sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:
