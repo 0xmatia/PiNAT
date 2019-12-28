@@ -24,7 +24,15 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
 
 void pinat::PacketPool::drop(const unsigned long id)
 {
-    //TODO 
+    for (auto i = this->packets.begin(); i != this->packets.end(); i++)
+    {
+        if ((*i)->getID() == id)
+        {
+            delete *i;
+            this->packets.erase(i);
+            break;
+        }
+    }
 }
 
 pinat::PacketPool::~PacketPool()

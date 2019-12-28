@@ -35,7 +35,9 @@ namespace pinat{
             if (ip != NULL)
             {
                 _sender->send(*packet, Tins::NetworkInterface(ip->dst_addr()));
-            }    
+            }
+
+            _packetPool->drop(id);
         }
     }
 

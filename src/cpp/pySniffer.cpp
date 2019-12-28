@@ -64,5 +64,5 @@ static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
 
 static PyObject* Sniffer_getPool(SnifferObject* self)
 {
-	return PyLong_FromUnsignedLong((unsigned long)self->sniffer->getPacketPool());
+	return PyLong_FromVoidPtr(self->sniffer->getPacketPool());
 }
