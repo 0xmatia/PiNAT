@@ -1,6 +1,7 @@
 #include <Python.h>
 #include <string>
 #include "pySniffer.hpp"
+#include "pyCoreFunctions.hpp"
 
 /*
 module information.
