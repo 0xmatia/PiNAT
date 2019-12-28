@@ -9,7 +9,7 @@ namespace pinat
      * Creates new global packpool object so other function
      * will be able to access packets.
      */
-    void initCore(pinat::PacketPool*& pool);
+    void initCore(pinat::PacketPool* pool);
 
     /**
      * Gets the src ip of the packet with the specified ID

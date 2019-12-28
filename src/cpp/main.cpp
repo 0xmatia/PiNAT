@@ -23,9 +23,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	pinat::PacketPool* packetPool = new pinat::PacketPool();
-	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "", packetPool);
-	pinat::initCore(packetPool);
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
+	pinat::initCore(s->getPacketPool());
 	int choice = 100;
 	while (choice >= 0)
 	{
@@ -39,5 +38,4 @@ int main(int argc, char** argv)
 	}
 	cout << "Exiting" << endl;
 	delete s;
-	delete packetPool;
 }

@@ -3,13 +3,12 @@
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
 
-void pinat::initCore(pinat::PacketPool*& pool)
+void pinat::initCore(pinat::PacketPool* pool)
 {
     pp = pool;
     //or pp = new PacketPool(), because we have a static field!
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 std::string pinat::getSrcIp(const unsigned long id)
 {
@@ -26,7 +25,6 @@ std::string pinat::getSrcIp(const unsigned long id)
     return ""; // which means no src ip
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 std::string pinat::getDstIp(const unsigned long id)
 {
@@ -43,7 +41,6 @@ std::string pinat::getDstIp(const unsigned long id)
     return ""; // which means no src ip
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 uint16_t pinat::getSrcPort(const unsigned long id)
 {
@@ -63,7 +60,6 @@ uint16_t pinat::getSrcPort(const unsigned long id)
     return tcp->sport();
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 uint16_t pinat::getDstPort(const unsigned long id)
 {
@@ -83,7 +79,6 @@ uint16_t pinat::getDstPort(const unsigned long id)
     return tcp->dport();
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 std::string pinat::getSenderMAC(const unsigned long id)
 {
@@ -100,7 +95,6 @@ std::string pinat::getSenderMAC(const unsigned long id)
     return ""; // which means no mac
 }
 
-//\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 std::string pinat::getTargetMAC(const unsigned long id)
 {

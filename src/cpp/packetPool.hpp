@@ -30,12 +30,6 @@ namespace pinat
         Tins::PDU* getPacket(const unsigned long id) const;
 
         /**
-         * Forwards the packet to the next adapter
-         *  Removes the packet from the queue
-         */
-        void forward(unsigned long id);
-
-        /**
          * Drops the packet and doesn't let it through 
          * Removes the packet from the queue
          */

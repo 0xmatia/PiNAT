@@ -22,11 +22,6 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
     return nullptr; // if for some reason the plugin tried to access invalid packet
 }
 
-void pinat::PacketPool::forward(const unsigned long id)
-{
- //TODO
-}
-
 void pinat::PacketPool::drop(const unsigned long id)
 {
     //TODO 
