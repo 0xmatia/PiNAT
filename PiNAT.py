@@ -19,6 +19,9 @@ def main():
         print("PiNAT is terminating")
         exit(1)
     
+    input()
+    Routing_Tools.cleanup(adapter)
+    exit()
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
     plugins = plugin_system_instance.reload()
