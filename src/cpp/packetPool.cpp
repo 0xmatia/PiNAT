@@ -22,7 +22,7 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
     return nullptr; // if for some reason the plugin tried to access invalid packet
 }
 
-void pinat::PacketPool::drop(const unsigned long id)
+int pinat::PacketPool::drop(const unsigned long id)
 {
     for (auto i = this->packets.begin(); i != this->packets.end(); i++)
     {
@@ -30,9 +30,11 @@ void pinat::PacketPool::drop(const unsigned long id)
         {
             delete *i;
             this->packets.erase(i);
-            break;
+            return 0;
         }
     }
+
+    return -1;
 }
 
 pinat::PacketPool::~PacketPool()

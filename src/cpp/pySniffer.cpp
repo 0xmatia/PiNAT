@@ -34,12 +34,13 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 {
 	char* interface;
 	char* filter;
-	char *kwlist[] = {(char*)"interface", (char*)"filter", NULL};
+	char* sendingInterface;
+	char *kwlist[] = {(char*)"interface", (char*)"filter", (char*) "sinterface", NULL};
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ss", kwlist, &interface, &filter))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "sss", kwlist, &interface, &filter, &sendingInterface))
 		return -1;
 
-	self->sniffer = new pinat::Sniffer(interface, filter);
+	self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface);
 
 	return 0;
 }
@@ -53,8 +54,8 @@ static PyObject* Sniffer_getPacket(SnifferObject* self)
 
 static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
 {
-	unsigned int id = 0;
-	if(!PyArg_ParseTuple(args, "I", &id)) {
+	unsigned long id = 0;
+	if(!PyArg_ParseTuple(args, "k", &id)) {
         return NULL;
     }
 

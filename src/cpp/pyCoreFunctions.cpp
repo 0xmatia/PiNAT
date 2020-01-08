@@ -64,7 +64,7 @@ PyObject* py_getSrcMac(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getSenderMAC(packetID).c_str());
+    return PyUnicode_FromString(pinat::getSrcMAC(packetID).c_str());
 }
 
 PyObject* py_getDstMac(PyObject* self, PyObject* args)
@@ -75,5 +75,5 @@ PyObject* py_getDstMac(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getTargetMAC(packetID).c_str());
+    return PyUnicode_FromString(pinat::getDstMAC(packetID).c_str());
 }

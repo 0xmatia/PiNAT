@@ -2,12 +2,12 @@
 
 
 namespace pinat{
-    Sniffer::Sniffer(string interface, string filter)
+    Sniffer::Sniffer(string sniffingInterface, string filter, string sendingInterface)
     {
-        this->_sniffer = new Tins::Sniffer(interface);
+        this->_sniffer = new Tins::Sniffer(sniffingInterface);
         this->_sniffer->set_filter(filter);
         this->_packetPool = new PacketPool();
-        this->_sender = new Tins::PacketSender(interface);
+        this->_sender = new Tins::PacketSender(sendingInterface);
     }
 
     Sniffer::~Sniffer()
@@ -26,19 +26,18 @@ namespace pinat{
         
     }
 
-    void Sniffer::forwardPacket(unsigned long id)
+    int Sniffer::forwardPacket(unsigned long id)
     {
         Tins::PDU* packet = _packetPool->getPacket(id);
-        if (packet != nullptr)
+        if (packet == nullptr)
         {
-            Tins::IP* ip = packet->find_pdu<Tins::IP>();
-            if (ip != NULL)
-            {
-                _sender->send(*packet, Tins::NetworkInterface(ip->dst_addr()));
-            }
-
-            _packetPool->drop(id);
+            return -1;
         }
+        
+        _sender->send(*packet);
+        _packetPool->drop(id);
+
+        return 0;
     }
 
     PacketPool* Sniffer::getPacketPool() const

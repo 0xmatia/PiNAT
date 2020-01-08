@@ -34,10 +34,10 @@ namespace pinat
     /**
      * Gets the sender's MAC address of the packet with the spcified ID
      */
-    std::string getSenderMAC(const unsigned long id);
+    std::string getSrcMAC(const unsigned long id);
 
     /**
      * Gets the targets's MAC address of the packet with the spcified ID
      */
-    std::string getTargetMAC(const unsigned long id);
+    std::string getDstMAC(const unsigned long id);
 }

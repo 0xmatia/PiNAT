@@ -13,32 +13,23 @@ void pinat::initCore(pinat::PacketPool* pool)
 std::string pinat::getSrcIp(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
-    try
-    {
-        const Tins::IP& ip = packet->rfind_pdu<Tins::IP>();
-        return ip.src_addr().to_string();
-    }
-    catch(const Tins::pdu_not_found& e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return ""; // which means no src ip
+    Tins::IP* ip = packet->find_pdu<Tins::IP>();
+
+    if(ip)
+        return ip->src_addr().to_string();
+    else
+        return ""; // which means no src ip
 }
 
 
 std::string pinat::getDstIp(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
-    try
-    {
-        const Tins::IP& ip = packet->rfind_pdu<Tins::IP>();
-        return ip.dst_addr().to_string();
-    }
-    catch(const Tins::pdu_not_found& e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return ""; // which means no src ip
+    Tins::IP* ip = packet->find_pdu<Tins::IP>();
+    if (ip)
+        return ip->dst_addr().to_string();
+    else
+        return ""; // which means no dst ip
 }
 
 
@@ -80,33 +71,24 @@ uint16_t pinat::getDstPort(const unsigned long id)
 }
 
 
-std::string pinat::getSenderMAC(const unsigned long id)
+std::string pinat::getSrcMAC(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
-    try
-    {
-        const Tins::EthernetII& eth = packet->rfind_pdu<Tins::EthernetII>();
-        return eth.src_addr().to_string();
-    }
-    catch(const Tins::pdu_not_found& e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return ""; // which means no mac
+    Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+    if (eth)
+        return eth->src_addr().to_string();
+    else
+        return ""; // which means no mac
 }
 
 
-std::string pinat::getTargetMAC(const unsigned long id)
+std::string pinat::getDstMAC(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
-    try
-    {
-        const Tins::EthernetII& eth = packet->rfind_pdu<Tins::EthernetII>();
-        return eth.dst_addr().to_string();
-    }
-    catch(const Tins::pdu_not_found& e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return ""; // which means no mac
+    Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+    if (eth)
+        return eth->dst_addr().to_string();
+    
+    else
+        return ""; // which means no mac
 }

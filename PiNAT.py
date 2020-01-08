@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from sys import path
+from sys import argv
 path.append("src/python")
 
 import Routing_Tools
@@ -13,20 +14,17 @@ def main():
 
     # Start hotspot and routing
     try:
-        adapter = Routing_Tools.init_hotspot()
+        wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
     except Exception as e:
         print (e)
         print("PiNAT is terminating")
         exit(1)
-    
-    input()
-    Routing_Tools.cleanup(adapter)
-    exit()
+
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
     plugins = plugin_system_instance.reload()
 
-    sniffer = pynat.Sniffer(adapter, "")
+    sniffer = pynat.Sniffer("ap0", "ether dst " + argv[1], eth_adapter)
     pynat.init_core(sniffer.get_pool())
     try:
         while True:
@@ -39,7 +37,7 @@ def main():
     except Exception:
         print("Exception happened, terminating now")
     
-    Routing_Tools.cleanup()
+    Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
 
 
 if __name__ == "__main__":

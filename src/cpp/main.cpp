@@ -3,6 +3,7 @@
 #include "coreFunctions.hpp"
 #include <unistd.h>
 #include <iostream>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -17,25 +18,35 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	if(argc != 2)
+	if(argc != 3)
 	{
-		cout << "usage: sniffer <interface>" << endl;
+		cout << "usage: sniffer <sniffing interface> <sending interface>" << endl;
 		return 1;
 	}
 
-	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "");
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "", argv[2]);
 	pinat::initCore(s->getPacketPool());
-	int choice = 100;
-	while (choice >= 0)
+	
+	unsigned long a = 0;
+	std::string command = "";
+	while(command != "exit")
 	{
-		unsigned long id = 0;
-		id = s->getPacket();
-		std::string mac = pinat::getSenderMAC(id);
-		std::string ip = pinat::getDstIp(id);
-		cout << "Sender Mac address of packet: " << mac << endl;
-		cout << "Dst IP address of packet: " << ip << endl;
-		choice--;
+		cout << "> ";
+		std::cin >> command;
+		if(command == "s")
+		{
+			a = s->getPacket();
+			cout << a << endl;
+		}
+		else if(command == "p")
+		{
+			cout << pinat::getSrcMAC(a) << " -> " << pinat::getDstMAC(a) << endl;
+			cout << pinat::getSrcIp(a) << ":" << pinat::getSrcPort(a) << " -> " << pinat::getDstIp(a) << ":" << pinat::getDstPort(a) << endl;
+		}
+		else if(command == "f")
+			cout << s->forwardPacket(a) << endl;
 	}
+
 	cout << "Exiting" << endl;
 	delete s;
 }
