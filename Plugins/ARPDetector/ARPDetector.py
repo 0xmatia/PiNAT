@@ -14,8 +14,7 @@ class ARPDetector(plugin):
 
 
     def process(self, packet):
-        if not pynat.check_type(packet, "ARP"):
-            return
+        print(packet)
 
         
 

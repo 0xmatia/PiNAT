@@ -19,12 +19,12 @@ def main():
         print (e)
         print("PiNAT is terminating")
         exit(1)
-    input()
+
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
     plugins = plugin_system_instance.reload()
 
-    sniffer = pynat.Sniffer("br0", "ether dst " + argv[1], eth_adapter)
+    sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
     pynat.init_core(sniffer.get_pool())
 
     for plugin in plugins.values():

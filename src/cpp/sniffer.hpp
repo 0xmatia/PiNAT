@@ -10,7 +10,7 @@ using std::string;
 namespace pinat {
 	class Sniffer {
 	public:
-		Sniffer(string sniffingInterface, string filter, string sendingInterface);
+		Sniffer(string sniffingInterface, string filter, string sendingInterface, string mac);
 		~Sniffer();
 
 		unsigned long getPacket() const;
@@ -20,5 +20,6 @@ namespace pinat {
 		Tins::Sniffer* _sniffer;
 		Tins::PacketSender* _sender;
         PacketPool* _packetPool;
+		Tins::HWAddress<6> _mac;
 	};
 }
