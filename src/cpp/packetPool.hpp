@@ -33,7 +33,7 @@ namespace pinat
          * Drops the packet and doesn't let it through 
          * Removes the packet from the queue
          */
-        int drop(unsigned long id);
+        void drop(unsigned long id);
        
     };    
 }

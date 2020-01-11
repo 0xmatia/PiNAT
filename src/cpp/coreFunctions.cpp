@@ -85,6 +85,7 @@ std::string pinat::getDstIp(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
     Tins::IP* ip = packet->find_pdu<Tins::IP>();
+    
     if (ip)
         return ip->dst_addr().to_string();
     else
@@ -147,7 +148,6 @@ std::string pinat::getDstMAC(const unsigned long id)
     Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
     if (eth)
         return eth->dst_addr().to_string();
-    
     else
         return ""; // which means no mac
 }

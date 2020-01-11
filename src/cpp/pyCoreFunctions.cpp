@@ -21,7 +21,13 @@ PyObject* py_getSrcIp(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getSrcIp(packetID).c_str());
+    try {
+        return PyUnicode_FromString(pinat::getSrcIp(packetID).c_str());
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
+    
 }
 
 PyObject* py_getDstIp(PyObject* self, PyObject* args)
@@ -32,7 +38,12 @@ PyObject* py_getDstIp(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getDstIp(packetID).c_str());
+    try {
+        return PyUnicode_FromString(pinat::getDstIp(packetID).c_str());
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
 }
 
 
@@ -43,7 +54,13 @@ PyObject* py_getSport(PyObject* self, PyObject* args)
     if(!PyArg_ParseTuple(args, "k", &packetID)) {
         return NULL;
     }
-    return PyLong_FromUnsignedLong(pinat::getSrcPort(packetID));
+
+    try {
+        return PyLong_FromUnsignedLong(pinat::getSrcPort(packetID));
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
 }
 
 PyObject* py_getDport(PyObject* self, PyObject* args)
@@ -53,7 +70,13 @@ PyObject* py_getDport(PyObject* self, PyObject* args)
     if(!PyArg_ParseTuple(args, "k", &packetID)) {
         return NULL;
     }
-    return PyLong_FromUnsignedLong(pinat::getDstPort(packetID));
+
+    try {
+        return PyLong_FromUnsignedLong(pinat::getDstPort(packetID));
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
 }
 
 PyObject* py_getSrcMac(PyObject* self, PyObject* args)
@@ -64,7 +87,12 @@ PyObject* py_getSrcMac(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getSrcMAC(packetID).c_str());
+    try {
+        return PyUnicode_FromString(pinat::getSrcMAC(packetID).c_str());
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
 }
 
 PyObject* py_getDstMac(PyObject* self, PyObject* args)
@@ -75,7 +103,12 @@ PyObject* py_getDstMac(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    return PyUnicode_FromString(pinat::getDstMAC(packetID).c_str());
+    try {
+        return PyUnicode_FromString(pinat::getDstMAC(packetID).c_str());
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
 }
 
 PyObject* py_checkType(PyObject* self, PyObject* args)
@@ -87,12 +120,17 @@ PyObject* py_checkType(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    if(pinat::checkType(packetID, type))
-    {
-        Py_RETURN_TRUE;
-    }
-    else
-    {
-        Py_RETURN_FALSE;
+    try {
+        if(pinat::checkType(packetID, type))
+        {
+            Py_RETURN_TRUE;
+        }
+        else
+        {
+            Py_RETURN_FALSE;
+        }
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
     }
 }
