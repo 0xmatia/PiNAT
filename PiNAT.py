@@ -26,17 +26,24 @@ def main():
 
     sniffer = pynat.Sniffer("ap0", "ether dst " + argv[1], eth_adapter)
     pynat.init_core(sniffer.get_pool())
+
+    for plugin in plugins.values():
+            plugin.setup()
+
     try:
         while True:
             packet = sniffer.get_packet()
             for plugin in plugins.values():
-                plugin.proccess(packet)
+                plugin.process(packet)
             sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:
         print("Exception happened, terminating now")
     
+    for plugin in plugins.values():
+        plugin.teardown()
+
     Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
 
 

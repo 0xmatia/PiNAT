@@ -2,6 +2,8 @@
 
 #include "packetPool.hpp"
 #include <string>
+#include <map>
+#include <vector>
 
 namespace pinat
 {
@@ -37,7 +39,10 @@ namespace pinat
     std::string getSrcMAC(const unsigned long id);
 
     /**
-     * Gets the targets's MAC address of the packet with the spcified ID
+     * Gets the target's MAC address of the packet with the spcified ID
      */
     std::string getDstMAC(const unsigned long id);
+
+
+    bool checkType(const unsigned long id, std::string type);
 }

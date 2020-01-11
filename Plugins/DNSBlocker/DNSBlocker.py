@@ -10,6 +10,15 @@ class DNSBlocker(plugin):
         self.description = "Blocking sites"
         self.author = "Ofri Marx"
 
-    def proccess(self, packet):
+
+    def process(self, packet):
         print(f"This is {self.name}, and I am {self.description}")
         print("Src MAC: {}".format(pynat.get_src_mac(packet)))
+
+
+    def setup(self):
+        pass
+
+
+    def teardown(self):
+        pass
