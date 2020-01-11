@@ -9,11 +9,11 @@ class DNSBlocker(plugin):
         self.version = 0.1
         self.description = "Blocking sites"
         self.author = "Ofri Marx"
+        self.priority = 1
 
 
     def process(self, packet):
-        print(f"This is {self.name}, and I am {self.description}")
-        print("Src MAC: {}".format(pynat.get_src_mac(packet)))
+        return packet
 
 
     def setup(self):

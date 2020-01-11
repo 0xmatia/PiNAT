@@ -32,6 +32,7 @@ void pinat::PacketPool::drop(const unsigned long id)
         {
             delete *i;
             this->packets.erase(i);
+            return;
         }
     }
 

@@ -9,12 +9,13 @@ class ARPDetector(plugin):
         self.version = 1.0
         self.description = "Detects suspicious arp activity"
         self.author = "Ofri Marx"
+        self.priority = 0
 
         self.arp_table = {}
 
 
     def process(self, packet):
-        print(packet)
+        return packet
 
         
 

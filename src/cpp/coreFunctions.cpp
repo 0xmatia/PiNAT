@@ -62,6 +62,8 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
 
+extern "C"
+{
 void pinat::initCore(pinat::PacketPool* pool)
 {
     pp = pool;
@@ -169,4 +171,10 @@ bool pinat::checkType(const unsigned long id, std::string type)
     }
     
     return ret;
+}
+
+void dropPacket(const unsigned long id)
+{
+    pp->drop(id);
+}
 }

@@ -1,5 +1,7 @@
 #include "pyCoreFunctions.hpp"
 
+extern "C" 
+{
 PyObject* py_initCore(PyObject* self, PyObject* args)
 {
     PyObject* packPoolPointer = 0;
@@ -133,4 +135,23 @@ PyObject* py_checkType(PyObject* self, PyObject* args)
         PyErr_SetString(PyExc_KeyError, message);
         return NULL;
     }
+}
+
+PyObject* py_dropPacket(PyObject* self, PyObject* args)
+{
+    unsigned long packetID = 0;
+
+    if(!PyArg_ParseTuple(args, "k", &packetID)) {
+        return NULL;
+    }
+
+    try {
+        pinat::dropPacket(packetID);
+    } catch(const char* message) {
+        PyErr_SetString(PyExc_KeyError, message);
+        return NULL;
+    }
+
+    Py_RETURN_NONE;
+}
 }

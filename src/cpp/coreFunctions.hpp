@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+extern "C"
+{
 namespace pinat
 {
     /**
@@ -45,4 +47,8 @@ namespace pinat
 
 
     bool checkType(const unsigned long id, std::string type);
+
+
+    void dropPacket(const unsigned long id);
+}
 }
