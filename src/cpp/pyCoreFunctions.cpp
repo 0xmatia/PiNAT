@@ -95,4 +95,43 @@ PyObject* py_checkType(PyObject* self, PyObject* args)
     {
         Py_RETURN_FALSE;
     }
+    
+}
+
+PyObject* py_getDNSNames(PyObject* self, PyObject* args)
+{
+    unsigned long packetID = 0;
+    PyObject *PList = PyList_New(0);
+
+    if(!PyArg_ParseTuple(args, "k", &packetID)) {
+        return NULL;
+    }
+
+    std::vector<std::string> names = pinat::getDNSNames(packetID);
+
+    //convert to pylsit
+    for(auto it = names.begin(); it != names.end(); it++ )
+    {
+        PyList_Append(PList, Py_BuildValue("s", (*it).c_str()));
+    }
+    return PList;
+}
+
+PyObject* py_getDNSAddresses(PyObject* self, PyObject* args)
+{
+        unsigned long packetID = 0;
+    PyObject *PList = PyList_New(0);
+
+    if(!PyArg_ParseTuple(args, "k", &packetID)) {
+        return NULL;
+    }
+
+    std::vector<std::string> ips = pinat::getDNSAddresses(packetID);
+
+    //convert to pylsit
+    for(auto it = ips.begin(); it != ips.end(); it++ )
+    {
+        PyList_Append(PList, Py_BuildValue("s", (*it).c_str()));
+    }
+    return PList;
 }

@@ -170,3 +170,46 @@ bool pinat::checkType(const unsigned long id, std::string type)
     
     return ret;
 }
+
+std::vector<std::string> pinat::getDNSNames(const unsigned long id)
+{
+    std::vector<std::string> names;
+    if (pinat::getSrcPort(id) == 53)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+
+        if (dns.type() == Tins::DNS::RESPONSE)
+        {
+            Tins::DNS::resources_type d = dns.answers();
+            
+            for (auto i : d)
+            {
+                names.push_back(i.dname());
+            }
+            
+        }
+    }
+    return names; // return empty vector if packet is not valid
+}
+
+std::vector<std::string> pinat::getDNSAddresses(const unsigned long id)
+{
+    std::vector<std::string> ips;
+    if (pinat::getSrcPort(id) == 53)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+
+        if (dns.type() == Tins::DNS::RESPONSE)
+        {
+            Tins::DNS::resources_type d = dns.answers();
+            for (auto i : d)
+            {
+                ips.push_back(i.data());
+            }
+            
+        }
+    }
+    return ips; // return empty vector if packet is not valid
+}

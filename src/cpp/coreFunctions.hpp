@@ -45,4 +45,10 @@ namespace pinat
 
 
     bool checkType(const unsigned long id, std::string type);
+
+
+    std::vector<std::string> getDNSNames(const unsigned long id);
+
+
+    std::vector<std::string> getDNSAddresses(const unsigned long id);
 }

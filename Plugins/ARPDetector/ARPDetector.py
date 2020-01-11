@@ -14,10 +14,7 @@ class ARPDetector(plugin):
 
 
     def process(self, packet):
-        print(packet)
-
-        
-
+        pass
 
     def setup(self):
         pass
