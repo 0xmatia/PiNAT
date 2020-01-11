@@ -156,7 +156,17 @@ std::string pinat::getDstMAC(const unsigned long id)
 bool pinat::checkType(const unsigned long id, std::string type)
 {
     Tins::PDU* packet = pp->getPacket(id);
-    std::map<Tins::PDU::PDUType, std::string>::const_iterator it = typeMap.find(packet->pdu_type());
+    bool ret = false;
+
+    std::map<Tins::PDU::PDUType, std::string>::const_iterator it;
+    std::map<Tins::PDU::PDUType, std::string>::const_iterator mapEnd = typeMap.end();
+
+    while(packet && !ret)
+    {
+        it = typeMap.find(packet->pdu_type());
+        ret = it != mapEnd && type == it->second;
+        packet = packet->inner_pdu();
+    }
     
-    return it != typeMap.end() && type == it->second;
+    return ret;
 }
