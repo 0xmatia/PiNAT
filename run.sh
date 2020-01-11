@@ -5,6 +5,6 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-#MAC=$(ip neigh | grep $(ip route show match 0/0 | awk '{print $3}') -w | awk '{print $5}')
+MAC=$(ip neigh | grep $(ip route show match 0/0 | awk 'NR==1{print $3}') -w | awk 'NR==1{print $5}')
 
-python3 -B PiNAT.py 08:6a:0a:22:12:1a
+python3 -B PiNAT.py $MAC

@@ -19,24 +19,31 @@ def main():
         print (e)
         print("PiNAT is terminating")
         exit(1)
-    input()
+
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
     plugins = plugin_system_instance.reload()
 
-    sniffer = pynat.Sniffer("br0", "ether dst " + argv[1], eth_adapter)
+    sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
     pynat.init_core(sniffer.get_pool())
+
+    for plugin in plugins.values():
+            plugin.setup()
+
     try:
         while True:
             packet = sniffer.get_packet()
             for plugin in plugins.values():
-                plugin.proccess(packet)
+                plugin.process(packet)
             sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:
         print("Exception happened, terminating now")
     
+    for plugin in plugins.values():
+        plugin.teardown()
+
     Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
 
 

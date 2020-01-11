@@ -2,7 +2,7 @@
 
 
 namespace pinat{
-    Sniffer::Sniffer(string sniffingInterface, string filter, string sendingInterface)
+    Sniffer::Sniffer(string sniffingInterface, string filter, string sendingInterface, string mac) : _mac(mac)
     {
         this->_sniffer = new Tins::Sniffer(sniffingInterface);
         this->_sniffer->set_filter(filter);
@@ -34,7 +34,9 @@ namespace pinat{
             return -1;
         }
         
-        _sender->send(*packet);
+        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+        if(eth && eth->dst_addr() == _mac)
+            _sender->send(*packet);
         _packetPool->drop(id);
 
         return 0;

@@ -22,9 +22,23 @@ class plugin:
 
     # Now here we can add all the methods the plugin has to have:
     
-    def proccess(self, packet):
+    def process(self, packet):
         """
         This method will be executed on each packet
+        """
+        raise NotImplementedError
+
+
+    def setup(self):
+        """
+        This method will be executed once after loading the plugin
+        """
+        raise NotImplementedError
+
+
+    def teardown(self):
+        """
+        This method will be executed once before the programs' end
         """
         raise NotImplementedError
 

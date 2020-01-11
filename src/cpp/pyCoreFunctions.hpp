@@ -11,4 +11,5 @@ extern "C" {
     PyObject* py_getDport(PyObject* self, PyObject* args);
     PyObject* py_getSrcMac(PyObject* self, PyObject* args);
     PyObject* py_getDstMac(PyObject* self, PyObject* args);
+    PyObject* py_checkType(PyObject* self, PyObject* args);
 }

@@ -77,3 +77,22 @@ PyObject* py_getDstMac(PyObject* self, PyObject* args)
 
     return PyUnicode_FromString(pinat::getDstMAC(packetID).c_str());
 }
+
+PyObject* py_checkType(PyObject* self, PyObject* args)
+{
+    unsigned long packetID = 0;
+    char* type;
+
+    if(!PyArg_ParseTuple(args, "ks", &packetID, &type)) {
+        return NULL;
+    }
+
+    if(pinat::checkType(packetID, type))
+    {
+        Py_RETURN_TRUE;
+    }
+    else
+    {
+        Py_RETURN_FALSE;
+    }
+}

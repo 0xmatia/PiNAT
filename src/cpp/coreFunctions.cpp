@@ -1,5 +1,64 @@
 #include "coreFunctions.hpp"
 
+
+const std::map<Tins::PDU::PDUType, std::string> typeMap = {
+		{Tins::PDU::PDU::RAW, "RAW"},
+        {Tins::PDU::ETHERNET_II, "ETHERNET_II"},
+        {Tins::PDU::IEEE802_3, "IEEE802_3"},
+        {Tins::PDU::RADIOTAP, "RADIOTAP"},
+        {Tins::PDU::DOT11, "DOT11"},
+        {Tins::PDU::DOT11_ACK, "DOT11_ACK"},
+        {Tins::PDU::DOT11_ASSOC_REQ, "DOT11_ASSOC_REQ"},
+        {Tins::PDU::DOT11_ASSOC_RESP, "DOT11_ASSOC_RESP"},
+        {Tins::PDU::DOT11_AUTH, "DOT11_AUTH"},
+        {Tins::PDU::DOT11_BEACON, "DOT11_BEACON"},
+        {Tins::PDU::DOT11_BLOCK_ACK, "DOT11_BLOCK_ACK"},
+        {Tins::PDU::DOT11_BLOCK_ACK_REQ, "DOT11_BLOCK_ACK_REQ"},
+        {Tins::PDU::DOT11_CF_END, "DOT11_CF_END"},
+        {Tins::PDU::DOT11_DATA, "DOT11_DATA"},
+        {Tins::PDU::DOT11_CONTROL, "DOT11_CONTROL"},
+        {Tins::PDU::DOT11_DEAUTH, "DOT11_DEAUTH"},
+        {Tins::PDU::DOT11_DIASSOC, "DOT11_DIASSOC"},
+        {Tins::PDU::DOT11_END_CF_ACK, "DOT11_END_CF_ACK"},
+        {Tins::PDU::DOT11_MANAGEMENT, "DOT11_MANAGEMENT"},
+        {Tins::PDU::DOT11_PROBE_REQ, "DOT11_PROBE_REQ"},
+        {Tins::PDU::DOT11_PROBE_RESP, "DOT11_PROBE_RESP"},
+        {Tins::PDU::DOT11_PS_POLL, "DOT11_PS_POLL"},
+        {Tins::PDU::DOT11_REASSOC_REQ, "DOT11_REASSOC_REQ"},
+        {Tins::PDU::DOT11_REASSOC_RESP, "DOT11_REASSOC_RESP"},
+        {Tins::PDU::DOT11_RTS, "DOT11_RTS"},
+        {Tins::PDU::DOT11_QOS_DATA, "DOT11_QOS_DATA"},
+        {Tins::PDU::LLC, "LLC"},
+        {Tins::PDU::SNAP, "SNAP"},
+        {Tins::PDU::IP, "IP"},
+        {Tins::PDU::ARP, "ARP"},
+        {Tins::PDU::TCP, "TCP"},
+        {Tins::PDU::UDP, "UDP"},
+        {Tins::PDU::ICMP, "ICMP"},
+        {Tins::PDU::BOOTP, "BOOTP"},
+        {Tins::PDU::DHCP, "DHCP"},
+        {Tins::PDU::EAPOL, "EAPOL"},
+        {Tins::PDU::RC4EAPOL, "RC4EAPOL"},
+        {Tins::PDU::RSNEAPOL, "RSNEAPOL"},
+        {Tins::PDU::DNS, "DNS"},
+        {Tins::PDU::LOOPBACK, "LOOPBACK"},
+        {Tins::PDU::IPv6, "IPv6"},
+        {Tins::PDU::ICMPv6, "ICMPv6"},
+        {Tins::PDU::SLL, "SLL"},
+        {Tins::PDU::DHCPv6, "DHCPv6"},
+        {Tins::PDU::DOT1AD, "DOT1AD"},
+        {Tins::PDU::DOT1Q, "DOT1Q"},
+        {Tins::PDU::PPPOE, "PPPOE"},
+        {Tins::PDU::STP, "STP"},
+        {Tins::PDU::PPI, "PPI"},
+        {Tins::PDU::IPSEC_AH, "IPSEC_AH"},
+        {Tins::PDU::IPSEC_ESP, "IPSEC_ESP"},
+        {Tins::PDU::PKTAP, "PKTAP"},
+        {Tins::PDU::MPLS, "MPLS"},
+        {Tins::PDU::UNKNOWN, "UNKNOWN"}
+};
+
+
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
 
@@ -91,4 +150,23 @@ std::string pinat::getDstMAC(const unsigned long id)
     
     else
         return ""; // which means no mac
+}
+
+
+bool pinat::checkType(const unsigned long id, std::string type)
+{
+    Tins::PDU* packet = pp->getPacket(id);
+    bool ret = false;
+
+    std::map<Tins::PDU::PDUType, std::string>::const_iterator it;
+    std::map<Tins::PDU::PDUType, std::string>::const_iterator mapEnd = typeMap.end();
+
+    while(packet && !ret)
+    {
+        it = typeMap.find(packet->pdu_type());
+        ret = it != mapEnd && type == it->second;
+        packet = packet->inner_pdu();
+    }
+    
+    return ret;
 }

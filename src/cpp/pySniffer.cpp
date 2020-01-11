@@ -35,12 +35,13 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 	char* interface;
 	char* filter;
 	char* sendingInterface;
-	char *kwlist[] = {(char*)"interface", (char*)"filter", (char*) "sinterface", NULL};
+	char* mac;
+	char *kwlist[] = {(char*)"interface", (char*)"filter", (char*) "sinterface", (char*)"mac", NULL};
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "sss", kwlist, &interface, &filter, &sendingInterface))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ssss", kwlist, &interface, &filter, &sendingInterface, &mac))
 		return -1;
 
-	self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface);
+	self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface, mac);
 
 	return 0;
 }
