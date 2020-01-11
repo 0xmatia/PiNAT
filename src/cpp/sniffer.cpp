@@ -35,7 +35,7 @@ namespace pinat{
         }
         
         Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-        if(eth->dst_addr() == _mac)
+        if(eth && eth->dst_addr() == _mac)
             _sender->send(*packet);
         _packetPool->drop(id);
 
