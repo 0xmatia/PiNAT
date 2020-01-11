@@ -58,6 +58,8 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
         {Tins::PDU::UNKNOWN, "UNKNOWN"}
 };
 
+extern "C"
+{
 
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
@@ -169,4 +171,23 @@ bool pinat::checkType(const unsigned long id, std::string type)
     }
     
     return ret;
+}
+
+std::vector<std::string>* getArpInfo(const unsigned long id)
+{
+    Tins::PDU* packet = pp->getPacket(id);
+    std::vector<std::string>* ret = nullptr;
+
+    Tins::ARP* arp = packet->find_pdu<Tins::ARP>();
+    if(arp)
+    {
+        ret = new std::vector<std::string>;
+        ret->push_back(arp->sender_hw_addr().to_string());
+        ret->push_back(arp->target_hw_addr().to_string());
+        ret->push_back(arp->sender_ip_addr().to_string());
+        ret->push_back(arp->target_ip_addr().to_string());
+    }
+
+    return ret;
+}
 }

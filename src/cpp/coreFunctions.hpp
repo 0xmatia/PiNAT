@@ -5,7 +5,8 @@
 #include <map>
 #include <vector>
 
-namespace pinat
+
+extern "C" namespace pinat
 {
     /**
      * Creates new global packpool object so other function
@@ -45,4 +46,7 @@ namespace pinat
 
 
     bool checkType(const unsigned long id, std::string type);
+
+
+    std::vector<std::string>* getArpInfo(const unsigned long id);
 }
