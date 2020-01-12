@@ -26,20 +26,14 @@ namespace pinat{
         
     }
 
-    int Sniffer::forwardPacket(unsigned long id)
+    void Sniffer::forwardPacket(unsigned long id)
     {
         Tins::PDU* packet = _packetPool->getPacket(id);
-        if (packet == nullptr)
-        {
-            return -1;
-        }
-        
         Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+
         if(eth && eth->dst_addr() == _mac)
             _sender->send(*packet);
         _packetPool->drop(id);
-
-        return 0;
     }
 
     PacketPool* Sniffer::getPacketPool() const

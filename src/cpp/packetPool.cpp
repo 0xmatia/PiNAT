@@ -19,10 +19,12 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
         }
         
     }
+    
+    throw "packet does not exist";
     return nullptr; // if for some reason the plugin tried to access invalid packet
 }
 
-int pinat::PacketPool::drop(const unsigned long id)
+void pinat::PacketPool::drop(const unsigned long id)
 {
     for (auto i = this->packets.begin(); i != this->packets.end(); i++)
     {
@@ -30,11 +32,10 @@ int pinat::PacketPool::drop(const unsigned long id)
         {
             delete *i;
             this->packets.erase(i);
-            return 0;
         }
     }
 
-    return -1;
+    throw "packet does not exist";
 }
 
 pinat::PacketPool::~PacketPool()

@@ -13,7 +13,7 @@ class DNSDetector(plugin):
         self.description = "Alerts if DNS poisoning occured"
         self.author = "Elad Matia"
         self.resolver = dns.resolver.Resolver()
-        self.resolver.nameservers = ["8.8.8.8"] # can be changed
+        self.resolver.nameservers = ["8.8.8.8", "8.8.4.4"] # can be changed
 
 
     def process(self, packet):

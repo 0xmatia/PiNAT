@@ -58,6 +58,8 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
         {Tins::PDU::UNKNOWN, "UNKNOWN"}
 };
 
+extern "C"
+{
 
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
@@ -85,6 +87,7 @@ std::string pinat::getDstIp(const unsigned long id)
 {
     Tins::PDU* packet = pp->getPacket(id);
     Tins::IP* ip = packet->find_pdu<Tins::IP>();
+    
     if (ip)
         return ip->dst_addr().to_string();
     else
@@ -147,7 +150,6 @@ std::string pinat::getDstMAC(const unsigned long id)
     Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
     if (eth)
         return eth->dst_addr().to_string();
-    
     else
         return ""; // which means no mac
 }
@@ -212,4 +214,23 @@ std::vector<std::string> pinat::getDNSAddresses(const unsigned long id)
         }
     }
     return ips; // return empty vector if packet is not valid
+}
+
+    std::vector<std::string>* getArpInfo(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        std::vector<std::string>* ret = nullptr;
+
+        Tins::ARP* arp = packet->find_pdu<Tins::ARP>();
+        if(arp)
+        {
+            ret = new std::vector<std::string>;
+            ret->push_back(arp->sender_hw_addr().to_string());
+            ret->push_back(arp->target_hw_addr().to_string());
+            ret->push_back(arp->sender_ip_addr().to_string());
+            ret->push_back(arp->target_ip_addr().to_string());
+        }
+
+        return ret;
+    }
 }

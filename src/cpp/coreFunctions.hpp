@@ -5,7 +5,8 @@
 #include <map>
 #include <vector>
 
-namespace pinat
+
+extern "C" namespace pinat
 {
     /**
      * Creates new global packpool object so other function
@@ -51,4 +52,7 @@ namespace pinat
 
 
     std::vector<std::string> getDNSAddresses(const unsigned long id);
+
+    
+    std::vector<std::string>* getArpInfo(const unsigned long id);
 }

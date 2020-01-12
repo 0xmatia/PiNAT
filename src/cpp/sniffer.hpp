@@ -14,7 +14,7 @@ namespace pinat {
 		~Sniffer();
 
 		unsigned long getPacket() const;
-		int forwardPacket(unsigned long id);
+		void forwardPacket(unsigned long id);
 		PacketPool* getPacketPool() const;
 	private:
 		Tins::Sniffer* _sniffer;

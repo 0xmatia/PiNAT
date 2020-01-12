@@ -41,14 +41,27 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
     if (! PyArg_ParseTupleAndKeywords(args, kwds, "ssss", kwlist, &interface, &filter, &sendingInterface, &mac))
 		return -1;
 
-	self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface, mac);
+	try {
+		self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface, mac);
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return -1;
+	}
+	
 
 	return 0;
 }
 
 static PyObject* Sniffer_getPacket(SnifferObject* self)
 {
-	unsigned long p = self->sniffer->getPacket();
+	unsigned long p;
+	try {
+		p = self->sniffer->getPacket();
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return NULL;
+	}
+
 	PyObject* ret = PyLong_FromUnsignedLong(p);
 	return ret;
 }
@@ -60,7 +73,16 @@ static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
         return NULL;
     }
 
-	self->sniffer->forwardPacket(id);
+	try {
+		self->sniffer->forwardPacket(id);
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return NULL;
+	} catch(const char* message) {
+		PyErr_SetString(PyExc_Exception, message);
+		return NULL;
+	}
+	
 	return PyLong_FromUnsignedLong(id);
 }
 

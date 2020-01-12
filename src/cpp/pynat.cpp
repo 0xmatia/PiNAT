@@ -15,6 +15,8 @@ PyMethodDef core_methods[] = {
     {"check_type", (PyCFunction)py_getDstMac, METH_VARARGS, "Checks the type of the specified packet"},
     {"get_dns_names", (PyCFunction)py_getDNSNames, METH_VARARGS, "Returns a list of the DNS query names"},
     {"get_dns_addresses", (PyCFunction)py_getDNSAddresses, METH_VARARGS, "Returns a list of the DNS addresses"},
+    {"check_type", (PyCFunction)py_checkType, METH_VARARGS, "Checks the type of the specified packet"},
+    {"get_arp_info", (PyCFunction)py_getArpInfo, METH_VARARGS, "Gets sender and target info from the specified arp packet"},
     {NULL}  /* Sentinel */
 };
 
