@@ -12,8 +12,7 @@ class DNSBlocker(plugin):
 
 
     def process(self, packet):
-        print(f"This is {self.name}, and I am {self.description}")
-        print("Src MAC: {}".format(pynat.get_src_mac(packet)))
+        pass
 
 
     def setup(self):

@@ -1,5 +1,7 @@
 #include "pyCoreFunctions.hpp"
 
+extern "C"
+{
 PyObject* py_initCore(PyObject* self, PyObject* args)
 {
     PyObject* packPoolPointer = 0;
@@ -133,4 +135,28 @@ PyObject* py_checkType(PyObject* self, PyObject* args)
         PyErr_SetString(PyExc_KeyError, message);
         return NULL;
     }
+}
+
+PyObject* py_getArpInfo(PyObject* self, PyObject* args)
+{
+    unsigned long packetID = 0;
+
+    if(!PyArg_ParseTuple(args, "k", &packetID)) {
+        return NULL;
+    }
+
+    std::vector<std::string>* vec = pinat::getArpInfo(packetID);
+    PyObject* ret = nullptr;
+
+    if (vec)
+    {
+        ret = Py_BuildValue("ssss", vec->at(0).c_str(), vec->at(1).c_str(), vec->at(2).c_str(), vec->at(3).c_str());
+        delete vec;
+        return ret;
+    }
+    else
+    {
+        Py_RETURN_NONE;
+    }
+}
 }
