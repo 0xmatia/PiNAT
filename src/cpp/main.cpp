@@ -39,7 +39,20 @@ int main(int argc, char** argv)
 	while (!stop)
 	{
 		a = s->getPacket();
-		pinat::dnsstuff(a);
+		std::map<std::string, std::vector<std::string>*> dnsInfo = pinat::getDNSInfo(a);
+		for (auto i = dnsInfo.begin(); i != dnsInfo.end(); i++)
+		{
+			std::cout << "Dname: " + i->first;
+			std::cout << "IPs:\t";
+			for (auto j = i->second->begin(); j != i->second->end(); j++)
+			{
+				std::cout << j->back() << ", ";
+				j->pop_back();
+			}
+			std::cout << std::endl;
+			delete i->second;
+		}
+		
 		s->forwardPacket(a);
 	}
 	

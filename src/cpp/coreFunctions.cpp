@@ -1,4 +1,5 @@
 #include "coreFunctions.hpp"
+#include <map>
 
 
 const std::map<Tins::PDU::PDUType, std::string> typeMap = {
@@ -60,7 +61,6 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
 
 extern "C"
 {
-
 // The packet pool instance
 pinat::PacketPool* pp = nullptr;
 
@@ -173,47 +173,38 @@ bool pinat::checkType(const unsigned long id, std::string type)
     return ret;
 }
 
-std::vector<std::string> pinat::getDNSNames(const unsigned long id)
+std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigned long id)
 {
-    std::vector<std::string> names;
+    std::map<std::string, std::vector<std::string>*> dnsInfo;
     if (pinat::getSrcPort(id) == 53)
     {
         Tins::PDU* packet = pp->getPacket(id);
-        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+        Tins::DNS* dns = packet->find_pdu<Tins::DNS>();
 
-        if (dns.type() == Tins::DNS::RESPONSE)
+        if (dns->type() == Tins::DNS::RESPONSE)
         {
-            Tins::DNS::resources_type d = dns.answers();
+            //Answers found in the DNS
+            Tins::DNS::resources_type answers = dns->answers();
             
-            for (auto i : d)
+            for (auto i : answers)
             {
-                names.push_back(i.dname());
+                std::string dname, ip;
+                if (dnsInfo.find(dname) == dnsInfo.end()) 
+                {
+                    //if the dname doesn't exist in the map, add it.
+                    dnsInfo[dname] = new std::vector<std::string> {ip};
+                }
+                else
+                {
+                    //dname was found, append ip to its vector
+                   dnsInfo[dname]->push_back(ip);
+                }
+                
             }
             
         }
     }
-    return names; // return empty vector if packet is not valid
-}
-
-std::vector<std::string> pinat::getDNSAddresses(const unsigned long id)
-{
-    std::vector<std::string> ips;
-    if (pinat::getSrcPort(id) == 53)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
-
-        if (dns.type() == Tins::DNS::RESPONSE)
-        {
-            Tins::DNS::resources_type d = dns.answers();
-            for (auto i : d)
-            {
-                ips.push_back(i.data());
-            }
-            
-        }
-    }
-    return ips; // return empty vector if packet is not valid
+    return dnsInfo; // return empty vector if packet is not valid
 }
 
     std::vector<std::string>* getArpInfo(const unsigned long id)

@@ -48,10 +48,7 @@ extern "C" namespace pinat
     bool checkType(const unsigned long id, std::string type);
 
 
-    std::vector<std::string> getDNSNames(const unsigned long id);
-
-
-    std::vector<std::string> getDNSAddresses(const unsigned long id);
+    std::map<std::string, std::vector<std::string>*> getDNSInfo(const unsigned long id);
 
     
     std::vector<std::string>* getArpInfo(const unsigned long id);
