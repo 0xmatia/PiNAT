@@ -35,7 +35,7 @@ def main():
             packet = sniffer.get_packet()
             for plugin in plugins.values():
                 plugin.process(packet)
-            sniffer.forward_packet(packet)
+            #sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception:

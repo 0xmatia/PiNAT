@@ -12,7 +12,6 @@ extern "C" {
     PyObject* py_getSrcMac(PyObject* self, PyObject* args);
     PyObject* py_getDstMac(PyObject* self, PyObject* args);
     PyObject* py_checkType(PyObject* self, PyObject* args);
-    PyObject* py_getDNSNames(PyObject* self, PyObject* args);
-    PyObject* py_getDNSAddresses(PyObject* self, PyObject* args);
     PyObject* py_getArpInfo(PyObject* self, PyObject* args);
+    PyObject* py_getDNSInfo(PyObject* self, PyObject* args);
 }

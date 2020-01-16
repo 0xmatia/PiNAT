@@ -20,11 +20,10 @@ class DNSDetector(plugin):
         # check if the packet is a DNS response
         # if pynat.check_type(packet, "DNS"):
         if pynat.get_src_port(packet) == 53:
-            dnames = pynat.get_dns_names(packet)
-            ips = pynat.get_dns_addresses(packet)
-            t = threading.Thread(target=self.dns_reslover, args=[dnames, ips])
-            t.daemon = True
-            t.start()
+            dns_info = pynat.get_dns_info(packet)
+            for dname in dns_info:
+                print(dname + ": ", end="")
+                print(dns_info[dname])
 
 
     def dns_reslover(self, dnames, ips):

@@ -160,41 +160,48 @@ extern "C"
         }
     }
 
-    PyObject* py_getDNSNames(PyObject* self, PyObject* args)
+    PyObject* py_getDNSInfo(PyObject* self, PyObject* args)
     {
         unsigned long packetID = 0;
-        PyObject *PList = PyList_New(0);
-
+        PyObject* addresses, *info;
+        std::string dname;
+        std::vector<std::string>* addressVector;
+        int counter = 0;
+        
         if(!PyArg_ParseTuple(args, "k", &packetID)) {
             return NULL;
         }
+        std::map<std::string, std::vector<std::string>*> dnsInfo = pinat::getDNSInfo(packetID);
 
-        std::vector<std::string> names = pinat::getDNSNames(packetID);
+        //create the dictionary
+        info = PyDict_New();
 
-        //convert to pylsit
-        for(auto it = names.begin(); it != names.end(); it++ )
+        //Iterate over the map:
+        for (auto i = dnsInfo.begin(); i != dnsInfo.end(); i++)
         {
-            PyList_Append(PList, Py_BuildValue("s", (*it).c_str()));
+            dname = i->first;
+            addressVector = i->second;
+
+            //create new list:
+            addresses = PyList_New(addressVector->size());
+            //Now, fill the pylist with the values inside tempAddesses
+            for (const auto address : *addressVector)
+            {
+                PyList_SetItem(addresses, counter, PyUnicode_FromString(address.c_str()));
+                counter++;
+            }
+            counter = 0;
+            //FREE the allocated space for the addressVector
+            delete addressVector;
+            addressVector = NULL;
+
+            //insert vector + dname into the dictionary
+            PyDict_SetItem(info, PyUnicode_FromString(dname.c_str()), addresses);
+            addresses = NULL; 
+            //DON'T delete the ref to the old list (which the dictionary now has 
+            // a pointer to), but point to null because in the next iteration
+            // we are creating a new list
         }
-        return PList;
-    }
-
-    PyObject* py_getDNSAddresses(PyObject* self, PyObject* args)
-    {
-            unsigned long packetID = 0;
-        PyObject *PList = PyList_New(0);
-
-        if(!PyArg_ParseTuple(args, "k", &packetID)) {
-            return NULL;
-        }
-
-        std::vector<std::string> ips = pinat::getDNSAddresses(packetID);
-
-        //convert to pylsit
-        for(auto it = ips.begin(); it != ips.end(); it++ )
-        {
-            PyList_Append(PList, Py_BuildValue("s", (*it).c_str()));
-        }
-        return PList;
+        return info;
     }
 }

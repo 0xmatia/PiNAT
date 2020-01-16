@@ -49,6 +49,7 @@ extern "C" namespace pinat
 
     /**
      * The function returns a map of all the queries' responses in a vector for each domain
+     * Note: the Caller HAS to free the vector allocated memory!
      */
     std::map<std::string, std::vector<std::string>*> getDNSInfo(const unsigned long id);
 

@@ -32,7 +32,10 @@ namespace pinat{
         Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
 
         if(eth && eth->dst_addr() == _mac)
+        {
+            std::cout<<eth->dst_addr() << std::endl;
             _sender->send(*packet);
+        }
         _packetPool->drop(id);
     }
 
