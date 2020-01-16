@@ -31,10 +31,10 @@ ${BIN}: ${SRC}
 	mv ${BDIR}/pynat.cpython* ${BDIR}/pynat.so
 
 ${ODIR}/%.o: ${SDIR}/%.cpp
-	${COMP} -c $< -o $@ -I${EDIR}
+	${COMP} -g -c $< -o $@ -I${EDIR}
 
 ${DBIN}: ${DOBJ}
-	${COMP} -o $@ $^ -L${EDIR} -ltins
+	${COMP} -g -o $@ $^ -L${EDIR} -ltins
 
 clean:
 	@rm -rvf ${ODIR}

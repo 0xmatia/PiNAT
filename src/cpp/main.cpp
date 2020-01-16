@@ -35,25 +35,22 @@ int main(int argc, char** argv)
 	
 	unsigned long a = 0;
 	std::string command = "";
-
 	while (!stop)
 	{
 		a = s->getPacket();
 		std::map<std::string, std::vector<std::string>*> dnsInfo = pinat::getDNSInfo(a);
 		for (auto i = dnsInfo.begin(); i != dnsInfo.end(); i++)
 		{
-			std::cout << "Dname: " + i->first;
-			std::cout << "IPs:\t";
-			for (auto j = i->second->begin(); j != i->second->end(); j++)
+			std::cout << "Dname: " + i->first << std::endl;
+			std::cout << "IPs: ";
+			std::vector<std::string>* ips = i->second;
+			for (const std::string address : *ips)
 			{
-				std::cout << j->back() << ", ";
-				j->pop_back();
+				std::cout << address << std::endl;
 			}
-			std::cout << std::endl;
+			std::cout << std::endl << std::endl;
 			delete i->second;
 		}
-		
-		s->forwardPacket(a);
 	}
 	
 	// while(command != "exit")

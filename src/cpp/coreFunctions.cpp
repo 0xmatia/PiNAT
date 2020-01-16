@@ -179,29 +179,24 @@ std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigne
     if (pinat::getSrcPort(id) == 53)
     {
         Tins::PDU* packet = pp->getPacket(id);
-        Tins::DNS* dns = packet->find_pdu<Tins::DNS>();
-
-        if (dns->type() == Tins::DNS::RESPONSE)
+        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+        if (dns.type() == Tins::DNS::RESPONSE)
         {
             //Answers found in the DNS
-            Tins::DNS::resources_type answers = dns->answers();
-            
+            Tins::DNS::resources_type answers = dns.answers();
+
             for (auto i : answers)
             {
-                std::string dname, ip;
+                if (i.query_type() == Tins::DNS::CNAME) continue; // skip cnames
+                std::string dname = i.dname();
+                std::string ip = i.data();
                 if (dnsInfo.find(dname) == dnsInfo.end()) 
                 {
                     //if the dname doesn't exist in the map, add it.
-                    dnsInfo[dname] = new std::vector<std::string> {ip};
+                    dnsInfo[dname] = new std::vector<std::string>();
                 }
-                else
-                {
-                    //dname was found, append ip to its vector
-                   dnsInfo[dname]->push_back(ip);
-                }
-                
+                dnsInfo[dname]->push_back(ip);
             }
-            
         }
     }
     return dnsInfo; // return empty vector if packet is not valid
