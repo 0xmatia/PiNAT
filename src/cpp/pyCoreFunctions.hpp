@@ -12,5 +12,6 @@ extern "C" {
     PyObject* py_getSrcMac(PyObject* self, PyObject* args);
     PyObject* py_getDstMac(PyObject* self, PyObject* args);
     PyObject* py_checkType(PyObject* self, PyObject* args);
+    PyObject* py_dropPacket(PyObject* self, PyObject* args);
     PyObject* py_getArpInfo(PyObject* self, PyObject* args);
 }
