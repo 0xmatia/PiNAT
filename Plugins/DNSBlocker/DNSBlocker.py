@@ -15,7 +15,6 @@ class DNSBlocker(plugin):
     def process(self, packet):
         return packet
 
-
     def setup(self):
         pass
 
