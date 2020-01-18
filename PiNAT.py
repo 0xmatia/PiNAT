@@ -25,8 +25,15 @@ def main():
     plugins = list(plugin_system_instance.reload().values())
     plugins.sort(key=lambda x: x.priority)
 
-    sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
-    pynat.init_core(sniffer.get_pool())
+    try:
+        sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
+        pynat.init_core(sniffer.get_pool())
+    except Exception as e:
+        print("Exception: ", end="")
+        print(e)
+        print("terminating now")
+        Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
+        exit(1)
 
     for plugin in plugins:
             plugin.setup()

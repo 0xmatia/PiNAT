@@ -64,8 +64,6 @@ extern "C"
     // The packet pool instance
     pinat::PacketPool* pp = nullptr;
     
-    extern "C"
-    {
     void pinat::initCore(pinat::PacketPool* pool)
     {
         pp = pool;

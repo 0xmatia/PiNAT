@@ -25,8 +25,8 @@ extern "C"
     
         try {
             return PyUnicode_FromString(pinat::getSrcIp(packetID).c_str());
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
         
@@ -42,8 +42,8 @@ extern "C"
     
         try {
             return PyUnicode_FromString(pinat::getDstIp(packetID).c_str());
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -59,8 +59,8 @@ extern "C"
     
         try {
             return PyLong_FromUnsignedLong(pinat::getSrcPort(packetID));
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -75,8 +75,8 @@ extern "C"
     
         try {
             return PyLong_FromUnsignedLong(pinat::getDstPort(packetID));
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -91,8 +91,8 @@ extern "C"
     
         try {
             return PyUnicode_FromString(pinat::getSrcMAC(packetID).c_str());
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -107,8 +107,8 @@ extern "C"
     
         try {
             return PyUnicode_FromString(pinat::getDstMAC(packetID).c_str());
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -131,8 +131,8 @@ extern "C"
             {
                 Py_RETURN_FALSE;
             }
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     }
@@ -147,8 +147,8 @@ extern "C"
     
         try {
             pinat::dropPacket(packetID);
-        } catch(const char* message) {
-            PyErr_SetString(PyExc_KeyError, message);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_KeyError, e.what());
             return NULL;
         }
     
@@ -162,10 +162,19 @@ extern "C"
         if(!PyArg_ParseTuple(args, "k", &packetID)) {
             return NULL;
         }
-    
-        std::vector<std::string>* vec = pinat::getArpInfo(packetID);
+
         PyObject* ret = nullptr;
-    
+        std::vector<std::string>* vec = nullptr;
+
+        try {
+            vec = pinat::getArpInfo(packetID);
+        } catch(std::exception& e) {
+            if(vec)
+                delete vec;
+            PyErr_SetString(PyExc_KeyError, e.what());
+            return NULL;
+        }
+        
         if (vec)
         {
             ret = Py_BuildValue("ssss", vec->at(0).c_str(), vec->at(1).c_str(), vec->at(2).c_str(), vec->at(3).c_str());
