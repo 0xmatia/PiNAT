@@ -12,42 +12,32 @@ class DNSDetector(plugin):
         self.version = 0.1
         self.description = "Alerts if DNS poisoning occured"
         self.author = "Elad Matia"
-        self.resolver = dns.resolver.Resolver()
-        self.resolver.nameservers = ["8.8.8.8", "8.8.4.4"] # can be changed
-
 
     def process(self, packet):
         # check if the packet is a DNS response
         # if pynat.check_type(packet, "DNS"):
         if pynat.get_src_port(packet) == 53:
             dns_info = pynat.get_dns_info(packet)
-            for dname in dns_info:
-                print(dname + ": ", end="")
-                print(dns_info[dname])
+            threading.Thread(target=self.dns_reslover, args=(dns_info))
 
 
-    def dns_reslover(self, dnames, ips):
-        print("Names", dnames)
-        print("Ips: ", ips)
+    def dns_reslover(self, dns_info):
         dns_response = []
+        
+        resolver = dns.resolver.Resolver()
+        resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
 
-        for query in dnames:
-            answer = self.resolver.query(query)
-            for i in answer.response.answer:
-                for j in i.items: # j can be CNAME (alias) or A record
-                    dns_response.append(j.to_text())
-            print("New IPS: ", dns_response)
-            # compare - how the fuck?
+        for dname in dns_info:
+            ip_list = dns_info[dname]
+
+            answer = self.resolver.query(dname, "A")
+            for item in answer:
+                resultant_str = ','.join([str(item), answer])
+                dns_response.append(resultant_str.split(','))
+
 
         print()
 
-            
-        # checked_ip = answer.response.answer[0].items[0].address
-        # if checked_ip != ip:
-        #     print("~~~ALERT~~~\n\nDNS poisoning detected: \
-        #         {0} returned different result after checking with a different server\n~~~~~~~~~".format(name))
-
-        # The thread will terminate once it read all dns packets
 
     def setup(self):
         pass

@@ -22,45 +22,26 @@ def main():
 
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
-    plugins = list(plugin_system_instance.reload().values())
-    plugins.sort(key=lambda x: x.priority)
+    plugins = plugin_system_instance.reload()
 
-    try:
-        sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
-        pynat.init_core(sniffer.get_pool())
-    except Exception as e:
-        print("Exception: ", end="")
-        print(e)
-        print("terminating now")
-        Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
-        exit(1)
+    sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
+    pynat.init_core(sniffer.get_pool())
 
-    for plugin in plugins:
+    for plugin in plugins.values():
             plugin.setup()
 
     try:
         while True:
             packet = sniffer.get_packet()
-<<<<<<< HEAD
             for plugin in plugins.values():
                 plugin.process(packet)
-            #sniffer.forward_packet(packet)
-=======
-            for plugin in plugins:
-                packet = plugin.process(packet)
-                if packet == None:
-                    break
-            if packet != None:
-                sniffer.forward_packet(packet)
->>>>>>> 255f494e280fbf8bc1995be19ece7a63c89cb45b
+            sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
-    except Exception as e:
-        print("Exception: ", end="")
-        print(e)
-        print("terminating now")
+    except Exception:
+        print("Exception happened, terminating now")
     
-    for plugin in plugins:
+    for plugin in plugins.values():
         plugin.teardown()
 
     Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
