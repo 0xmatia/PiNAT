@@ -19,10 +19,13 @@ class DNSDetector(plugin):
         if pynat.get_src_port(packet) == 53:
             dns_info = pynat.get_dns_info(packet)
             threading.Thread(target=self.dns_reslover, args=(dns_info))
+        
+        return packet
 
 
     def dns_reslover(self, dns_info):
         dns_response = []
+        unmateched_ips = []
         
         resolver = dns.resolver.Resolver()
         resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
@@ -35,9 +38,30 @@ class DNSDetector(plugin):
                 resultant_str = ','.join([str(item), answer])
                 dns_response.append(resultant_str.split(','))
 
+            # compare
+            for suspect in ip_list:
+                if suspect not in dns_response:
+                    unmateched_ips.append(suspect)
 
-        print()
+            if len(unmateched_ips) == 0: # if empty, we are good
+                continue
+        
+            # change nameserver
+            resolver.nameservers = ["1.1.1.1", "1.0.0.1"]
+            answer = self.resolver.query(dname, "A")
+            for item in answer:
+                resultant_str = ','.join([str(item), answer])
+                dns_response.append(resultant_str.split(','))
 
+            for suspect in ip_list:
+                if suspect not in dns_response:
+                    unmateched_ips.append(suspect)
+
+            if len(unmateched_ips) != 0:
+                # possible dns spoofing detected
+                print("Warning - possible DNS poisoning attack detected")
+                print(dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1")
+                print("Suspected IP(S): " + ip_list)
 
     def setup(self):
         pass
