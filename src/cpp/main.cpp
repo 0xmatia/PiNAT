@@ -24,13 +24,13 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	if(argc != 3)
+	if(argc != 4)
 	{
-		cout << "usage: sniffer <sniffing interface> <sending interface>" << endl;
+		cout << "usage: sniffer <sniffing interface> <sending interface> <router mac>" << endl;
 		return 1;
 	}
 
-	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "", argv[2], "08:6a:0a:22:12:1a");
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "", argv[2], argv[3]);
 	pinat::initCore(s->getPacketPool());
 	
 	unsigned long a = 0;

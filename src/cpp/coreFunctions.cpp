@@ -61,152 +61,155 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
 
 extern "C"
 {
-// The packet pool instance
-pinat::PacketPool* pp = nullptr;
+    // The packet pool instance
+    pinat::PacketPool* pp = nullptr;
 
-void pinat::initCore(pinat::PacketPool* pool)
-{
-    pp = pool;
-    //or pp = new PacketPool(), because we have a static field!
-}
-
-
-std::string pinat::getSrcIp(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::IP* ip = packet->find_pdu<Tins::IP>();
-
-    if(ip)
-        return ip->src_addr().to_string();
-    else
-        return ""; // which means no src ip
-}
-
-
-std::string pinat::getDstIp(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::IP* ip = packet->find_pdu<Tins::IP>();
-    
-    if (ip)
-        return ip->dst_addr().to_string();
-    else
-        return ""; // which means no dst ip
-}
-
-
-uint16_t pinat::getSrcPort(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
-
-    if (tcp == 0)
+    void pinat::initCore(pinat::PacketPool* pool)
     {
-        // Tcp not found, search for udp
-        Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
-        if (udp == 0)
-        {
-            return 0; // no udp, no port
-        }
-        return udp->sport();
+        pp = pool;
+        //or pp = new PacketPool(), because we have a static field!
     }
-    return tcp->sport();
-}
 
-
-uint16_t pinat::getDstPort(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
-
-    if (tcp == 0)
-    {
-        // Tcp not found, search for udp
-        Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
-        if (udp == 0)
-        {
-            return 0; // no udp, no port
-        }
-        return udp->dport();
-    }
-    return tcp->dport();
-}
-
-
-std::string pinat::getSrcMAC(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-    if (eth)
-        return eth->src_addr().to_string();
-    else
-        return ""; // which means no mac
-}
-
-
-std::string pinat::getDstMAC(const unsigned long id)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-    if (eth)
-        return eth->dst_addr().to_string();
-    else
-        return ""; // which means no mac
-}
-
-
-bool pinat::checkType(const unsigned long id, std::string type)
-{
-    Tins::PDU* packet = pp->getPacket(id);
-    bool ret = false;
-
-    std::map<Tins::PDU::PDUType, std::string>::const_iterator it;
-    std::map<Tins::PDU::PDUType, std::string>::const_iterator mapEnd = typeMap.end();
-
-    while(packet && !ret)
-    {
-        it = typeMap.find(packet->pdu_type());
-        ret = it != mapEnd && type == it->second;
-        packet = packet->inner_pdu();
-    }
-    
-    return ret;
-}
-
-std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigned long id)
-{
-    std::map<std::string, std::vector<std::string>*> dnsInfo;
-    if (pinat::getSrcPort(id) == 53)
+    std::string pinat::getSrcIp(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
-        Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
-        if (dns.type() == Tins::DNS::RESPONSE)
-        {
-            //Answers found in the DNS
-            Tins::DNS::resources_type answers = dns.answers();
+        Tins::IP* ip = packet->find_pdu<Tins::IP>();
 
-            for (auto i : answers)
+        if(ip)
+            return ip->src_addr().to_string();
+        else
+            return ""; // which means no src ip
+    }
+
+
+    std::string pinat::getDstIp(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::IP* ip = packet->find_pdu<Tins::IP>();
+        
+        if (ip)
+            return ip->dst_addr().to_string();
+        else
+            return ""; // which means no dst ip
+    }
+    
+    uint16_t pinat::getSrcPort(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
+    
+        if (tcp == 0)
+        {
+            // Tcp not found, search for udp
+            Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
+            if (udp == 0)
             {
-                if (i.query_type() == Tins::DNS::CNAME) continue; // skip cnames
-                std::string dname = i.dname();
-                std::string ip = i.data();
-                if (dnsInfo.find(dname) == dnsInfo.end()) 
+                return 0; // no udp, no port
+            }
+            return udp->sport();
+        }
+        return tcp->sport();
+    }
+    
+    
+    uint16_t pinat::getDstPort(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
+    
+        if (tcp == 0)
+        {
+            // Tcp not found, search for udp
+            Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
+            if (udp == 0)
+            {
+                return 0; // no udp, no port
+            }
+            return udp->dport();
+        }
+        return tcp->dport();
+    }
+    
+    
+    std::string pinat::getSrcMAC(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+        if (eth)
+            return eth->src_addr().to_string();
+        else
+            return ""; // which means no mac
+    }
+    
+    
+    std::string pinat::getDstMAC(const unsigned long id)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+        if (eth)
+            return eth->dst_addr().to_string();
+        else
+            return ""; // which means no mac
+    }
+    
+    
+    bool pinat::checkType(const unsigned long id, std::string type)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        bool ret = false;
+    
+        std::map<Tins::PDU::PDUType, std::string>::const_iterator it;
+        std::map<Tins::PDU::PDUType, std::string>::const_iterator mapEnd = typeMap.end();
+    
+        while(packet && !ret)
+        {
+            it = typeMap.find(packet->pdu_type());
+            ret = it != mapEnd && type == it->second;
+            packet = packet->inner_pdu();
+        }
+        
+        return ret;
+    }
+
+    std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigned long id)
+    {
+        std::map<std::string, std::vector<std::string>*> dnsInfo;
+        if (pinat::getSrcPort(id) == 53)
+        {
+            Tins::PDU* packet = pp->getPacket(id);
+            Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+            if (dns.type() == Tins::DNS::RESPONSE)
+            {
+                //Answers found in the DNS
+                Tins::DNS::resources_type answers = dns.answers();
+
+                for (auto i : answers)
                 {
-                    //if the dname doesn't exist in the map, add it.
-                    dnsInfo[dname] = new std::vector<std::string>();
+                    if (i.query_type() == Tins::DNS::CNAME) continue; // skip cnames
+                    std::string dname = i.dname();
+                    std::string ip = i.data();
+                    if (dnsInfo.find(dname) == dnsInfo.end()) 
+                    {
+                        //if the dname doesn't exist in the map, add it.
+                        dnsInfo[dname] = new std::vector<std::string>();
+                    }
+                    dnsInfo[dname]->push_back(ip);
                 }
-                dnsInfo[dname]->push_back(ip);
             }
         }
+        return dnsInfo; // return empty vector if packet is not valid
     }
-    return dnsInfo; // return empty vector if packet is not valid
-}
+    
+    void dropPacket(const unsigned long id)
+    {
+        pp->drop(id);
+    }
 
     std::vector<std::string>* getArpInfo(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
         std::vector<std::string>* ret = nullptr;
-
+    
         Tins::ARP* arp = packet->find_pdu<Tins::ARP>();
         if(arp)
         {
@@ -216,7 +219,8 @@ std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigne
             ret->push_back(arp->sender_ip_addr().to_string());
             ret->push_back(arp->target_ip_addr().to_string());
         }
-
+    
         return ret;
     }
+
 }

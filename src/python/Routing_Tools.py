@@ -1,45 +1,29 @@
 import subprocess
 from time import sleep
 
-def _get_interface():
+def check_interface(interface):
     """
     Returns a valid interface name
     """
     proc = subprocess.Popen(["nmcli", "-f", "DEVICE", "device"], stdout=subprocess.PIPE)
     (available_adapters, _) = proc.communicate()
 
-    wifi_adapter = input("Wifi interface name: ")
-    etherent_adapter = input("Ethernet interface name: ")
-
-    # # Does the adapter exists?
-    if wifi_adapter + " " not in available_adapters.decode() or \
-        etherent_adapter + " " not in available_adapters.decode():
-            raise Exception("One of the specified adapters doesn't exist")
-    
-    return wifi_adapter, etherent_adapter
+    # # Does the adapter exist?
+    return interface + " "  in available_adapters.decode()
 
 
-def _get_password():
+def check_password(passphrase):
     """
     Returns a valid WPA2 password
     """
-    passphrase = input("Wifi password: ")
-    if len(passphrase) > 63 or len(passphrase) < 8:
-        raise Exception("Invalid WPA2 password. Password must be 8-63 chars long.")
-  
-    return passphrase
+    return 8 <= len(passphrase) <= 63
 
 
-
-def _get_ssid():
+def check_ssid(ssid):
     """
     Returns a valid SSID
     """
-    ssid = input("Wifi Name: ")
-    if len(ssid) > 32 or len(ssid) < 1 or '|' in ssid:
-        raise Exception("Invalid SSID.")
-
-    return ssid
+    return 1 < len(ssid) < 32 and '|' not in ssid
 
 
 def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
@@ -56,6 +40,7 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
 
     print("Hotspot has been activated")
 
+
 def cleanup(wifi_interface, eth_interface, router_mac):
     """ 
     Turns off the hotspot if neccessry
@@ -66,10 +51,69 @@ def cleanup(wifi_interface, eth_interface, router_mac):
     print("Hotspot deactivated")
 
 
+def read_config():
+    try:
+        f = open("config.txt", "r")
+    except OSError:
+        return None, None, None, None
+
+    wifi_adapter = None
+    eth_adapter = None
+    ssid = None
+    password = None
+    for line in f.read().split("\n"):
+        try:
+            key, value = line.split("=")
+        except:
+            continue
+        if key == "wireless_adapter":
+            wifi_adapter = value
+        elif key == "regular_adapter":
+            eth_adapter = value
+        elif key == "ssid":
+            ssid = value
+        elif key == "pass":
+            password = value
+    f.close()
+
+    return wifi_adapter, eth_adapter, ssid, password
+
+
 def init_hotspot(router_mac):
-    wifi_adapter, eth_adapter = _get_interface()
-    ssid = _get_ssid()
-    password = _get_password()
+    wifi_adapter, eth_adapter, ssid, password = read_config()
+
+    if wifi_adapter == None:
+        wifi_adapter = input("Wifi interface name: ")
+    else:
+        print("wifi_adapter = " + wifi_adapter)
+    if not check_interface(wifi_adapter):
+        raise Exception("interface {} does not exist".format(wifi_adapter))
+
+
+    if eth_adapter == None:
+        eth_adapter = input("Ethernet interface name: ")
+    else:
+        print("regular_adapter = " + eth_adapter)
+    if not check_interface(eth_adapter):
+        raise Exception("interface {} does not exist".format(eth_adapter))
+
+
+    if ssid == None:
+        ssid = input("Wifi name: ")
+    else:
+        print("ssid = " + ssid)
+    if not check_ssid(ssid):
+        raise Exception("Invalid ssid: " + ssid)
+    
+
+    if password == None:
+        password = input("Wifi password: ")
+    else:
+        print("password = {}".format(password))
+    if not check_password(password):
+        raise Exception("Invalid WPA2 password: {}\nPassword must be 8-63 chars long".format(password))
+    
+
     # Start hotspot:
     _turn_on(wifi_adapter, eth_adapter, ssid, password, router_mac)
     return wifi_adapter, eth_adapter

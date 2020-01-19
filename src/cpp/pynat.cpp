@@ -13,6 +13,7 @@ PyMethodDef core_methods[] = {
     {"get_src_mac", (PyCFunction)py_getSrcMac, METH_VARARGS, "Gets the src Mac of the specified packet"},
     {"get_dst_mac", (PyCFunction)py_getDstMac, METH_VARARGS, "Gets the dst Mac of the specified packet"},
     {"check_type", (PyCFunction)py_getDstMac, METH_VARARGS, "Checks the type of the specified packet"},
+    {"drop_packet", (PyCFunction)py_dropPacket, METH_VARARGS, "Drops the specified packet"},
     {"check_type", (PyCFunction)py_checkType, METH_VARARGS, "Checks the type of the specified packet"},
     {"get_arp_info", (PyCFunction)py_getArpInfo, METH_VARARGS, "Gets sender and target info from the specified arp packet"},
     {"get_dns_info", (PyCFunction)py_getDNSInfo, METH_VARARGS, "Returns a dictionary with the dns query responses."},

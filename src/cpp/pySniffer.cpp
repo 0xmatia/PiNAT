@@ -78,9 +78,6 @@ static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
 	} catch(std::exception& e) {
 		PyErr_SetString(PyExc_Exception, e.what());
 		return NULL;
-	} catch(const char* message) {
-		PyErr_SetString(PyExc_Exception, message);
-		return NULL;
 	}
 	
 	return PyLong_FromUnsignedLong(id);

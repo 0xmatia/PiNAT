@@ -5,7 +5,6 @@
 #include <map>
 #include <vector>
 
-
 extern "C" namespace pinat
 {
     /**
@@ -53,6 +52,10 @@ extern "C" namespace pinat
      */
     std::map<std::string, std::vector<std::string>*> getDNSInfo(const unsigned long id);
 
+
+    void dropPacket(const unsigned long id);
+    
+    
     /**
      * Returns basic infromation about Layer 2
      */
