@@ -33,7 +33,6 @@ namespace pinat{
 
         if(eth && eth->dst_addr() == _mac)
         {
-            std::cout<<eth->dst_addr() << std::endl;
             _sender->send(*packet);
         }
         _packetPool->drop(id);
