@@ -11,11 +11,11 @@ BDIR = bin
 EDIR = externals
 
 BIN := ${BDIR}/pynat.so
-SRC = sniffer.cpp pySniffer.cpp pynat.cpp
+SRC = sniffer.cpp pySniffer.cpp pynat.cpp packetPool.cpp coreFunctions.cpp packet.cpp pyCoreFunctions.cpp
 SRC := ${SRC:%=${SDIR}/%}
 
 DBIN := ${BDIR}/sniffer
-DSRC = main.cpp sniffer.cpp
+DSRC = packet.cpp packetPool.cpp coreFunctions.cpp sniffer.cpp main.cpp
 DOBJ := ${DSRC:%.cpp=${ODIR}/%.o}
 
 all: setup ${BIN}

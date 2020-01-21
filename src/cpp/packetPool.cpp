@@ -1,33 +1,38 @@
 #include "packetPool.hpp"
 
-unsigned long pinat::PacketPool::addPacket(Tins::PDU*& packet)
+pinat::PacketPool::PacketPool()
 {
-    unsigned long id = 0;
+    _currentPacket = nullptr;
+}
 
-    //std::lock_guard<std::mutex> lock(this->packetsMutex);
-    this->packets.push_back(new Packet(packet, id));
-    return id;
+unsigned long pinat::PacketPool::addPacket(Tins::PDU* packet)
+{
+    _currentPacket = packet;
+    return 0;
 }
 
 Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
 {
-    for (auto i = this->packets.begin(); i != this->packets.end(); i++)
-    {
-        if ((*i)->getID() == id)
-        {
-            return (*i)->getPacket;
-        }
-        
-    }
-    return nullptr; // if for some reason the plugin tried to access invalid packet
-}
-
-void pinat::PacketPool::forward(const unsigned long id)
-{
- //TODO
+    if(_currentPacket)
+        return _currentPacket;
+    else
+        throw std::runtime_error("packet does not exist");
+    
+    return nullptr;
 }
 
 void pinat::PacketPool::drop(const unsigned long id)
 {
-    //TODO 
+    if(_currentPacket)
+    {
+        delete _currentPacket;
+        _currentPacket = nullptr;
+    }
+    else
+        throw std::runtime_error("packet does not exist");
+}
+
+pinat::PacketPool::~PacketPool()
+{
+    delete _currentPacket;
 }

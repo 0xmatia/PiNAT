@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from sys import path
+from sys import argv
 path.append("src/python")
 
 import Routing_Tools
@@ -13,30 +14,50 @@ def main():
 
     # Start hotspot and routing
     try:
-        adapter = Routing_Tools.init_hotspot()
+        wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
     except Exception as e:
         print (e)
         print("PiNAT is terminating")
         exit(1)
-    
+
     # Load the plugins
     plugin_system_instance = plugin_system('Plugins')
-    plugins = plugin_system_instance.reload()
+    plugins = list(plugin_system_instance.reload().values())
+    plugins.sort(key=lambda x: x.priority)
 
     try:
-        sniffer = pynat.Sniffer(adapter, "")
+        sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
+        pynat.init_core(sniffer.get_pool())
+    except Exception as e:
+        print("Exception: ", end="")
+        print(e)
+        print("terminating now")
+        Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
+        exit(1)
+
+    for plugin in plugins:
+            plugin.setup()
+
+    try:
         while True:
             packet = sniffer.get_packet()
-            for plugin in plugins.values():
-                plugin.proccess(packet)
-            sniffer.forward_packet(0)
-            
+            for plugin in plugins:
+                packet = plugin.process(packet)
+                if packet == None:
+                    break
+            if packet != None:
+                sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
-    except Exception:
-        print("Exception happened, terminating now")
+    except Exception as e:
+        print("Exception: ", end="")
+        print(e)
+        print("terminating now")
     
-    Routing_Tools.cleanup()
+    for plugin in plugins:
+        plugin.teardown()
+
+    Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
 
 
 if __name__ == "__main__":
