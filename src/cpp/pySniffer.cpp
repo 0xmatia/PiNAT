@@ -34,20 +34,56 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 {
 	char* interface;
 	char* filter;
-	char *kwlist[] = {(char*)"interface", (char*)"filter", NULL};
+	char* sendingInterface;
+	char* mac;
+	char *kwlist[] = {(char*)"interface", (char*)"filter", (char*) "sinterface", (char*)"mac", NULL};
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ss", kwlist, &interface, &filter))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ssss", kwlist, &interface, &filter, &sendingInterface, &mac))
 		return -1;
 
-	self->sniffer = new pinat::Sniffer(interface, filter);
+	try {
+		self->sniffer = new pinat::Sniffer(interface, filter, sendingInterface, mac);
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return -1;
+	}
+	
 
 	return 0;
 }
 
 static PyObject* Sniffer_getPacket(SnifferObject* self)
 {
-	Tins::PDU* p = self->sniffer->getPacket();
-	PyObject* ret = PyUnicode_FromString(self->sniffer->getLayers(p).c_str());
-	delete p;
+	unsigned long p;
+	try {
+		p = self->sniffer->getPacket();
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return NULL;
+	}
+
+	PyObject* ret = PyLong_FromUnsignedLong(p);
 	return ret;
+}
+
+static PyObject* Sniffer_forwardPacket(SnifferObject* self, PyObject* args)
+{
+	unsigned long id = 0;
+	if(!PyArg_ParseTuple(args, "k", &id)) {
+        return NULL;
+    }
+
+	try {
+		self->sniffer->forwardPacket(id);
+	} catch(std::exception& e) {
+		PyErr_SetString(PyExc_Exception, e.what());
+		return NULL;
+	}
+	
+	return PyLong_FromUnsignedLong(id);
+}
+
+static PyObject* Sniffer_getPool(SnifferObject* self)
+{
+	return PyLong_FromVoidPtr(self->sniffer->getPacketPool());
 }
