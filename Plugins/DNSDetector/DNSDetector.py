@@ -4,6 +4,11 @@ from bin import pynat
 import threading
 import socket
 
+
+#Notes:
+# - I get a lot of false positives. It is mostly from from google related domains, sometimes facebook
+# - Maybe add an option to ignore google stuff?
+# - I think that as a proof-of-concept it works okay
 class DNSDetector(plugin):
 
     def __init__(self):
@@ -19,8 +24,11 @@ class DNSDetector(plugin):
         # if pynat.check_type(packet, "DNS"):
         if pynat.get_src_port(packet) == 53:
             dns_info = pynat.get_dns_info(packet)
-            threading.Thread(target=self.dns_reslover, args=(dns_info))
-        
+            thread = threading.Thread(target=self.dns_reslover, args=(dns_info,))
+
+            thread.daemon = True
+            thread.start()
+            
         return packet
 
 
@@ -30,7 +38,6 @@ class DNSDetector(plugin):
     
         resolver = dns.resolver.Resolver()
         resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
-
         for dname in dns_info:
             ip_list = dns_info[dname]
 
@@ -45,7 +52,7 @@ class DNSDetector(plugin):
 
             if len(unmateched_ips) == 0: # if empty, we are good
                 continue
-        
+            
             # change nameserver
             resolver.nameservers = ["1.1.1.1", "1.0.0.1"]
             answer = resolver.query(dname, "A")
@@ -61,6 +68,7 @@ class DNSDetector(plugin):
                 print("Warning - possible DNS poisoning attack detected")
                 print(dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1")
                 print("Suspected IP(S): " + str(unmateched_ips))
+                print()
 
                 
     def setup(self):
