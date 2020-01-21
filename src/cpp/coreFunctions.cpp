@@ -1,4 +1,5 @@
 #include "coreFunctions.hpp"
+#include <map>
 
 
 const std::map<Tins::PDU::PDUType, std::string> typeMap = {
@@ -60,29 +61,27 @@ const std::map<Tins::PDU::PDUType, std::string> typeMap = {
 
 extern "C"
 {
-    
     // The packet pool instance
     pinat::PacketPool* pp = nullptr;
-    
+
     void pinat::initCore(pinat::PacketPool* pool)
     {
         pp = pool;
         //or pp = new PacketPool(), because we have a static field!
     }
-    
-    
+
     std::string pinat::getSrcIp(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
         Tins::IP* ip = packet->find_pdu<Tins::IP>();
-    
+
         if(ip)
             return ip->src_addr().to_string();
         else
             return ""; // which means no src ip
     }
-    
-    
+
+
     std::string pinat::getDstIp(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
@@ -93,7 +92,6 @@ extern "C"
         else
             return ""; // which means no dst ip
     }
-    
     
     uint16_t pinat::getSrcPort(const unsigned long id)
     {
@@ -173,6 +171,35 @@ extern "C"
         return ret;
     }
 
+    std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigned long id)
+    {
+        std::map<std::string, std::vector<std::string>*> dnsInfo;
+        if (pinat::getSrcPort(id) == 53)
+        {
+            Tins::PDU* packet = pp->getPacket(id);
+            Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
+            if (dns.type() == Tins::DNS::RESPONSE)
+            {
+                //Answers found in the DNS
+                Tins::DNS::resources_type answers = dns.answers();
+
+                for (auto i : answers)
+                {
+                    if (i.query_type() == Tins::DNS::CNAME) continue; // skip cnames
+                    std::string dname = i.dname();
+                    std::string ip = i.data();
+                    if (dnsInfo.find(dname) == dnsInfo.end()) 
+                    {
+                        //if the dname doesn't exist in the map, add it.
+                        dnsInfo[dname] = new std::vector<std::string>();
+                    }
+                    dnsInfo[dname]->push_back(ip);
+                }
+            }
+        }
+        return dnsInfo; // return empty vector if packet is not valid
+    }
+    
     void dropPacket(const unsigned long id)
     {
         pp->drop(id);

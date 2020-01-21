@@ -1,6 +1,5 @@
 # Inspiration: https://github.com/gdiepen/python_plugin_example
 import os, importlib, pkgutil
-
 class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
@@ -83,6 +82,6 @@ class plugin_system:
             self.plugins[name] = instance
             
         except ImportError as e:
-            print(e)
+            print(f"Er: {e}")
         except Exception as e:
             print(e)

@@ -46,8 +46,18 @@ extern "C" namespace pinat
 
     bool checkType(const unsigned long id, std::string type);
 
+    /**
+     * The function returns a map of all the queries' responses in a vector for each domain
+     * Note: the Caller HAS to free the vector allocated memory!
+     */
+    std::map<std::string, std::vector<std::string>*> getDNSInfo(const unsigned long id);
+
+
     void dropPacket(const unsigned long id);
     
     
+    /**
+     * Returns basic infromation about Layer 2
+     */
     std::vector<std::string>* getArpInfo(const unsigned long id);
 }

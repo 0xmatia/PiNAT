@@ -3,4 +3,5 @@
 2. create_ap
     - Hostpad + more common utilities
 3. python3
+    - dnspython (sudo apt install python3-dnspython)
 4. 
