@@ -1,5 +1,7 @@
 from Plugin_Observer import plugin
 from bin import pynat
+import sqlite3
+import os
 
 class IPBlocker(plugin):
 
@@ -25,6 +27,20 @@ class IPBlocker(plugin):
     def setup(self):
         with open("Plugins/IPBlocker/blacklist.txt", "r") as input_file:
             self.blacklist = input_file.read().splitlines()
+        # initialize database
+        os.chdir("Plugins/IPBlocker")
+        print(os.getcwd())
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL)''')
+
+        # create plugin specific actions. each action is the table name where 
+        # data will be pulled from
+
+        cursor.execute(''' IF NOT EXISTS (SELECT * FROM ACTIONS WHERE database_name = 'DB1' AND database_owner = 'x@x.com')
+        INSERT INTO ACTIONS VALUES ('get_blocked_ips')''')
+        conn.commit()
+        conn.close()
 
 
     def teardown(self):
