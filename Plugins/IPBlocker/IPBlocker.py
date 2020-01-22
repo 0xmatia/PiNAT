@@ -32,13 +32,14 @@ class IPBlocker(plugin):
         print(os.getcwd())
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL UNIQUE)''')
+        conn.commit()
 
         # create plugin specific actions. each action is the table name where 
         # data will be pulled from
 
-        cursor.execute(''' IF NOT EXISTS (SELECT * FROM ACTIONS WHERE database_name = 'DB1' AND database_owner = 'x@x.com')
-        INSERT INTO ACTIONS VALUES ('get_blocked_ips')''')
+        cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('get_blocked_ips')")
+        cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('blocked_stats')")
         conn.commit()
         conn.close()
 
