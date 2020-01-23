@@ -45,9 +45,9 @@ class plugin:
 
     def init_database(self, name: str):
         old_path = os.getcwd()
-        os.chdir("Plugins/" + name)
+        os.chdir("Plugins/" + name[:len(name)-3]) # without the extension
 
-        conn = sqlite3.connect(name + ".db")
+        conn = sqlite3.connect(name) 
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL UNIQUE)''')
         conn.commit()
