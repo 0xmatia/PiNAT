@@ -4,4 +4,5 @@
     - Hostpad + more common utilities
 3. python3
     - dnspython (sudo apt install python3-dnspython)
+    - Flask, Flast-RESTful
 4. 
