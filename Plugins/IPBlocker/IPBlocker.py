@@ -2,6 +2,7 @@ from Plugin_Observer import plugin
 from bin import pynat
 import sqlite3
 import os
+import json
 
 class IPBlocker(plugin):
 
@@ -28,20 +29,37 @@ class IPBlocker(plugin):
         with open("Plugins/IPBlocker/blacklist.txt", "r") as input_file:
             self.blacklist = input_file.read().splitlines()
         # initialize database
-        os.chdir("Plugins/IPBlocker")
-        print(os.getcwd())
-        conn = sqlite3.connect("database.db")
+        self.init_database("IPBlocker")
+        os.chdir(os.path.dirname(__file__))
+        # insert plugin-specifc actions to action table
+        conn = sqlite3.connect("IPBlocker.db")
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL UNIQUE)''')
-        conn.commit()
-
-        # create plugin specific actions. each action is the table name where 
-        # data will be pulled from
 
         cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('get_blocked_ips')")
         cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('blocked_stats')")
         conn.commit()
         conn.close()
+
+    
+    # return a list of available actions!
+    def get_actions(self):
+        action_list = []
+        conn = sqlite3.connect("IPBlocker.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM ACTIONS")
+        result = cursor.fetchall()
+        conn.commit()
+        conn.close()
+
+        for action in result:
+            action_list.append(action[0])
+
+        return action_list
+
+
+    def get_blocked_ips(self):
+        return json.dumps(self.blacklist)
 
 
     def teardown(self):
