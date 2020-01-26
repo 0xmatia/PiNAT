@@ -72,4 +72,3 @@ if __name__ == "__main__":
     load_plugins()
     os.chdir(current_path) #restore path
     app.run(debug=True)
-    subprocess.Popen(['./clean_pyc.sh']).wait() # clean pyc

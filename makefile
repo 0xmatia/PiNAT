@@ -38,12 +38,12 @@ ${DBIN}: ${DOBJ}
 
 clean:
 	@rm -rvf ${ODIR}
-	@rm -rvf __pycache__
+	@find Plugins src -name __pycache__ -type d -exec rm -rvf '{}' +
 
 cleanall:
 	@rm -rvf ${ODIR}
 	@rm -rvf ${BDIR}
-	@rm -rvf __pycache__
+	@find Plugins src -name __pycache__ -type d -exec rm -rvf '{}' +
 
 install:
 	cp ${EDIR}/libtins.so /usr/lib/

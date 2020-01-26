@@ -7,3 +7,5 @@ config.txt
 __pycache__
 *.pyc
 *.pyo
+pinat/
+venv/
