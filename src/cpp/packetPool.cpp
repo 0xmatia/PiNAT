@@ -16,7 +16,7 @@ Tins::PDU* pinat::PacketPool::getPacket(const unsigned long id) const
     if(_currentPacket)
         return _currentPacket;
     else
-        throw std::runtime_error("packet does not exist");
+        throw std::runtime_error("getPacket: packet does not exist");
     
     return nullptr;
 }
@@ -29,7 +29,7 @@ void pinat::PacketPool::drop(const unsigned long id)
         _currentPacket = nullptr;
     }
     else
-        throw std::runtime_error("packet does not exist");
+        throw std::runtime_error("drop: packet does not exist");
 }
 
 pinat::PacketPool::~PacketPool()
