@@ -64,7 +64,7 @@ class DNSDetector(plugin):
                     unmateched_ips.remove(suspect)
 
             if len(unmateched_ips) != 0:
-                # possible dns spoofing detected
+                possible dns spoofing detected
                 print("Warning - possible DNS poisoning attack detected")
                 print(dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1")
                 print("Suspected IP(S): " + str(unmateched_ips))

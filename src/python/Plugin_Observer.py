@@ -1,5 +1,5 @@
 # Inspiration: https://github.com/gdiepen/python_plugin_example
-import os, importlib, pkgutil
+import os, importlib, pkgutil, sqlite3
 class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
@@ -41,6 +41,19 @@ class plugin:
         This method will be executed once before the programs' end
         """
         raise NotImplementedError
+
+
+    def init_database(self, name: str):
+        old_path = os.getcwd()
+        os.chdir("Plugins/" + name[:len(name)-3]) # without the extension
+
+        conn = sqlite3.connect(name) 
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL UNIQUE)''')
+        conn.commit()
+        conn.close()
+
+        os.chdir(old_path)
 
 
 ###########################################################################################################
