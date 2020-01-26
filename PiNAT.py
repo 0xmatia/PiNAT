@@ -2,6 +2,7 @@
 
 from sys import path
 from sys import argv
+from traceback import print_exc
 path.append("src/python")
 
 import Routing_Tools
@@ -16,7 +17,7 @@ def main():
     try:
         wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
     except Exception as e:
-        print (e)
+        print_exc()
         print("PiNAT is terminating")
         exit(1)
 
@@ -29,8 +30,7 @@ def main():
         sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
         pynat.init_core(sniffer.get_pool())
     except Exception as e:
-        print("Exception: ", end="")
-        print(e)
+        print_exc()
         print("terminating now")
         Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
         exit(1)
@@ -50,8 +50,7 @@ def main():
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
     except Exception as e:
-        print("Exception: ", end="")
-        print(e)
+        print_exc()
         print("terminating now")
     
     for plugin in plugins:

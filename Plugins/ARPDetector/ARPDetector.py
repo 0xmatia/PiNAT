@@ -19,7 +19,7 @@ class ARPDetector(plugin):
         if not info:
             return packet
 
-        sender_mac, target_mac, sender_ip, target_ip = info
+        sender_mac, _, sender_ip, __ = info
         if sender_ip not in self.arp_table:
             self.arp_table[sender_ip] = sender_mac
         elif self.arp_table[sender_ip] != sender_mac:

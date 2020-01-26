@@ -39,6 +39,7 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
     subprocess.Popen(["ethtool", "-K", wifi_adapter, "gso", "off"]).wait()
     subprocess.Popen(["ethtool", "-K", wifi_adapter, "gro", "off"]).wait()
 
+    sleep(6)
     print("Hotspot has been activated")
 
 

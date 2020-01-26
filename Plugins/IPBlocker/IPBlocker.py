@@ -26,8 +26,7 @@ class IPBlocker(plugin):
             src_ip = pynat.get_src_ip(packet)
             conn = sqlite3.connect(self.dbname)
             cursor = conn.cursor()
-            cursor.execute("""INSERT INTO TABLE LOG VALUES (?, ?, DATETIME("now"))""", 
-            src_ip, dst_addr)
+            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now"))""", (src_ip, dst_addr))
             conn.commit()
             conn.close()
 
