@@ -38,10 +38,12 @@ ${DBIN}: ${DOBJ}
 
 clean:
 	@rm -rvf ${ODIR}
+	@rm -rvf __pycache__
 
 cleanall:
 	@rm -rvf ${ODIR}
 	@rm -rvf ${BDIR}
+	@rm -rvf __pycache__
 
 install:
 	cp ${EDIR}/libtins.so /usr/lib/
