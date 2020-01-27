@@ -17,18 +17,14 @@ zz
 
 ### Prerequisites
 
-Three interfaces, one of them has to be ethernet!
+* Three interfaces, one of them has to be ethernet!
 
-Libtins
-Python3 + libraries specified in requirements.txt
-ethtool
-create_ap
-(optional) virtual python enivronment
+* Libtins
+* Python3 + libraries specified in requirements.txt
+* ethtool
+* create_ap
+* (optional) virtual python enivronment
 ...
-
-```
-Give examples
-```
 
 ### Installing
 
