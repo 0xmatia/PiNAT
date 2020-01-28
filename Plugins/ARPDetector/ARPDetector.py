@@ -1,5 +1,6 @@
 from Plugin_Observer import plugin
 from bin import pynat
+import os, sqlite3
 
 class ARPDetector(plugin):
 
@@ -10,7 +11,8 @@ class ARPDetector(plugin):
         self.description = "Detects suspicious arp activity"
         self.author = "Ofri Marx"
         self.priority = 5
-
+        self.actions = ["get_log"]
+        self.dbname = "ARPDetector.db"
         self.arp_table = {}
 
 
@@ -29,7 +31,30 @@ class ARPDetector(plugin):
 
 
     def setup(self):
+        # os.chdir(os.path.dirname(__file__))
+        # conn = sqlite3.connect(self.dbname)
+        # cursor = conn.cursor()
+        
+        # # create the log table
+        # #create table log if it doesn't exist
+        # # cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (ATTACKER_IP TEXT NOT NULL,
+        # # SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
+        # conn.commit()
+        # conn.close()
         pass
+
+
+    def get_actions(self):
+        return self.actions
+
+
+    def delete_database(self):
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM LOG")
+        conn.commit()
+        conn.close()
 
 
     def teardown(self):

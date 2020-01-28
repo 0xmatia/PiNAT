@@ -25,7 +25,7 @@ class IPBlocker(plugin):
             src_ip = pynat.get_src_ip(packet)
             conn = sqlite3.connect(self.dbname)
             cursor = conn.cursor()
-            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now"))""", (src_ip, dst_addr))
+            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now", "localtime"))""", (src_ip, dst_addr))
             conn.commit()
             conn.close()
 
@@ -36,10 +36,10 @@ class IPBlocker(plugin):
 
 
     def setup(self):
-        with open("Plugins/IPBlocker/blacklist.txt", "r") as input_file:
+        os.chdir(os.path.dirname(__file__))
+        with open("blacklist.txt", "r") as input_file:
             self.blacklist = input_file.read().splitlines()
         # insert plugin-specifc actions to action table
-        os.chdir(os.path.dirname(__file__))
         conn = sqlite3.connect(self.dbname)
         cursor = conn.cursor()
         

@@ -68,15 +68,14 @@ class DNSDetector(plugin):
                     unmateched_ips.remove(suspect)
 
             if len(unmateched_ips) != 0:
-                print("Warning - possible DNS poisoning attack detected")
-                print(dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1")
+                print("[DNSDetector] - WARNING: " + dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1. ", end="")
                 print("Suspected IP(S): " + str(unmateched_ips))
                 print()
 
                 os.chdir(os.path.dirname(__file__))
                 conn = sqlite3.connect(self.dbname)
                 cursor = conn.cursor()
-                cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now"))""", (attacker_ip, ','.join(unmateched_ips)))
+                cursor.execute("""INSERT INTO LOG VALUES (?, ?, ?, DATETIME("now", "localtime"))""", (attacker_ip, dname, ','.join(unmateched_ips)))
                 conn.commit()
                 conn.close()
 
@@ -88,7 +87,7 @@ class DNSDetector(plugin):
         
         #create table log if it doesn't exist
         cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (ATTACKER_IP TEXT NOT NULL,
-        SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
+        DOMAIN TEXT NOT NULL, SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
         conn.commit()
         conn.close()
 
@@ -108,7 +107,7 @@ class DNSDetector(plugin):
         conn.close()
     
         for entry in db_res:
-            answer_array.append({"attacker:": entry[0], "suspected_ips": entry[1].split(","), "time": entry[2]})
+            answer_array.append({"attacker:": entry[0], "domain": entry[1], "suspected_ips": entry[2].split(","), "time": entry[3]})
 
         return {"result": answer_array}
 
