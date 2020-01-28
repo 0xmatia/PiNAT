@@ -5,7 +5,7 @@ import os, sqlite3
 class ARPDetector(plugin):
 
     def __init__(self):
-        self.name = "ARP detector"
+        self.name = "ARPDetector"
         self.type = "Analyzer"
         self.version = 1.0
         self.description = "Detects suspicious arp activity"
@@ -26,26 +26,47 @@ class ARPDetector(plugin):
             self.arp_table[sender_ip] = sender_mac
         elif self.arp_table[sender_ip] != sender_mac:
             print("detected possible arp spoofing of address {}\npossible devices: {} or {}".format(sender_ip, sender_mac, self.arp_table[sender_ip]))
+            os.chdir(os.path.dirname(__file__))
+            conn = sqlite3.connect(self.dbname)
+            cursor = conn.cursor()
+            
+            cursor.execute("""INSERT INTO LOG VALUES (?, ?, ?, DATETIME("now", "localtime"))""", \
+            (sender_ip, sender_mac, self.arp_table[sender_ip]))
+            conn.commit()
+            conn.close()
 
         return packet
 
 
     def setup(self):
-        # os.chdir(os.path.dirname(__file__))
-        # conn = sqlite3.connect(self.dbname)
-        # cursor = conn.cursor()
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
         
-        # # create the log table
-        # #create table log if it doesn't exist
-        # # cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (ATTACKER_IP TEXT NOT NULL,
-        # # SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
-        # conn.commit()
-        # conn.close()
-        pass
+        cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (SENDER_IP TEXT NOT NULL,
+        SENDER_MAC_ONE TEXT NOT NULL, SENDER_MAC_TWO TEXT NOT NULL, TIME TEXT NOT NULL)""")
+        conn.commit()
+        conn.close()
 
 
     def get_actions(self):
         return self.actions
+
+    
+    def get_log(self):
+        answer_array = []
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT * FROM LOG")
+        db_res = cursor.fetchall()
+        conn.commit()
+        conn.close()
+    
+        for entry in db_res:
+            answer_array.append({"sender_ip:": entry[0], "sender_mac": entry[1], "conflicted_mac": entry[2].split(","), "time": entry[3]})
+
+        return {"result": answer_array}
 
 
     def delete_database(self):
