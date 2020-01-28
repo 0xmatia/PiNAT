@@ -11,6 +11,8 @@ medium sized private networks. It connects to the router with an ethernet cable
 from one adapter, and opens an access point from another adapter for other devices
 to connect. 
 
+![struct](structure.png?raw=true)
+
 PiNAT serves as a transparent bridge between connected devices and the router, 
 with the options of sniffing network activity, blocking it and even modifying it
 live. Network analysis is done by user written plugins and a few plugins which 
