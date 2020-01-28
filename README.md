@@ -1,6 +1,19 @@
 # PiNAT
 
-Open source, modular network monitoring tool
+Raspberry **Pi** **N**etwork **A**nalayzer **T**ool
+
+Open source, modular network monitoring tool. Connects to the router with an 
+ethernet cable from one adapter and opens an access point from another adapter
+for other devices to connect. This way, it serves as a transparent bridge between
+connected devices and the router, with the options of sniffing network activity, 
+blocking it and even modifying it live. Network analysis is done by user written 
+plugins and a few plugins which are supplied by us. The plugins are written in python, 
+and are given access to network activity through a python library which we developed. 
+With the special plugin system we constructed, every user is able to change the 
+functionality of the program to his specific needs, or add functionality to the 
+defualt analasys done by our plugins. 
+
+
 
 ## Getting Started
 
@@ -17,12 +30,11 @@ zz
 
 ### Prerequisites
 
-* Three interfaces, one of them has to be ethernet!
-
-* Libtins
+* Two interfaces, one of them has to be ethernet! (another interface is recommended)
+* Libtins [add link to repo]
 * Python3 + libraries specified in requirements.txt
 * ethtool
-* create_ap
+* create_ap [add link to repo]
 * (optional) virtual python enivronment
 ...
 
@@ -36,7 +48,7 @@ Firstly, clone the repo:
 git clone https://gitlab.com/magsh-2019/14/1402-pinat-
 ```
 
-Install all requirments (git, apt, pacman)
+Install all requirments (libtins, python3, ethtool, create_ap)
 
 ```
 sudo apt install ethtool
@@ -67,13 +79,20 @@ pip install -r requirements.txt
 ```
 
 You should be all setup now. Run ./run to start to program
-## Running the tests
+
 
 ## Built With
 
 * [Flask](url) - The web framework used
 * [Libtins](url) - Dependency Management
 * [create_ap](url) - Used to generate RSS Feeds
+
+
+## Develop plugins
+
+
+## Internals
+a few words about how our project works
 
 
 ## Authors
