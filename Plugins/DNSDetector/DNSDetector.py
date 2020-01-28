@@ -21,6 +21,7 @@ class DNSDetector(plugin):
         self.priority = 324786
         self.actions = ["get_log"]
         self.dbname = "DNSDetector.db"
+        self.safe_ips = []
 
     def process(self, packet):
         # check if the packet is a DNS response
@@ -67,6 +68,11 @@ class DNSDetector(plugin):
                 if suspect in dns_response:
                     unmateched_ips.remove(suspect)
 
+            for known_ip in self.known_ips:
+                if known_ip in unmateched_ips:
+                    unmateched_ips.remove(known_ip)
+            
+            
             if len(unmateched_ips) != 0:
                 print("[DNSDetector] - WARNING: " + dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1. ", end="")
                 print("Suspected IP(S): " + str(unmateched_ips))
@@ -90,6 +96,9 @@ class DNSDetector(plugin):
         DOMAIN TEXT NOT NULL, SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
         conn.commit()
         conn.close()
+
+        with open("known_ips.txt", 'r') as f:
+            self.known_ips = [line.rstrip() for line in f]
 
 
     def get_actions(self):
