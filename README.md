@@ -2,16 +2,30 @@
 
 Raspberry **Pi** **N**etwork **A**nalayzer **T**ool
 
-Open source, modular network monitoring tool. Connects to the router with an 
-ethernet cable from one adapter and opens an access point from another adapter
-for other devices to connect. This way, it serves as a transparent bridge between
-connected devices and the router, with the options of sniffing network activity, 
-blocking it and even modifying it live. Network analysis is done by user written 
-plugins and a few plugins which are supplied by us. The plugins are written in python, 
-and are given access to network activity through a python library which we developed. 
-With the special plugin system we constructed, every user is able to change the 
-functionality of the program to his specific needs, or add functionality to the 
-defualt analasys done by our plugins. 
+![pinat](peanut.png?raw=true)
+
+## What is PiNAT?
+
+PiNAT is an open source, modular network monitoring tool, built for small to 
+medium sized private networks. It connects to the router with an ethernet cable 
+from one adapter, and opens an access point from another adapter for other devices
+to connect. 
+
+PiNAT serves as a transparent bridge between connected devices and the router, 
+with the options of sniffing network activity, blocking it and even modifying it
+live. Network analysis is done by user written plugins and a few plugins which 
+are supplied by us. The plugins are written in python, and are given access to 
+network activity through a python library which we developed. With the special 
+plugin system we constructed, every user is able to change the functionality of 
+the program to his specific needs, or add functionality to the defualt analasys 
+done by our plugins.
+
+Some of the included plugins are:
+*  ARP spoofing detector - analyzes arp requests and alerts when there is a
+duplicate address
+*  DSN spoofing detector - analyzes dns responses and compares with trusted dns
+servers
+*  IP blocker - blocks certain external ip addresses
 
 
 
@@ -107,4 +121,7 @@ This project is licensed under the <> License - see the [LICENSE.md](LICENSE.md)
 
 ## Acknowledgments
 
-More stuff
+This project was written during our third year in the [Magshimim](https://www.magshimim.cyber.org.il/) 
+program with the help of several people from and out of Magshimim.
+
+Special thanks to [] and []
