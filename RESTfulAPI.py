@@ -44,6 +44,13 @@ class ListPluginActions(Resource):
             return {"actions": action_list}
         except KeyError:
             return {"status": "Plugin was not found"}, 500
+
+    def delete(self, plugin: str):
+        try:
+            plugins_dictionary[plugin].delete_database()
+            return {"status": "success"}
+        except KeyError:
+            return {"status": "Plugin was not found"}, 500
     
 
 """
@@ -59,7 +66,6 @@ class PluginAction(Resource):
             return {"status": "Plugin was not found"}, 500
         except AttributeError:
             return {"status": "invalid action"}, 500
-
 
 # add resources to API
 api.add_resource(Root, "/")

@@ -45,6 +45,20 @@ class plugin:
         raise NotImplementedError
 
 
+    def get_actions(self):
+        """
+        Will return list of methods of the plugin
+        """
+        raise NotImplementedError
+
+
+    def delete_database(self):
+        """
+        Will delete the database
+        """
+        raise NotImplementedError
+
+
 ###########################################################################################################
 class plugin_system:
     """This class will load every plugin (File which inherits from 'plugin' class)"""

@@ -14,7 +14,7 @@ class IPBlocker(plugin):
         self.author = "Ofri Marx"
         self.priority = 1000
         self.dbname = "IPBlocker.db"
-        self.actions = ["get_blocked_ips", "bget_blocked_stats"]
+        self.actions = ["get_blocked_ips", "get_blocked_stats"]
 
 
     def process(self, packet):
@@ -39,7 +39,7 @@ class IPBlocker(plugin):
         with open("Plugins/IPBlocker/blacklist.txt", "r") as input_file:
             self.blacklist = input_file.read().splitlines()
         # insert plugin-specifc actions to action table
-        os.chdir(os.path.dirname(__name__))
+        os.chdir(os.path.dirname(__file__))
         conn = sqlite3.connect(self.dbname)
         cursor = conn.cursor()
         
@@ -55,24 +55,33 @@ class IPBlocker(plugin):
         return self.actions
 
 
+    def delete_database(self):
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM LOG")
+        conn.commit()
+        conn.close()
+
+
     def get_blocked_ips(self):
-        return {"blocked_ips": self.blacklist}
+        return {"result": self.blacklist}
 
 
     def get_blocked_stats(self):
         answer_array = []
-        os.chdir(os.path.dirname(__name__))
+        os.chdir(os.path.dirname(__file__))
         conn = sqlite3.connect(self.dbname)
         cursor = conn.cursor()
         cursor.execute("SELECT DISTINCT * FROM LOG")
         db_res = cursor.fetchall()
-        cursor.commit()
-        cursor.close()
+        conn.commit()
+        conn.close()
 
         for entry in db_res:
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})
 
-        return {result: answer_array}
+        return {"result": answer_array}
 
     def teardown(self):
         pass
