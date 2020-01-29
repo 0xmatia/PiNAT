@@ -77,4 +77,4 @@ if __name__ == "__main__":
     current_path = os.getcwd() # save curred pwd
     load_plugins()
     os.chdir(current_path) #restore path
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
