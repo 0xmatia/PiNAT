@@ -4,16 +4,10 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
-#include <signal.h>
 
 using std::cout;
 using std::endl;
 
-volatile sig_atomic_t stop;
-
-void inthand(int signum) {
-    stop = 1;
-}
 void checkSniffing(char* interface);
 
 int main(int argc, char** argv)
@@ -35,41 +29,80 @@ int main(int argc, char** argv)
 	
 	unsigned long a = 0;
 	std::string command = "";
-	while (!stop)
+	while (command != "x")
 	{
-		a = s->getPacket();
-		std::map<std::string, std::vector<std::string>*> dnsInfo = pinat::getDNSInfo(a);
-		for (auto i = dnsInfo.begin(); i != dnsInfo.end(); i++)
+		cout << ">>> ";
+		std::cin >> command;
+		
+		if(command == "s")
+			a = s->getPacket();
+		else if(command == "m")
 		{
-			std::cout << "Dname: " + i->first << std::endl;
-			std::cout << "IPs: ";
-			std::vector<std::string>* ips = i->second;
-			for (const std::string address : *ips)
+			std::vector<std::string>* vec = pinat::getMACs(a);
+			if(vec)
 			{
-				std::cout << address << std::endl;
+				cout << vec->at(0) << " -> " << vec->at(1) << endl;
+				delete vec;
 			}
-			std::cout << std::endl << std::endl;
-			delete i->second;
+			else
+			{
+				cout << "no mac" << endl;
+			}
 		}
+		else if(command == "i")
+		{
+			std::vector<std::string>* vec = pinat::getIPs(a);
+			if(vec)
+			{
+				cout << vec->at(0) << " -> " << vec->at(1) << endl;
+				delete vec;
+			}
+			else
+			{
+				cout << "no ip" << endl;
+			}
+		}
+		else if(command == "p")
+		{
+			std::vector<unsigned int>* vec = pinat::getPorts(a);
+			if(vec)
+			{
+				cout << vec->at(0) << " -> " << vec->at(1) << endl;
+				delete vec;
+			}
+			else
+			{
+				cout << "no ports" << endl;
+			}
+		}
+		else if(command == "d")
+		{
+			std::map<std::string, std::vector<std::string>*>* dnsInfo = pinat::getDNSInfo(a);
+			if(dnsInfo)
+			{
+				for (auto i = dnsInfo->begin(); i != dnsInfo->end(); i++)
+				{
+					std::cout << "Dname: " + i->first << std::endl;
+					std::cout << "IPs: ";
+					std::vector<std::string>* ips = i->second;
+					for (const std::string address : *ips)
+					{
+						std::cout << address << ", ";
+					}
+					std::cout << std::endl;
+					delete ips;
+				}
+
+				delete dnsInfo;
+			}
+			else
+			{
+				cout << "no dns response" << endl;
+			}
+			
+		}		
 	}
-	
-	// while(command != "exit")
-	// {
-	// 	cout << "> ";
-	// 	std::cin >> command;
-	// 	if(command == "s")
-	// 	{
-	// 		a = s->getPacket();
-	// 		cout << a << endl;
-	// 	}
-	// 	else if(command == "p")
-	// 	{
-	// 		cout << pinat::getSrcMAC(a) << " -> " << pinat::getDstMAC(a) << endl;
-	// 		cout << pinat::getSrcIp(a) << ":" << pinat::getSrcPort(a) << " -> " << pinat::getDstIp(a) << ":" << pinat::getDstPort(a) << endl;
-	// 	}
-	// 	else if(command == "f")
-	// 		cout << s->forwardPacket(a) << endl;
-	// }
+
 
 	cout << "Exiting" << endl;
 	delete s;

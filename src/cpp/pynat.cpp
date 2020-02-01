@@ -6,12 +6,9 @@
 
 PyMethodDef core_methods[] = {
     {"init_core", (PyCFunction)py_initCore, METH_VARARGS, "Initializes the core function system"},
-    {"get_src_ip", (PyCFunction)py_getSrcIp, METH_VARARGS, "Gets the src IP of the specified packet"},
-    {"get_dst_ip", (PyCFunction)py_getDstIp, METH_VARARGS, "Gets the dst IP of the specified packet"},
-    {"get_src_port", (PyCFunction)py_getSport, METH_VARARGS, "Gets the src port of the specified packet"},
-    {"get_dst_port", (PyCFunction)py_getDport, METH_VARARGS, "Gets the dst port of the specified packet"},
-    {"get_src_mac", (PyCFunction)py_getSrcMac, METH_VARARGS, "Gets the src Mac of the specified packet"},
-    {"get_dst_mac", (PyCFunction)py_getDstMac, METH_VARARGS, "Gets the dst Mac of the specified packet"},
+    {"get_ips", (PyCFunction)py_getIPs, METH_VARARGS, "Gets the src and dst IP of the specified packet"},
+    {"get_ports", (PyCFunction)py_getPorts, METH_VARARGS, "Gets the src and dst port of the specified packet"},
+    {"get_macs", (PyCFunction)py_getMACs, METH_VARARGS, "Gets the src and dst Mac of the specified packet"},
     {"drop_packet", (PyCFunction)py_dropPacket, METH_VARARGS, "Drops the specified packet"},
     {"check_type", (PyCFunction)py_checkType, METH_VARARGS, "Checks the type of the specified packet"},
     {"get_arp_info", (PyCFunction)py_getArpInfo, METH_VARARGS, "Gets sender and target info from the specified arp packet"},
