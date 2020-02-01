@@ -152,7 +152,6 @@ namespace pinat
         return false;
     }
 
-#include <iostream>
     std::map<std::string, std::vector<std::string>*>* getDNSInfo(const unsigned long id)
     {
         Tins::DNS::resources_type answers;
