@@ -215,5 +215,28 @@ namespace pinat
         return ret;
     }
 
+    sqlite3* openDB(std::string path)
+    {
+        sqlite3* db;
+        if(sqlite3_open(path.c_str(), &db) != SQLITE_OK)
+        {
+            sqlite3_close(db);
+            throw std::runtime_error(sqlite3_errmsg(db));
+        }
+
+        return db;
+    }
+
+    void closeDB(sqlite3* db)
+    {
+        if(sqlite3_close_v2(db) != SQLITE_OK)
+            throw std::runtime_error(sqlite3_errmsg(db));
+    }
+
+    void execDB(sqlite3* db, std::string command)
+    {
+        if(sqlite3_exec(db, command.c_str(), NULL, NULL, NULL) != SQLITE_OK)
+            throw std::runtime_error(sqlite3_errmsg(db));   
+    }
 }
 }

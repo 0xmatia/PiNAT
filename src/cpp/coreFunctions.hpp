@@ -1,6 +1,7 @@
 #pragma once
 
 #include "packetPool.hpp"
+#include <sqlite3.h>
 #include <string>
 #include <map>
 #include <vector>
@@ -29,13 +30,17 @@ namespace pinat
      */
     std::map<std::string, std::vector<std::string>*>* getDNSInfo(const unsigned long id);
 
-
     void dropPacket(const unsigned long id);
-    
     
     /**
      * Returns basic infromation about Layer 2
      */
     std::vector<std::string>* getArpInfo(const unsigned long id);
+
+    sqlite3* openDB(std::string path);
+
+    void closeDB(sqlite3* db);
+
+    void execDB(sqlite3* db, std::string command);
 }
 }

@@ -235,4 +235,64 @@ extern "C"
         }
     }
 
+    PyObject* py_openDB(PyObject* self, PyObject* args)
+    {
+        char* path;
+    
+        if(!PyArg_ParseTuple(args, "s", &path)) {
+            return NULL;
+        }
+
+        PyObject* ret = nullptr;
+    
+        try {
+            ret = PyLong_FromVoidPtr((void*)pinat::openDB(path));
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_RuntimeError, e.what());
+            return NULL;
+        }
+
+        return ret;
+    }
+
+    PyObject* py_closeDB(PyObject* self, PyObject* args)
+    {
+        PyObject* pyPointer = nullptr;
+    
+        if(!PyArg_ParseTuple(args, "O", &pyPointer)) {
+            return NULL;
+        }
+    
+        void* dbPointer = PyLong_AsVoidPtr(pyPointer);
+
+        try {
+            pinat::closeDB((sqlite3*)dbPointer);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_RuntimeError, e.what());
+            return NULL;
+        }
+        
+        Py_RETURN_NONE;
+    }
+
+    PyObject* py_execDB(PyObject* self, PyObject* args)
+    {
+        PyObject* pyPointer = nullptr;
+        char* command;
+    
+        if(!PyArg_ParseTuple(args, "Os", &pyPointer, &command)) {
+            return NULL;
+        }
+    
+        void* dbPointer = PyLong_AsVoidPtr(pyPointer);
+
+        try {
+            pinat::execDB((sqlite3*)dbPointer, command);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_RuntimeError, e.what());
+            return NULL;
+        }
+        
+        Py_RETURN_NONE;
+    }   
 }

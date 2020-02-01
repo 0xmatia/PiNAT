@@ -8,8 +8,6 @@
 using std::cout;
 using std::endl;
 
-void checkSniffing(char* interface);
-
 int main(int argc, char** argv)
 {
 	if(getuid() != 0)
@@ -106,4 +104,5 @@ int main(int argc, char** argv)
 
 	cout << "Exiting" << endl;
 	delete s;
+	return 0;
 }

@@ -12,7 +12,10 @@ PyMethodDef core_methods[] = {
     {"drop_packet", (PyCFunction)py_dropPacket, METH_VARARGS, "Drops the specified packet"},
     {"check_type", (PyCFunction)py_checkType, METH_VARARGS, "Checks the type of the specified packet"},
     {"get_arp_info", (PyCFunction)py_getArpInfo, METH_VARARGS, "Gets sender and target info from the specified arp packet"},
-    {"get_dns_info", (PyCFunction)py_getDNSInfo, METH_VARARGS, "Returns a dictionary with the dns query responses."},
+    {"get_dns_info", (PyCFunction)py_getDNSInfo, METH_VARARGS, "Returns a dictionary with the dns query responses"},
+    {"open_db", (PyCFunction)py_openDB, METH_VARARGS, "opens connection to database"},
+    {"close_db", (PyCFunction)py_closeDB, METH_VARARGS, "closes connection to database"},
+    {"exec_db", (PyCFunction)py_execDB, METH_VARARGS, "executes a command in the database"},
     {NULL}  /* Sentinel */
 };
 
