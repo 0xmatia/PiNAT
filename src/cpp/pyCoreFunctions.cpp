@@ -31,7 +31,7 @@ extern "C"
             vec = pinat::getIPs(packetID);
         } catch(std::exception& e) {
             delete vec;
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
         
@@ -62,7 +62,7 @@ extern "C"
             vec = pinat::getPorts(packetID);
         } catch(std::exception& e) {
             delete vec;
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
         
@@ -93,13 +93,13 @@ extern "C"
             vec = pinat::getMACs(packetID);
         } catch(std::exception& e) {
             delete vec;
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
         
         if (vec)
         {
-            ret = Py_BuildValue("II", vec->at(0), vec->at(1));
+            ret = Py_BuildValue("ss", vec->at(0).c_str(), vec->at(1).c_str());
             delete vec;
             return ret;
         }
@@ -128,7 +128,7 @@ extern "C"
                 Py_RETURN_FALSE;
             }
         } catch(std::exception& e) {
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
     }
@@ -144,7 +144,7 @@ extern "C"
         try {
             pinat::dropPacket(packetID);
         } catch(std::exception& e) {
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
     
@@ -166,7 +166,7 @@ extern "C"
             vec = pinat::getArpInfo(packetID);
         } catch(std::exception& e) {
             delete vec;
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
         
@@ -198,7 +198,7 @@ extern "C"
             dnsInfo = pinat::getDNSInfo(packetID);
         } catch(std::exception& e) {
             delete dnsInfo;
-            PyErr_SetString(PyExc_KeyError, e.what());
+            PyErr_SetString(PyExc_RuntimeError, e.what());
             return NULL;
         }
 
