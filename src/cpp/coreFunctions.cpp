@@ -2,202 +2,194 @@
 #include <map>
 
 
-const std::map<Tins::PDU::PDUType, std::string> typeMap = {
-		{Tins::PDU::PDU::RAW, "RAW"},
-        {Tins::PDU::ETHERNET_II, "ETHERNET_II"},
-        {Tins::PDU::IEEE802_3, "IEEE802_3"},
-        {Tins::PDU::RADIOTAP, "RADIOTAP"},
-        {Tins::PDU::DOT11, "DOT11"},
-        {Tins::PDU::DOT11_ACK, "DOT11_ACK"},
-        {Tins::PDU::DOT11_ASSOC_REQ, "DOT11_ASSOC_REQ"},
-        {Tins::PDU::DOT11_ASSOC_RESP, "DOT11_ASSOC_RESP"},
-        {Tins::PDU::DOT11_AUTH, "DOT11_AUTH"},
-        {Tins::PDU::DOT11_BEACON, "DOT11_BEACON"},
-        {Tins::PDU::DOT11_BLOCK_ACK, "DOT11_BLOCK_ACK"},
-        {Tins::PDU::DOT11_BLOCK_ACK_REQ, "DOT11_BLOCK_ACK_REQ"},
-        {Tins::PDU::DOT11_CF_END, "DOT11_CF_END"},
-        {Tins::PDU::DOT11_DATA, "DOT11_DATA"},
-        {Tins::PDU::DOT11_CONTROL, "DOT11_CONTROL"},
-        {Tins::PDU::DOT11_DEAUTH, "DOT11_DEAUTH"},
-        {Tins::PDU::DOT11_DIASSOC, "DOT11_DIASSOC"},
-        {Tins::PDU::DOT11_END_CF_ACK, "DOT11_END_CF_ACK"},
-        {Tins::PDU::DOT11_MANAGEMENT, "DOT11_MANAGEMENT"},
-        {Tins::PDU::DOT11_PROBE_REQ, "DOT11_PROBE_REQ"},
-        {Tins::PDU::DOT11_PROBE_RESP, "DOT11_PROBE_RESP"},
-        {Tins::PDU::DOT11_PS_POLL, "DOT11_PS_POLL"},
-        {Tins::PDU::DOT11_REASSOC_REQ, "DOT11_REASSOC_REQ"},
-        {Tins::PDU::DOT11_REASSOC_RESP, "DOT11_REASSOC_RESP"},
-        {Tins::PDU::DOT11_RTS, "DOT11_RTS"},
-        {Tins::PDU::DOT11_QOS_DATA, "DOT11_QOS_DATA"},
-        {Tins::PDU::LLC, "LLC"},
-        {Tins::PDU::SNAP, "SNAP"},
-        {Tins::PDU::IP, "IP"},
-        {Tins::PDU::ARP, "ARP"},
-        {Tins::PDU::TCP, "TCP"},
-        {Tins::PDU::UDP, "UDP"},
-        {Tins::PDU::ICMP, "ICMP"},
-        {Tins::PDU::BOOTP, "BOOTP"},
-        {Tins::PDU::DHCP, "DHCP"},
-        {Tins::PDU::EAPOL, "EAPOL"},
-        {Tins::PDU::RC4EAPOL, "RC4EAPOL"},
-        {Tins::PDU::RSNEAPOL, "RSNEAPOL"},
-        {Tins::PDU::DNS, "DNS"},
-        {Tins::PDU::LOOPBACK, "LOOPBACK"},
-        {Tins::PDU::IPv6, "IPv6"},
-        {Tins::PDU::ICMPv6, "ICMPv6"},
-        {Tins::PDU::SLL, "SLL"},
-        {Tins::PDU::DHCPv6, "DHCPv6"},
-        {Tins::PDU::DOT1AD, "DOT1AD"},
-        {Tins::PDU::DOT1Q, "DOT1Q"},
-        {Tins::PDU::PPPOE, "PPPOE"},
-        {Tins::PDU::STP, "STP"},
-        {Tins::PDU::PPI, "PPI"},
-        {Tins::PDU::IPSEC_AH, "IPSEC_AH"},
-        {Tins::PDU::IPSEC_ESP, "IPSEC_ESP"},
-        {Tins::PDU::PKTAP, "PKTAP"},
-        {Tins::PDU::MPLS, "MPLS"},
-        {Tins::PDU::UNKNOWN, "UNKNOWN"}
+const std::map<std::string, Tins::PDU::PDUType> typeMap = {
+		{"RAW", Tins::PDU::RAW},
+        {"ETHERNET_II", Tins::PDU::ETHERNET_II},
+        {"IEEE802_3", Tins::PDU::IEEE802_3},
+        {"RADIOTAP", Tins::PDU::RADIOTAP},
+        {"DOT11", Tins::PDU::DOT11},
+        {"DOT11_ACK", Tins::PDU::DOT11_ACK},
+        {"DOT11_ASSOC_REQ", Tins::PDU::DOT11_ASSOC_REQ},
+        {"DOT11_ASSOC_RESP", Tins::PDU::DOT11_ASSOC_RESP},
+        {"DOT11_AUTH", Tins::PDU::DOT11_AUTH},
+        {"DOT11_BEACON", Tins::PDU::DOT11_BEACON},
+        {"DOT11_BLOCK_ACK", Tins::PDU::DOT11_BLOCK_ACK},
+        {"DOT11_BLOCK_ACK_REQ", Tins::PDU::DOT11_BLOCK_ACK_REQ},
+        {"DOT11_CF_END", Tins::PDU::DOT11_CF_END},
+        {"DOT11_DATA", Tins::PDU::DOT11_DATA},
+        {"DOT11_CONTROL", Tins::PDU::DOT11_CONTROL},
+        {"DOT11_DEAUTH", Tins::PDU::DOT11_DEAUTH},
+        {"DOT11_DIASSOC", Tins::PDU::DOT11_DIASSOC},
+        {"DOT11_END_CF_ACK", Tins::PDU::DOT11_END_CF_ACK},
+        {"DOT11_MANAGEMENT", Tins::PDU::DOT11_MANAGEMENT},
+        {"DOT11_PROBE_REQ", Tins::PDU::DOT11_PROBE_REQ},
+        {"DOT11_PROBE_RESP", Tins::PDU::DOT11_PROBE_RESP},
+        {"DOT11_PS_POLL", Tins::PDU::DOT11_PS_POLL},
+        {"DOT11_REASSOC_REQ", Tins::PDU::DOT11_REASSOC_REQ},
+        {"DOT11_REASSOC_RESP", Tins::PDU::DOT11_REASSOC_RESP},
+        {"DOT11_RTS", Tins::PDU::DOT11_RTS},
+        {"DOT11_QOS_DATA", Tins::PDU::DOT11_QOS_DATA},
+        {"LLC", Tins::PDU::LLC},
+        {"SNAP", Tins::PDU::SNAP},
+        {"IP", Tins::PDU::IP},
+        {"ARP", Tins::PDU::ARP},
+        {"TCP", Tins::PDU::TCP},
+        {"UDP", Tins::PDU::UDP},
+        {"ICMP", Tins::PDU::ICMP},
+        {"BOOTP", Tins::PDU::BOOTP},
+        {"DHCP", Tins::PDU::DHCP},
+        {"EAPOL", Tins::PDU::EAPOL},
+        {"RC4EAPOL", Tins::PDU::RC4EAPOL},
+        {"RSNEAPOL", Tins::PDU::RSNEAPOL},
+        {"DNS", Tins::PDU::DNS},
+        {"LOOPBACK", Tins::PDU::LOOPBACK},
+        {"IPv6", Tins::PDU::IPv6},
+        {"ICMPv6", Tins::PDU::ICMPv6},
+        {"SLL", Tins::PDU::SLL},
+        {"DHCPv6", Tins::PDU::DHCPv6},
+        {"DOT1AD", Tins::PDU::DOT1AD},
+        {"DOT1Q", Tins::PDU::DOT1Q},
+        {"PPPOE", Tins::PDU::PPPOE},
+        {"STP", Tins::PDU::STP},
+        {"PPI", Tins::PDU::PPI},
+        {"IPSEC_AH", Tins::PDU::IPSEC_AH},
+        {"IPSEC_ESP", Tins::PDU::IPSEC_ESP},
+        {"PKTAP", Tins::PDU::PKTAP},
+        {"MPLS", Tins::PDU::MPLS},
+        {"UNKNOWN", Tins::PDU::UNKNOWN}
 };
 
 extern "C"
 {
+namespace pinat
+{
     // The packet pool instance
     pinat::PacketPool* pp = nullptr;
 
-    void pinat::initCore(pinat::PacketPool* pool)
+    void initCore(pinat::PacketPool* pool)
     {
         pp = pool;
-        //or pp = new PacketPool(), because we have a static field!
     }
 
-    std::string pinat::getSrcIp(const unsigned long id)
+    std::vector<std::string>* getIPs(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
         Tins::IP* ip = packet->find_pdu<Tins::IP>();
+        std::vector<std::string>* ret = nullptr;
 
-        if(ip)
-            return ip->src_addr().to_string();
-        else
-            return ""; // which means no src ip
-    }
-
-
-    std::string pinat::getDstIp(const unsigned long id)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        Tins::IP* ip = packet->find_pdu<Tins::IP>();
-        
         if (ip)
-            return ip->dst_addr().to_string();
-        else
-            return ""; // which means no dst ip
+        {
+            ret = new std::vector<std::string>;
+            ret->push_back(ip->src_addr().to_string());
+            ret->push_back(ip->dst_addr().to_string());
+        }
+
+        return ret;
     }
     
-    uint16_t pinat::getSrcPort(const unsigned long id)
+    std::vector<unsigned int>* getPorts(const unsigned long id)
     {
         Tins::PDU* packet = pp->getPacket(id);
         Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
-    
-        if (tcp == 0)
+        Tins::UDP* udp = nullptr;
+        std::vector<unsigned int>* ret = nullptr;
+
+        if(tcp != 0)
         {
-            // Tcp not found, search for udp
-            Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
-            if (udp == 0)
-            {
-                return 0; // no udp, no port
-            }
-            return udp->sport();
+            ret = new std::vector<unsigned int>;
+            ret->push_back(tcp->sport());
+            ret->push_back(tcp->dport());
         }
-        return tcp->sport();
-    }
-    
-    
-    uint16_t pinat::getDstPort(const unsigned long id)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        Tins::TCP* tcp = packet->find_pdu<Tins::TCP>();
-    
-        if (tcp == 0)
+        else
         {
-            // Tcp not found, search for udp
-            Tins::UDP* udp = packet->find_pdu<Tins::UDP>();
-            if (udp == 0)
+            udp = packet->find_pdu<Tins::UDP>();
+            if(udp != 0)
             {
-                return 0; // no udp, no port
+                ret = new std::vector<unsigned int>;
+                ret->push_back(udp->sport());
+                ret->push_back(udp->dport());
             }
-            return udp->dport();
-        }
-        return tcp->dport();
-    }
-    
-    
-    std::string pinat::getSrcMAC(const unsigned long id)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-        if (eth)
-            return eth->src_addr().to_string();
-        else
-            return ""; // which means no mac
-    }
-    
-    
-    std::string pinat::getDstMAC(const unsigned long id)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-        if (eth)
-            return eth->dst_addr().to_string();
-        else
-            return ""; // which means no mac
-    }
-    
-    
-    bool pinat::checkType(const unsigned long id, std::string type)
-    {
-        Tins::PDU* packet = pp->getPacket(id);
-        bool ret = false;
-    
-        std::map<Tins::PDU::PDUType, std::string>::const_iterator it;
-        std::map<Tins::PDU::PDUType, std::string>::const_iterator mapEnd = typeMap.end();
-    
-        while(packet && !ret)
-        {
-            it = typeMap.find(packet->pdu_type());
-            ret = it != mapEnd && type == it->second;
-            packet = packet->inner_pdu();
         }
         
         return ret;
     }
-
-    std::map<std::string, std::vector<std::string>*> pinat::getDNSInfo(const unsigned long id)
+    
+    std::vector<std::string>* getMACs(const unsigned long id)
     {
-        std::map<std::string, std::vector<std::string>*> dnsInfo;
-        if (pinat::getSrcPort(id) == 53)
-        {
-            Tins::PDU* packet = pp->getPacket(id);
-            Tins::DNS dns = packet->rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
-            if (dns.type() == Tins::DNS::RESPONSE)
-            {
-                //Answers found in the DNS
-                Tins::DNS::resources_type answers = dns.answers();
+        Tins::PDU* packet = pp->getPacket(id);
+        Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
+        std::vector<std::string>* ret = nullptr;
 
-                for (auto i : answers)
-                {
-                    if (i.query_type() == Tins::DNS::CNAME) continue; // skip cnames
-                    std::string dname = i.dname();
-                    std::string ip = i.data();
-                    if (dnsInfo.find(dname) == dnsInfo.end()) 
-                    {
-                        //if the dname doesn't exist in the map, add it.
-                        dnsInfo[dname] = new std::vector<std::string>();
-                    }
-                    dnsInfo[dname]->push_back(ip);
-                }
+        if (eth)
+        {
+            ret = new std::vector<std::string>;
+            ret->push_back(eth->src_addr().to_string());
+            ret->push_back(eth->dst_addr().to_string());
+        }
+
+        return ret;
+    }
+
+    bool checkType(const unsigned long id, std::string type)
+    {
+        Tins::PDU* packet = pp->getPacket(id);
+        std::map<std::string, Tins::PDU::PDUType>::const_iterator it = typeMap.find(type);
+        
+        if(it != typeMap.end())
+        {
+            while(packet)
+            {
+                if(packet->matches_flag(it->second))
+                    return true;
+                packet = packet->inner_pdu();
             }
         }
-        return dnsInfo; // return empty vector if packet is not valid
+        else
+        {
+            throw std::runtime_error("checkType: type doesn't exist");
+        }
+        
+        return false;
+    }
+
+    std::map<std::string, std::vector<std::string>*>* getDNSInfo(const unsigned long id)
+    {
+        Tins::DNS::resources_type answers;
+        std::map<std::string, std::vector<std::string>*>* dnsInfo = nullptr;
+        Tins::RawPDU* raw = pp->getPacket(id)->find_pdu<Tins::RawPDU>();
+        Tins::DNS dns;
+        
+        try {
+            if(raw)
+                dns = raw->to<Tins::DNS>();
+            else
+                return nullptr;
+        } catch (Tins::malformed_packet& e) {
+            return nullptr;
+        }
+        
+        if (dns.type() == Tins::DNS::RESPONSE)
+        {
+            dnsInfo = new std::map<std::string, std::vector<std::string>*>;
+            //Answers found in the DNS
+            answers = dns.answers();
+
+            for (Tins::DNS::resource resource : answers)
+            {
+                if (resource.query_type() == Tins::DNS::CNAME) continue; // skip cnames
+                
+                std::string dname = resource.dname();
+                std::string ip = resource.data();
+                if (dnsInfo->find(dname) == dnsInfo->end()) 
+                {
+                    //if the dname doesn't exist in the map, add it.
+                    (*dnsInfo)[dname] = new std::vector<std::string>();
+                }
+                (*dnsInfo)[dname]->push_back(ip);
+            }
+        }
+
+        return dnsInfo;
     }
     
     void dropPacket(const unsigned long id)
@@ -223,4 +215,28 @@ extern "C"
         return ret;
     }
 
+    sqlite3* openDB(std::string path)
+    {
+        sqlite3* db;
+        if(sqlite3_open(path.c_str(), &db) != SQLITE_OK)
+        {
+            sqlite3_close(db);
+            throw std::runtime_error(sqlite3_errmsg(db));
+        }
+
+        return db;
+    }
+
+    void closeDB(sqlite3* db)
+    {
+        if(sqlite3_close_v2(db) != SQLITE_OK)
+            throw std::runtime_error(sqlite3_errmsg(db));
+    }
+
+    void execDB(sqlite3* db, std::string command)
+    {
+        if(sqlite3_exec(db, command.c_str(), NULL, NULL, NULL) != SQLITE_OK)
+            throw std::runtime_error(sqlite3_errmsg(db));   
+    }
+}
 }

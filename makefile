@@ -34,7 +34,7 @@ ${ODIR}/%.o: ${SDIR}/%.cpp
 	${COMP} -c $< -o $@ -I${EDIR}
 
 ${DBIN}: ${DOBJ}
-	${COMP} -o $@ $^ -L${EDIR} -ltins
+	${COMP} -o $@ $^ ${EDIR}/sqlite3.o -L${EDIR} -ltins -lpthread -ldl
 
 clean:
 	@rm -rvf ${ODIR}
