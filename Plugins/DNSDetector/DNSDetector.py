@@ -3,6 +3,7 @@ from Plugin_Observer import plugin
 from bin import pynat
 import threading
 import socket
+import sqlite3, os
 
 
 #Notes:
@@ -18,13 +19,17 @@ class DNSDetector(plugin):
         self.description = "Alerts if DNS poisoning occured"
         self.author = "Elad Matia"
         self.priority = 324786
+        self.actions = ["get_log"]
+        self.dbname = "DNSDetector.db"
+        self.safe_ips = []
 
     def process(self, packet):
         # check if the packet is a DNS response
         # if pynat.check_type(packet, "DNS"):
         if pynat.get_src_port(packet) == 53:
             dns_info = pynat.get_dns_info(packet)
-            thread = threading.Thread(target=self.dns_reslover, args=(dns_info,))
+            attacker_ip = pynat.get_src_ip(packet)
+            thread = threading.Thread(target=self.dns_reslover, args=(dns_info, attacker_ip))
 
             thread.daemon = True
             thread.start()
@@ -32,7 +37,7 @@ class DNSDetector(plugin):
         return packet
 
 
-    def dns_reslover(self, dns_info):
+    def dns_reslover(self, dns_info, attacker_ip):
         dns_response = []
         unmateched_ips = []
     
@@ -63,15 +68,66 @@ class DNSDetector(plugin):
                 if suspect in dns_response:
                     unmateched_ips.remove(suspect)
 
+            for known_ip in self.known_ips:
+                if known_ip in unmateched_ips:
+                    unmateched_ips.remove(known_ip)
+            
+            
             if len(unmateched_ips) != 0:
-                print("Warning - possible DNS poisoning attack detected")
-                print(dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1")
+                print("[DNSDetector] - WARNING: " + dname + " returned different result while checking against 8.8.8.8 and 1.1.1.1. ", end="")
                 print("Suspected IP(S): " + str(unmateched_ips))
                 print()
 
-                
+                os.chdir(os.path.dirname(__file__))
+                conn = sqlite3.connect(self.dbname)
+                cursor = conn.cursor()
+                cursor.execute("""INSERT INTO LOG VALUES (?, ?, ?, DATETIME("now", "localtime"))""", (attacker_ip, dname, ','.join(unmateched_ips)))
+                conn.commit()
+                conn.close()
+
+    
     def setup(self):
-        pass
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        
+        #create table log if it doesn't exist
+        cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (ATTACKER_IP TEXT NOT NULL,
+        DOMAIN TEXT NOT NULL, SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL)""")
+        conn.commit()
+        conn.close()
+
+        with open("known_ips.txt", 'r') as f:
+            self.known_ips = [line.rstrip() for line in f]
+
+
+    def get_actions(self):
+        return self.actions
+
+
+    def get_log(self):
+        answer_array = []
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT * FROM LOG")
+        db_res = cursor.fetchall()
+        conn.commit()
+        conn.close()
+    
+        for entry in db_res:
+            answer_array.append({"attacker:": entry[0], "domain": entry[1], "suspected_ips": entry[2].split(","), "time": entry[3]})
+
+        return {"result": answer_array}
+
+
+    def delete_database(self):
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM LOG")
+        conn.commit()
+        conn.close()
 
 
     def teardown(self):

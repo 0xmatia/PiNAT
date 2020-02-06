@@ -14,8 +14,7 @@ class IPBlocker(plugin):
         self.author = "Ofri Marx"
         self.priority = 1000
         self.dbname = "IPBlocker.db"
-
-        self.blacklist = []
+        self.actions = ["get_blocked_ips", "get_blocked_stats"]
 
 
     def process(self, packet):
@@ -26,7 +25,7 @@ class IPBlocker(plugin):
             src_ip = pynat.get_src_ip(packet)
             conn = sqlite3.connect(self.dbname)
             cursor = conn.cursor()
-            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now"))""", (src_ip, dst_addr))
+            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now", "localtime"))""", (src_ip, dst_addr))
             conn.commit()
             conn.close()
 
@@ -37,19 +36,13 @@ class IPBlocker(plugin):
 
 
     def setup(self):
-        with open("Plugins/IPBlocker/blacklist.txt", "r") as input_file:
-            self.blacklist = input_file.read().splitlines()
-        # initialize database
-        self.init_database(self.dbname)
         os.chdir(os.path.dirname(__file__))
+        with open("blacklist.txt", "r") as input_file:
+            self.blacklist = input_file.read().splitlines()
         # insert plugin-specifc actions to action table
         conn = sqlite3.connect(self.dbname)
         cursor = conn.cursor()
-
-        cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('get_blocked_ips')")
-        cursor.execute("INSERT OR IGNORE INTO ACTIONS VALUES('blocked_stats')")
-        conn.commit()
-
+        
         #create table log if it doesn't exist
         cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, 
         BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL)""")
@@ -59,25 +52,36 @@ class IPBlocker(plugin):
     
     # return a list of available actions!
     def get_actions(self):
-        os.chdir(os.path.dirname(__file__))
-        action_list = []
-        conn = sqlite3.connect("IPBlocker.db")
-        cursor = conn.cursor()
+        return self.actions
 
-        cursor.execute("SELECT * FROM ACTIONS")
-        result = cursor.fetchall()
+
+    def delete_database(self):
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM LOG")
         conn.commit()
         conn.close()
 
-        for action in result:
-            action_list.append(action[0])
-
-        return action_list
-
 
     def get_blocked_ips(self):
-        return {"blocked_ips": self.blacklist}
+        return {"result": self.blacklist}
 
+
+    def get_blocked_stats(self):
+        answer_array = []
+        os.chdir(os.path.dirname(__file__))
+        conn = sqlite3.connect(self.dbname)
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT * FROM LOG")
+        db_res = cursor.fetchall()
+        conn.commit()
+        conn.close()
+
+        for entry in db_res:
+            answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})
+
+        return {"result": answer_array}
 
     def teardown(self):
         pass

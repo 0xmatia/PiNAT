@@ -44,6 +44,13 @@ class ListPluginActions(Resource):
             return {"actions": action_list}
         except KeyError:
             return {"status": "Plugin was not found"}, 500
+
+    def delete(self, plugin: str):
+        try:
+            plugins_dictionary[plugin].delete_database()
+            return {"status": "success"}
+        except KeyError:
+            return {"status": "Plugin was not found"}, 500
     
 
 """
@@ -60,7 +67,6 @@ class PluginAction(Resource):
         except AttributeError:
             return {"status": "invalid action"}, 500
 
-
 # add resources to API
 api.add_resource(Root, "/")
 api.add_resource(ListPluginActions, "/<string:plugin>")
@@ -71,4 +77,4 @@ if __name__ == "__main__":
     current_path = os.getcwd() # save curred pwd
     load_plugins()
     os.chdir(current_path) #restore path
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

@@ -4,13 +4,13 @@ class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
 
-    def __init__(self, name, author, version, description, plugin_type, priority):
+    def __init__(self, name, author, version, description, plugin_type, priority, dbname, actions):
         """In order to load a plugin, we need to have the following information:
         - name of the plugin
         - author/s of the plugin
         - the current version of the plugin 
         - the description of the plugin - what does it do?
-        - the plugin type (maybe in the future this will come in handy)
+        - the plugin type (maybe in the future this will come in handy) 
         It is possible and even recommended to have a config file and load the information from there
         """
         self.name = name
@@ -19,6 +19,8 @@ class plugin:
         self.description = description
         self.type = plugin_type
         self.priority = priority
+        self.dbname = dbname
+        self.actions = actions
 
     # Now here we can add all the methods the plugin has to have:
     
@@ -43,17 +45,18 @@ class plugin:
         raise NotImplementedError
 
 
-    def init_database(self, name: str):
-        old_path = os.getcwd()
-        os.chdir("Plugins/" + name[:len(name)-3]) # without the extension
+    def get_actions(self):
+        """
+        Will return list of methods of the plugin
+        """
+        raise NotImplementedError
 
-        conn = sqlite3.connect(name) 
-        cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS ACTIONS (ACTION TEXT NOT NULL UNIQUE)''')
-        conn.commit()
-        conn.close()
 
-        os.chdir(old_path)
+    def delete_database(self):
+        """
+        Will delete the database
+        """
+        raise NotImplementedError
 
 
 ###########################################################################################################
