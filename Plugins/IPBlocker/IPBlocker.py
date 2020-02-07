@@ -14,13 +14,15 @@ class IPBlocker(plugin):
         self.author = "Ofri Marx"
         self.priority = 1000
         self.actions = ["get_blocked_ips", "get_blocked_stats"]
+        
         self.blacklist = []
+        self.db = 0
 
 
     def process(self, packet):
         src_addr, dst_addr = pynat.get_ips(packet)
         if dst_addr in self.blacklist:
-            pynat.exec_db(self.db, "INSERT INTO LOG VALUES ('{}', '{}', DATETIME('now', 'localtime'))".format(src_addr, dst_addr))
+            pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES ('{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))".format(src_addr, dst_addr))
             pynat.drop_packet(packet)
             return None
 
@@ -28,12 +30,12 @@ class IPBlocker(plugin):
 
 
     def setup(self):
-        with open("blacklist.txt", "r") as input_file:
-            self.blacklist = input_file.read().splitlines()
-        
-        self.db = pynat.open_db("IPBlocker.db")
-        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL)")
-        
+        self.db = pynat.open_db("{}.db".format(self.name))
+        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL, UNIQUE(SRC_IP, BLOCKED_IP, TIME))")
+        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS BLACKLIST (BLOCKED_IP TEXT NOT NULL)")
+
+        self.blacklist = [row[0] for row in pynat.select_db(self.db, "SELECT BLOCKED_IP FROM BLACKLIST")]
+
 
     def teardown(self):
         pynat.close_db(self.db)
@@ -45,12 +47,7 @@ class IPBlocker(plugin):
 
 
     def delete_database(self):
-        os.chdir(os.path.dirname(__file__))
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM LOG")
-        conn.commit()
-        conn.close()
+        pynat.exec_db(self.db, "DELETE FROM LOG")
 
 
     def get_blocked_ips(self):
@@ -59,13 +56,7 @@ class IPBlocker(plugin):
 
     def get_blocked_stats(self):
         answer_array = []
-        os.chdir(os.path.dirname(__file__))
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT * FROM LOG")
-        db_res = cursor.fetchall()
-        conn.commit()
-        conn.close()
+        db_res = pynat.exec_db("SELECT * FROM LOG")
 
         for entry in db_res:
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})

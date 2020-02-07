@@ -12,8 +12,9 @@ class ARPDetector(plugin):
         self.author = "Ofri Marx"
         self.priority = 5
         self.actions = ["get_log"]
-        self.dbname = "ARPDetector.db"
+        
         self.arp_table = {}
+        self.db = 0
 
 
     def process(self, packet):
@@ -26,27 +27,18 @@ class ARPDetector(plugin):
             self.arp_table[sender_ip] = sender_mac
         elif self.arp_table[sender_ip] != sender_mac:
             print("detected possible arp spoofing of address {}\npossible devices: {} or {}".format(sender_ip, sender_mac, self.arp_table[sender_ip]))
-            os.chdir(os.path.dirname(__file__))
-            conn = sqlite3.connect(self.dbname)
-            cursor = conn.cursor()
-            
-            cursor.execute("""INSERT INTO LOG VALUES (?, ?, ?, DATETIME("now", "localtime"))""", \
-            (sender_ip, sender_mac, self.arp_table[sender_ip]))
-            conn.commit()
-            conn.close()
+            pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES ('{}', '{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))".format(sender_ip, sender_mac, self.arp_table[sender_ip]))
 
         return packet
 
 
     def setup(self):
-        os.chdir(os.path.dirname(__file__))
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
-        
-        cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (SENDER_IP TEXT NOT NULL,
-        SENDER_MAC_ONE TEXT NOT NULL, SENDER_MAC_TWO TEXT NOT NULL, TIME TEXT NOT NULL)""")
-        conn.commit()
-        conn.close()
+        self.db = pynat.open_db("{}.db".format(self.name))
+        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SENDER_IP TEXT NOT NULL, SENDER_MAC TEXT NOT NULL, SAVED_MAC TEXT NOT NULL, TIME TEXT NOT NULL, UNIQUE(SENDER_IP, SENDER_MAC, TIME))")
+
+
+    def teardown(self):
+        pynat.close_db(self.db)
 
 
     def get_actions(self):
@@ -55,28 +47,13 @@ class ARPDetector(plugin):
     
     def get_log(self):
         answer_array = []
-        os.chdir(os.path.dirname(__file__))
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT * FROM LOG")
-        db_res = cursor.fetchall()
-        conn.commit()
-        conn.close()
+        db_res = pynat.select_db(self.db, "SELECT * FROM LOG")
     
         for entry in db_res:
-            answer_array.append({"sender_ip:": entry[0], "sender_mac": entry[1], "conflicted_mac": entry[2].split(","), "time": entry[3]})
+            answer_array.append({"sender_ip:": entry[0], "sender_mac": entry[1], "conflicted_mac": entry[2], "time": entry[3]})
 
         return {"result": answer_array}
 
 
     def delete_database(self):
-        os.chdir(os.path.dirname(__file__))
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM LOG")
-        conn.commit()
-        conn.close()
-
-
-    def teardown(self):
-        pass
+        pynat.exec_db(self.db, "DELETE FROM LOG")
