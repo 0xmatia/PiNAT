@@ -15,4 +15,5 @@ extern "C" {
     PyObject* py_openDB(PyObject* self, PyObject* args);
     PyObject* py_closeDB(PyObject* self, PyObject* args);
     PyObject* py_execDB(PyObject* self, PyObject* args);
+    PyObject* py_selectDB(PyObject* self, PyObject* args);
 }

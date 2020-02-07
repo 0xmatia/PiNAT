@@ -42,5 +42,7 @@ namespace pinat
     void closeDB(sqlite3* db);
 
     void execDB(sqlite3* db, std::string command);
+
+    std::vector<std::vector<std::string>*>* selectDB(sqlite3* db, std::string command);
 }
 }

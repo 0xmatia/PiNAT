@@ -16,6 +16,7 @@ PyMethodDef core_methods[] = {
     {"open_db", (PyCFunction)py_openDB, METH_VARARGS, "opens connection to database"},
     {"close_db", (PyCFunction)py_closeDB, METH_VARARGS, "closes connection to database"},
     {"exec_db", (PyCFunction)py_execDB, METH_VARARGS, "executes a command in the database"},
+    {"select_db", (PyCFunction)py_selectDB, METH_VARARGS, "executes a command in the database and returns the result"},
     {NULL}  /* Sentinel */
 };
 

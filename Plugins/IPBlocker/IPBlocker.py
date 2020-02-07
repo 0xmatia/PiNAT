@@ -13,22 +13,14 @@ class IPBlocker(plugin):
         self.description = "Blocks certain external ip addresses"
         self.author = "Ofri Marx"
         self.priority = 1000
-        self.dbname = "IPBlocker.db"
         self.actions = ["get_blocked_ips", "get_blocked_stats"]
+        self.blacklist = []
 
 
     def process(self, packet):
-        dst_addr = pynat.get_dst_ip(packet)
+        src_addr, dst_addr = pynat.get_ips(packet)
         if dst_addr in self.blacklist:
-            # we are dropping the packet anyway, second delay won't kill anyone
-            os.chdir(os.path.dirname(__file__))
-            src_ip = pynat.get_src_ip(packet)
-            conn = sqlite3.connect(self.dbname)
-            cursor = conn.cursor()
-            cursor.execute("""INSERT INTO LOG VALUES (?, ?, DATETIME("now", "localtime"))""", (src_ip, dst_addr))
-            conn.commit()
-            conn.close()
-
+            pynat.exec_db(self.db, "INSERT INTO LOG VALUES ('{}', '{}', DATETIME('now', 'localtime'))".format(src_addr, dst_addr))
             pynat.drop_packet(packet)
             return None
 
@@ -36,18 +28,15 @@ class IPBlocker(plugin):
 
 
     def setup(self):
-        os.chdir(os.path.dirname(__file__))
         with open("blacklist.txt", "r") as input_file:
             self.blacklist = input_file.read().splitlines()
-        # insert plugin-specifc actions to action table
-        conn = sqlite3.connect(self.dbname)
-        cursor = conn.cursor()
         
-        #create table log if it doesn't exist
-        cursor.execute(""" CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, 
-        BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL)""")
-        conn.commit()
-        conn.close()
+        self.db = pynat.open_db("IPBlocker.db")
+        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL)")
+        
+
+    def teardown(self):
+        pynat.close_db(self.db)
 
     
     # return a list of available actions!
@@ -82,6 +71,3 @@ class IPBlocker(plugin):
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})
 
         return {"result": answer_array}
-
-    def teardown(self):
-        pass

@@ -294,5 +294,49 @@ extern "C"
         }
         
         Py_RETURN_NONE;
-    }   
+    }
+
+    PyObject* py_selectDB(PyObject* self, PyObject* args)
+    {
+        PyObject* pyPointer = nullptr;
+        char* command;
+    
+        if(!PyArg_ParseTuple(args, "Os", &pyPointer, &command)) {
+            return NULL;
+        }
+    
+        void* dbPointer = PyLong_AsVoidPtr(pyPointer);
+        std::vector<std::vector<std::string>*>* table = nullptr;
+        std::vector<std::string>* row = nullptr;
+        PyObject *pyTable, *pyRow;
+
+        try {
+            table = pinat::selectDB((sqlite3*)dbPointer, command);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_RuntimeError, e.what());
+            return NULL;
+        }
+
+        if(table)
+        {
+            pyTable = PyList_New(table->size());
+            for(unsigned int i=0; i<table->size(); i++)
+            {
+                row = table->at(i);
+                pyRow = PyList_New(row->size());
+                for(unsigned int j=0; j<row->size(); j++)
+                    PyList_SetItem(pyRow, j, PyUnicode_FromString(row->at(j).c_str()));
+                PyList_SetItem(pyTable, i, pyRow);
+                
+                delete row;
+            }
+            delete table;
+
+            return pyTable;
+        }
+        else
+        {
+            Py_RETURN_NONE;
+        }
+    }
 }

@@ -16,7 +16,7 @@ def main():
     # Start hotspot and routing
     try:
         wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
-    except Exception as e:
+    except Exception:
         print_exc()
         print("PiNAT is terminating")
         exit(1)
@@ -29,7 +29,7 @@ def main():
     try:
         sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
         pynat.init_core(sniffer.get_pool())
-    except Exception as e:
+    except Exception:
         print_exc()
         print("terminating now")
         Routing_Tools.cleanup(wifi_adapter, eth_adapter, argv[1])
@@ -49,7 +49,7 @@ def main():
                 sniffer.forward_packet(packet)
     except KeyboardInterrupt:
         print("Interrupt detected, terminating now")
-    except Exception as e:
+    except Exception:
         print_exc()
         print("terminating now")
     

@@ -238,5 +238,33 @@ namespace pinat
         if(sqlite3_exec(db, command.c_str(), NULL, NULL, NULL) != SQLITE_OK)
             throw std::runtime_error(sqlite3_errmsg(db));   
     }
+
+    static int selectDB_callback(void* param, int count, char** data, char** columns)
+    {
+        std::vector<std::vector<std::string>*>* table = (std::vector<std::vector<std::string>*>*)param;
+        std::vector<std::string>* row = new std::vector<std::string>;
+
+        for(int i=0; i<count; i++)
+        {
+            row->push_back(data[i]);
+        }
+
+        table->push_back(row);
+
+        return 0;
+    }
+
+    std::vector<std::vector<std::string>*>* selectDB(sqlite3* db, std::string command)
+    {
+        std::vector<std::vector<std::string>*>* table = new std::vector<std::vector<std::string>*>;
+        if(sqlite3_exec(db, command.c_str(), selectDB_callback, table, NULL) != SQLITE_OK)
+        {
+            for(unsigned int i=0; i<table->size(); i++)
+                delete table->at(i);
+            delete table;
+            throw std::runtime_error(sqlite3_errmsg(db));
+        }
+        return table;
+    }
 }
 }

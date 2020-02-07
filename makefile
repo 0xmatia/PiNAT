@@ -40,10 +40,8 @@ clean:
 	@rm -rvf ${ODIR}
 	@find Plugins src -name __pycache__ -type d -exec rm -rvf '{}' +
 
-cleanall:
-	@rm -rvf ${ODIR}
+cleanall: clean
 	@rm -rvf ${BDIR}
-	@find Plugins src -name __pycache__ -type d -exec rm -rvf '{}' +
 
 install:
 	cp ${EDIR}/libtins.so /usr/lib/
