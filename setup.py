@@ -7,7 +7,7 @@ def main():
           description="Python PiNAT library",
           author="Ofri Marx & Elad Matia",
           author_email="ofrikm@gmail.com",
-          ext_modules=[Extension("pynat", ["src/cpp/pynat.cpp", "src/cpp/pySniffer.cpp", "src/cpp/sniffer.cpp", "src/cpp/packetPool.cpp", "src/cpp/coreFunctions.cpp", "src/cpp/packet.cpp", "src/cpp/pyCoreFunctions.cpp"], extra_compile_args=["-Wno-unused", "-Iexternals"], extra_link_args=["-Lexternals", "-ltins"])])
+          ext_modules=[Extension("pynat", ["src/cpp/pynat.cpp", "src/cpp/pySniffer.cpp", "src/cpp/sniffer.cpp", "src/cpp/packetPool.cpp", "src/cpp/coreFunctions.cpp", "src/cpp/packet.cpp", "src/cpp/pyCoreFunctions.cpp"], extra_compile_args=["-Wno-unused", "-Iexternals"], extra_link_args=["externals/sqlite3.o", "-Lexternals", "-ltins", "-ldl", "-lpthread"])])
 
 if __name__ == "__main__":
     main()

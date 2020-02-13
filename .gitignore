@@ -3,3 +3,9 @@ obj/
 .vscode/
 libtins/
 config.txt
+*.db
+__pycache__
+*.pyc
+*.pyo
+pinat/
+venv/

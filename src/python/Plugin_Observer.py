@@ -1,16 +1,16 @@
 # Inspiration: https://github.com/gdiepen/python_plugin_example
-import os, importlib, pkgutil
+import os, importlib, pkgutil, sqlite3
 class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
 
-    def __init__(self, name, author, version, description, plugin_type, priority):
+    def __init__(self, name, author, version, description, plugin_type, priority, dbname, actions):
         """In order to load a plugin, we need to have the following information:
         - name of the plugin
         - author/s of the plugin
         - the current version of the plugin 
         - the description of the plugin - what does it do?
-        - the plugin type (maybe in the future this will come in handy)
+        - the plugin type (maybe in the future this will come in handy) 
         It is possible and even recommended to have a config file and load the information from there
         """
         self.name = name
@@ -19,6 +19,8 @@ class plugin:
         self.description = description
         self.type = plugin_type
         self.priority = priority
+        self.dbname = dbname
+        self.actions = actions
 
     # Now here we can add all the methods the plugin has to have:
     
@@ -39,6 +41,20 @@ class plugin:
     def teardown(self):
         """
         This method will be executed once before the programs' end
+        """
+        raise NotImplementedError
+
+
+    def get_actions(self):
+        """
+        Will return list of methods of the plugin
+        """
+        raise NotImplementedError
+
+
+    def delete_database(self):
+        """
+        Will delete the database
         """
         raise NotImplementedError
 

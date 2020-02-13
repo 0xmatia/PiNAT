@@ -36,8 +36,10 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
 
     subprocess.Popen(["ebtables", "-A", "FORWARD", "--logical-in", "br0", "-d", router_mac, "-j", "DROP"]).wait()
 
-    sleep(6) #how to get rid of it
+    subprocess.Popen(["ethtool", "-K", wifi_adapter, "gso", "off"]).wait()
+    subprocess.Popen(["ethtool", "-K", wifi_adapter, "gro", "off"]).wait()
 
+    sleep(6)
     print("Hotspot has been activated")
 
 
@@ -47,6 +49,8 @@ def cleanup(wifi_interface, eth_interface, router_mac):
     """
     subprocess.Popen(["create_ap", "--stop", wifi_interface]).wait()
     subprocess.Popen(["ebtables", "-D", "FORWARD", "--logical-in", "br0", "-d", router_mac, "-j", "DROP"]).wait()
+    subprocess.Popen(["ethtool", "-K", wifi_interface, "gso", "on"]).wait()
+    subprocess.Popen(["ethtool", "-K", wifi_interface, "gro", "on"]).wait()
 
     print("Hotspot deactivated")
 

@@ -1,7 +1,20 @@
-1. libtins
-    - libpcap-dev
-2. create_ap
-    - Hostpad + more common utilities
-3. python3
-    - dnspython (sudo apt install python3-dnspython)
-4. 
+aniso8601==8.0.0
+astroid==2.3.3
+Click==7.0
+dnspython==1.15.0
+Flask==1.1.1
+Flask-RESTful==0.3.7
+isort==4.3.21
+itsdangerous==1.1.0
+Jinja2==2.10.3
+lazy-object-proxy==1.4.3
+MarkupSafe==1.1.1
+mccabe==0.6.1
+pkg-resources==0.0.0
+pylint==2.4.4
+python-dotenv==0.10.5
+pytz==2019.3
+six==1.14.0
+typed-ast==1.4.1
+Werkzeug==0.16.0
+wrapt==1.11.2
