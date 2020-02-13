@@ -14,7 +14,7 @@ class ARPDetector(plugin):
         self.actions = ["get_log"]
         
         self.arp_table = {}
-        self.db = 0
+        self.db = ""
 
 
     def process(self, packet):
@@ -33,7 +33,8 @@ class ARPDetector(plugin):
 
 
     def setup(self):
-        self.db = pynat.open_db("{}.db".format(self.name))
+        file_location = os.path.dirname(__file__)
+        self.db = pynat.open_db(file_location + "/{}.db".format(self.name))
         pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SENDER_IP TEXT NOT NULL, SENDER_MAC TEXT NOT NULL, SAVED_MAC TEXT NOT NULL, TIME TEXT NOT NULL, UNIQUE(SENDER_IP, SENDER_MAC, TIME))")
 
 

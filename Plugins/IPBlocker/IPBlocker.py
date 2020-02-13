@@ -16,11 +16,15 @@ class IPBlocker(plugin):
         self.actions = ["get_blocked_ips", "get_blocked_stats"]
         
         self.blacklist = []
-        self.db = 0
+        self.db = ""
 
 
     def process(self, packet):
-        src_addr, dst_addr = pynat.get_ips(packet)
+        src_addr = ""
+        dst_addr = ""
+        ips = pynat.get_ips(packet)
+        if ips == None: return packet
+        src_addr, dst_addr = ips[0], ips[1]
         if dst_addr in self.blacklist:
             pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES ('{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))".format(src_addr, dst_addr))
             pynat.drop_packet(packet)
@@ -30,7 +34,8 @@ class IPBlocker(plugin):
 
 
     def setup(self):
-        self.db = pynat.open_db("{}.db".format(self.name))
+        file_location = os.path.dirname(__file__)
+        self.db = pynat.open_db(file_location + "/{}.db".format(self.name))
         pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (SRC_IP TEXT NOT NULL, BLOCKED_IP TEXT NOT NULL, TIME TEXT NOT NULL, UNIQUE(SRC_IP, BLOCKED_IP, TIME))")
         pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS BLACKLIST (BLOCKED_IP TEXT NOT NULL)")
 

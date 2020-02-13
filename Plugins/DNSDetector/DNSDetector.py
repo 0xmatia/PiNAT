@@ -21,7 +21,7 @@ class DNSDetector(plugin):
         self.priority = 324786
         self.actions = ["get_log"]
 
-        self.db = 0
+        self.db = ""
         self.known_ips = []
 
     def process(self, packet):
@@ -29,8 +29,10 @@ class DNSDetector(plugin):
         if not dns_info:
             return packet
 
-        attacker_ip, _ = pynat.get_ips(packet)
-        thread = threading.Thread(target=self.dns_reslover, args=(dns_info, attacker_ip))
+        ips = pynat.get_ips(packet)
+        if ips == None: # if we cant retrieve ip layer
+            return packet
+        thread = threading.Thread(target=self.dns_reslover, args=(dns_info, ips[0]))
 
         thread.daemon = True
         thread.start()
@@ -47,7 +49,13 @@ class DNSDetector(plugin):
         for dname in dns_info:
             ip_list = dns_info[dname]
 
-            answer = resolver.query(dname, "A")
+            try:
+                answer = resolver.query(dname, "A")
+            except dns.resolver.NXDOMAIN:
+                continue
+            except dns.resolver.Timeout:
+                continue
+
             for item in answer:
                 dns_response.append(item.to_text())
 
@@ -58,10 +66,16 @@ class DNSDetector(plugin):
 
             if len(unmateched_ips) == 0: # if empty, we are good
                 continue
-            
+
             # change nameserver
             resolver.nameservers = ["1.1.1.1", "1.0.0.1"]
-            answer = resolver.query(dname, "A")
+            try:
+                answer = resolver.query(dname, "A")
+            except dns.resolver.NXDOMAIN:
+                continue
+            except dns.resolver.Timeout:
+                continue
+
             for item in answer:
                 dns_response.append(item.to_text())
 
@@ -83,13 +97,14 @@ class DNSDetector(plugin):
 
     
     def setup(self):
-        self.db = pynat.open_db("{}.db".format(self.name))
-        
+        file_location = os.path.dirname(__file__)
+        self.db = pynat.open_db(file_location + "/{}.db".format(self.name))
         pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS LOG (ATTACKER_IP TEXT NOT NULL, DOMAIN TEXT NOT NULL, SPOOFED_IPS TEXT NOT NULL, TIME TEXT NOT NULL, UNIQUE(ATTACKER_IP, DOMAIN, SPOOFED_IPS, TIME))")
-        pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS KNOWN (IP TEXT NOT NULL, UNIQUE(IP))")
-        with open("known_ips.txt", 'r') as f:
+        #pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS KNOWN (IP TEXT NOT NULL, UNIQUE(IP))")
+        
+        with open(file_location + "/known_ips.txt", 'r') as f:
             self.known_ips = [line.rstrip() for line in f]
-        self.known_ips = [row[0] for row in pynat.select_db(self.db, "SELECT * FROM KNOWN")]
+        #self.known_ips = [row[0] for row in pynat.select_db(self.db, "SELECT * FROM KNOWN")]
 
 
     def teardown(self):
