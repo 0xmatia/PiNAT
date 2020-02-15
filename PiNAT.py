@@ -15,7 +15,7 @@ def main():
 
     # Start hotspot and routing
     try:
-        wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
+        wifi_adapter, eth_adapter, secondry_wifi = Routing_Tools.init_hotspot(argv[1])
     except Exception:
         print_exc()
         print("PiNAT is terminating")

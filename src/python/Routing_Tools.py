@@ -62,6 +62,7 @@ def read_config():
         return None, None, None, None
 
     wifi_adapter = None
+    secondry_wifi = None
     eth_adapter = None
     ssid = None
     password = None
@@ -72,6 +73,8 @@ def read_config():
             continue
         if key == "wireless_adapter":
             wifi_adapter = value
+        elif key == "secondry_adapter":
+            secondry_wifi = value
         elif key == "regular_adapter":
             eth_adapter = value
         elif key == "ssid":
@@ -80,11 +83,11 @@ def read_config():
             password = value
     f.close()
 
-    return wifi_adapter, eth_adapter, ssid, password
+    return wifi_adapter, secondry_wifi, eth_adapter, ssid, password
 
 
 def init_hotspot(router_mac):
-    wifi_adapter, eth_adapter, ssid, password = read_config()
+    wifi_adapter, secondry_wifi, eth_adapter, ssid, password = read_config()
 
     if wifi_adapter == None:
         wifi_adapter = input("Wifi interface name: ")
@@ -92,6 +95,13 @@ def init_hotspot(router_mac):
         print("wifi_adapter = " + wifi_adapter)
     if not check_interface(wifi_adapter):
         raise Exception("interface {} does not exist".format(wifi_adapter))
+
+    if secondry_wifi == None:
+        secondry_wifi = input("Secondry wifi interface name: ")
+    else:
+        print("secondry_adapter = " + secondry_wifi)
+    if not check_interface(secondry_wifi):
+        raise Exception("interface {} does not exist".format(secondry_wifi))
 
 
     if eth_adapter == None:
@@ -120,4 +130,4 @@ def init_hotspot(router_mac):
 
     # Start hotspot:
     _turn_on(wifi_adapter, eth_adapter, ssid, password, router_mac)
-    return wifi_adapter, eth_adapter
+    return wifi_adapter, eth_adapter, secondry_wifi

@@ -40,6 +40,7 @@ class IPBlocker(plugin):
         pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS BLACKLIST (BLOCKED_IP TEXT NOT NULL)")
 
         self.blacklist = [row[0] for row in pynat.select_db(self.db, "SELECT BLOCKED_IP FROM BLACKLIST")]
+        
 
 
     def teardown(self):
