@@ -1,6 +1,7 @@
 from wifi import Cell
 from time import sleep
 from sys import argv
+import sqlite3
 
 def scan_for_evil_twin(time, adapter):
     try:
