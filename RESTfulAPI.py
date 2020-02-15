@@ -5,6 +5,7 @@ path.append("src/python")
 from Plugin_Observer import plugin_system
 from flask import Flask
 from flask_restful import Resource, Api
+from src.python.evil_twin import evil_twin
 
 plugins_dictionary = {}
 
@@ -71,7 +72,11 @@ class PluginAction(Resource):
 
 class EvilTwinLog(Resource):
     def get(self):
-        pass
+        return {"status": "success", "log": evil_twin.get_log()}
+
+    def delete(self):
+        evil_twin.delete_log()        
+        return {"status": "success"}
 
 
 # add resources to API

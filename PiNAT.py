@@ -14,7 +14,7 @@ from bin import pynat
 
 def main():
     plugins = {}
-    evil_twin_location = "src/python/evil_twin.py"
+    evil_twin_location = "src/python/evil_twin/evil_twin.py"
 
     # Start hotspot and routing
     try:
