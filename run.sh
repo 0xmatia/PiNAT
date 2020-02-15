@@ -7,4 +7,6 @@ fi
 
 MAC=$(ip neigh | grep $(ip route show match 0/0 | awk 'NR==1{print $3}') -w | awk 'NR==1{print $5}')
 
-python3 -B PiNAT.py $MAC
+source venv/bin/activate
+python -B PiNAT.py $MAC
+deactivate
