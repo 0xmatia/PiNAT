@@ -5,6 +5,7 @@ path.append("src/python")
 from Plugin_Observer import plugin_system
 from flask import Flask
 from flask_restful import Resource, Api
+from src.python.evil_twin import evil_twin
 
 plugins_dictionary = {}
 
@@ -32,7 +33,8 @@ Pinat is online, list of available plugins
 class Root(Resource):
     def get(self):
         available_plugins = list(plugins_dictionary.keys())
-        return {"status": "online", "plugins": available_plugins}
+        actions = ['get_evil_twin_log']
+        return {"status": "online", "actions": actions, "plugins": available_plugins}
 
 """
 This will return all available actions for a specified plugin
@@ -67,8 +69,19 @@ class PluginAction(Resource):
         except AttributeError:
             return {"status": "invalid action"}, 500
 
+
+class EvilTwinLog(Resource):
+    def get(self):
+        return {"status": "success", "log": evil_twin.get_log()}
+
+    def delete(self):
+        evil_twin.delete_log()        
+        return {"status": "success"}
+
+
 # add resources to API
 api.add_resource(Root, "/")
+api.add_resource(EvilTwinLog, "/get_evil_twin_log")
 api.add_resource(ListPluginActions, "/<string:plugin>")
 api.add_resource(PluginAction, "/<string:plugin>/<string:action>")
 
