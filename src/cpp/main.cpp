@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "", argv[2], argv[3]);
+	pinat::Sniffer* s = new pinat::Sniffer(argv[1], "tcp", argv[2], argv[3]);
 	pinat::initCore(s->getPacketPool());
 	
 	unsigned long a = 0;
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 		cout << ">>> ";
 		std::cin >> command;
 		
-		if(command == "s")
+			if(command == "s")
 			a = s->getPacket();
 		else if(command == "m")
 		{
@@ -72,6 +72,12 @@ int main(int argc, char** argv)
 			{
 				cout << "no ports" << endl;
 			}
+		}
+
+		else if(command == "e")
+		{
+			std::string blacklist[1] = {"hey"};
+			pinat::censorWords(a, "f", blacklist);
 		}
 		else if(command == "d")
 		{
