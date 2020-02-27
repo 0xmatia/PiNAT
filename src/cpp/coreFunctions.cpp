@@ -1,8 +1,6 @@
 #include "coreFunctions.hpp"
 #include <map>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
+#include <string>
 
 
 const std::map<std::string, Tins::PDU::PDUType> typeMap = {
@@ -270,7 +268,7 @@ extern "C"
             return table;
         }
 
-        void censorWords(const unsigned long id, const std::string word, const std::string blacklist[])
+        void censorWords(const unsigned long id, const std::string word, const std::vector<std::string> blacklist)
         {   
             Tins::RawPDU* raw;
             Tins::PDU* packet = pp->getPacket(id);
@@ -281,7 +279,7 @@ extern "C"
                 std::cout << "A" << std::endl;
                 Tins::RawPDU::payload_type& payload = raw->payload();
                 std::cout << "B" << std::endl;
-
+            
 //                if (raw->payload_size() == 0)return;
                 for (auto i = payload.begin(); i != payload.end(); i++)
                 {
@@ -291,6 +289,15 @@ extern "C"
                 }
                 std::string str(payload.begin(), payload.end());
                 std::cout << "\n-------STRING: " + str << std::endl;
+                
+                for (const std::string censor: blacklist)
+                {
+                    std::replace(str.begin(), str.end(), censor, word);
+                }
+
+                // set payload:
+                std::vector<std::uint8_t> new_payload(str.begin(), str.end());
+                raw->payload(new_payload);
                 
             }
             

@@ -45,6 +45,6 @@ extern "C"
 
         std::vector<std::vector<std::string>*>* selectDB(sqlite3* db, std::string command);
 
-        void censorWords(const unsigned long id, const std::string word, const std::string blacklist[]);
+        void censorWords(const unsigned long id, const std::string word, const std::vector<std::string> blacklist);
     }
 }
