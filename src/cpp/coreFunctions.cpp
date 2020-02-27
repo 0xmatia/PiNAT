@@ -268,7 +268,9 @@ extern "C"
             return table;
         }
 
-        void censorWords(const unsigned long id, const std::string word, const std::vector<std::string> blacklist)
+        void censorWords(const unsigned long id,
+                         const std::string word,
+                         const std::vector<std::string> blacklist)
         {   
             Tins::RawPDU* raw;
             Tins::PDU* packet = pp->getPacket(id);
@@ -279,17 +281,17 @@ extern "C"
                 std::cout << "A" << std::endl;
                 Tins::RawPDU::payload_type& payload = raw->payload();
                 std::cout << "B" << std::endl;
-            
-//                if (raw->payload_size() == 0)return;
+
+                //////
+                std::cout << "C" << std::endl;
                 for (auto i = payload.begin(); i != payload.end(); i++)
                 {
-                std::cout << "C" << std::endl;
-
                     std::cout << i.base() << std::endl;
                 }
                 std::string str(payload.begin(), payload.end());
                 std::cout << "\n-------STRING: " + str << std::endl;
-                
+                ///////
+
                 for (const std::string censor: blacklist)
                 {
                     std::replace(str.begin(), str.end(), censor, word);
@@ -298,7 +300,6 @@ extern "C"
                 // set payload:
                 std::vector<std::uint8_t> new_payload(str.begin(), str.end());
                 raw->payload(new_payload);
-                
             }
             
         }

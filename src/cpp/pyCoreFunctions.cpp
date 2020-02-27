@@ -339,4 +339,9 @@ extern "C"
             Py_RETURN_NONE;
         }
     }
+
+    PyObject* py_censorWords(PyObject* self, PyObject* args)
+    {
+        
+    }
 }
