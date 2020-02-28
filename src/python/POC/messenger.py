@@ -13,6 +13,7 @@ def server():
     s.listen(1)
     client, _ = s.accept()
     message(client)
+    s.close()
 
 
 def message(s):

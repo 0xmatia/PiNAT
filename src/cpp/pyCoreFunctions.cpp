@@ -340,18 +340,31 @@ extern "C"
         }
     }
 
-    PyObject* py_censorWornds(PyObject* self, PyObject* args)
+    PyObject* py_censorWords(PyObject* self, PyObject* args)
     {
         unsigned long packetID = 0;
-        const std::vector<std::string> blacklist;
-        const std::string wordToReplace;
+        PyObject* listObj = nullptr, *tmp = nullptr;
+        std::vector<std::string> blacklist;
+        char* wordToReplace;
 
-        if(!PyArg_ParseTuple(args, "k[]s", &packetID, &blacklist, &wordToReplace)) {
+        if(!PyArg_ParseTuple(args, "ksO", &packetID, &wordToReplace, &listObj)) {
             return NULL;
         }
 
-        //TODO: Convert list to vector
-        pinat::censorWords(packetID, wordToReplace, blacklist);
+        for(unsigned int i = 0; i < PyList_Size(listObj); i++)
+        {
+            tmp = PyList_GetItem(listObj, i);
+            std::wstring ws(PyUnicode_AS_UNICODE(tmp));
+            blacklist.push_back(std::string(ws.begin(), ws.end()));
+        }
+
+        try {
+            pinat::censorWords(packetID, wordToReplace, &blacklist);
+        } catch(std::exception& e) {
+            PyErr_SetString(PyExc_RuntimeError, e.what());
+            return NULL;
+        }
+        
         Py_RETURN_NONE;
     }
 }

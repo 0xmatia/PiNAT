@@ -270,31 +270,32 @@ extern "C"
 
         void censorWords(const unsigned long id,
                          const std::string word,
-                         const std::vector<std::string> blacklist)
+                         const std::vector<std::string>* blacklist)
         {   
             Tins::RawPDU* raw;
             Tins::PDU* packet = pp->getPacket(id);
-            if (packet == NULL) return;
             if (pinat::checkType(id, "TCP"))
             {
                 raw = packet->find_pdu<Tins::RawPDU>();
-                std::cout << "A" << std::endl;
+                if(! raw)
+                    return;
                 Tins::RawPDU::payload_type& payload = raw->payload();
-                std::cout << "B" << std::endl;
 
-                //////
-                std::cout << "C" << std::endl;
-                for (auto i = payload.begin(); i != payload.end(); i++)
-                {
-                    std::cout << i.base() << std::endl;
-                }
                 std::string str(payload.begin(), payload.end());
-                std::cout << "\n-------STRING: " + str << std::endl;
-                ///////
 
-                for (const std::string censor: blacklist)
-                {
-                    std::replace(str.begin(), str.end(), censor, word);
+                for (const std::string censor: *blacklist)
+                { 
+                    // Get the first occurrence
+                    size_t pos = str.find(censor);
+                
+                    // Repeat till end is reached
+                    while( pos != std::string::npos)
+                    {
+                        // Replace this occurrence of Sub String
+                        str.replace(pos, censor.size(), word);
+                        // Get the next occurrence from the current position
+                        pos = str.find(censor, pos + word.size());
+                    }
                 }
 
                 // set payload:
