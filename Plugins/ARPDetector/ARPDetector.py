@@ -18,6 +18,7 @@ class ARPDetector(plugin):
 
 
     def process(self, packet):
+        return packet
         info = pynat.get_arp_info(packet)
         if not info:
             return packet

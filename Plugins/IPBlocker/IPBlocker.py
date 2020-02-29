@@ -20,6 +20,7 @@ class IPBlocker(plugin):
 
 
     def process(self, packet):
+        return packet
         src_addr = ""
         dst_addr = ""
         ips = pynat.get_ips(packet)

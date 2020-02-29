@@ -44,7 +44,7 @@ def main():
 
     # Start features that are not considered 'plugins'
     # 1. Evil twin detector
-    evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", secondry_wifi])
+    # evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", secondry_wifi])
     
     try:
         while True:

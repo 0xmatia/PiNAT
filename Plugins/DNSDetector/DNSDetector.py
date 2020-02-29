@@ -25,6 +25,7 @@ class DNSDetector(plugin):
         self.known_ips = []
 
     def process(self, packet):
+        return packet
         dns_info = pynat.get_dns_info(packet)
         if not dns_info:
             return packet

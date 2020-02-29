@@ -19,7 +19,7 @@ def scan_for_evil_twin(time, adapter):
             duplicates = []
             ssids = [cell.ssid for cell in Cell.all(adapter)]
             for ssid in ssids:
-                if ssids.count(ssid) > 1 and ssid not in duplicates:
+                if ssids.count(ssid) > 1 and ssid not in duplicates and ssid != "":
                     duplicates.append(ssid)
 
             for duplicate in duplicates:
