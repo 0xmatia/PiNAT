@@ -31,7 +31,7 @@ def main():
     plugins.sort(key=lambda x: x.priority)
 
     try:
-        sniffer = pynat.Sniffer(wifi_adapter, "", eth_adapter, argv[1])
+        sniffer = pynat.Sniffer("br0", "", wifi_adapter, eth_adapter, argv[1])
         pynat.init_core(sniffer.get_pool())
     except Exception:
         print_exc()
@@ -44,7 +44,7 @@ def main():
 
     # Start features that are not considered 'plugins'
     # 1. Evil twin detector
-    # evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", secondry_wifi])
+    evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", secondry_wifi])
     
     try:
         while True:

@@ -10,16 +10,18 @@ using std::string;
 namespace pinat {
 	class Sniffer {
 	public:
-		Sniffer(string sniffingInterface, string filter, string sendingInterface, string mac);
+		Sniffer(const string sniffingInterface, const string filter, const string in, const string out, string mac);
 		~Sniffer();
 
 		unsigned long getPacket() const;
 		void forwardPacket(unsigned long id);
 		PacketPool* getPacketPool() const;
 	private:
-		Tins::Sniffer* _sniffer;
-		Tins::PacketSender* _sender;
-        PacketPool* _packetPool;
 		Tins::HWAddress<6> _mac;
+		Tins::Sniffer* _sniffer;
+		Tins::NetworkInterface _in;
+		Tins::NetworkInterface _out;
+		Tins::PacketSender _packetSender;
+        PacketPool* _packetPool;
 	};
 }
