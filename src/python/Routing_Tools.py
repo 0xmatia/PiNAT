@@ -74,9 +74,8 @@ def read_config():
     except OSError:
         return None, None, None, None
 
-    wifi_adapter = None
-    secondry_wifi = None
-    eth_adapter = None
+    hotspot_interface = None
+    internet_interface = None
     ssid = None
     password = None
     for line in f.read().split("\n"):
@@ -84,23 +83,21 @@ def read_config():
             key, value = line.split("=")
         except:
             continue
-        if key == "wireless_adapter":
-            wifi_adapter = value
-        elif key == "secondry_adapter":
-            secondry_wifi = value
-        elif key == "regular_adapter":
-            eth_adapter = value
+        if key == "hotspot_interface":
+            hotspot_interface= value
+        elif key == "internet_interface":
+            internet_interface = value
         elif key == "ssid":
             ssid = value
         elif key == "pass":
             password = value
     f.close()
 
-    return wifi_adapter, secondry_wifi, eth_adapter, ssid, password
+    return hotspot_interface, internet_interface, ssid, password
 
 
 def init_hotspot(router_mac):
-    wifi_adapter, secondry_wifi, eth_adapter, ssid, password = read_config()
+    wifi_adapter, eth_adapter, ssid, password = read_config()
 
     if wifi_adapter == None:
         wifi_adapter = input("Wifi interface name: ")
@@ -108,14 +105,6 @@ def init_hotspot(router_mac):
         print("wifi_adapter = " + wifi_adapter)
     if not check_interface(wifi_adapter):
         raise Exception("interface {} does not exist".format(wifi_adapter))
-
-    if secondry_wifi == None:
-        secondry_wifi = input("Secondry wifi interface name: ")
-    else:
-        print("secondry_adapter = " + secondry_wifi)
-    if not check_interface(secondry_wifi):
-        raise Exception("interface {} does not exist".format(secondry_wifi))
-
 
     if eth_adapter == None:
         eth_adapter = input("Ethernet interface name: ")
@@ -143,4 +132,4 @@ def init_hotspot(router_mac):
 
     # Start hotspot:
     _turn_on(wifi_adapter, eth_adapter, ssid, password, router_mac)
-    return wifi_adapter, eth_adapter, secondry_wifi
+    return wifi_adapter, eth_adapter

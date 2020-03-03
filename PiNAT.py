@@ -18,7 +18,7 @@ def main():
 
     # Start hotspot and routing
     try:
-        wifi_adapter, eth_adapter, secondry_wifi = Routing_Tools.init_hotspot(argv[1])
+        wifi_adapter, eth_adapter = Routing_Tools.init_hotspot(argv[1])
     except Exception:
         print_exc()
         print("PiNAT is terminating")
@@ -44,7 +44,7 @@ def main():
 
     # Start features that are not considered 'plugins'
     # 1. Evil twin detector
-    evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", secondry_wifi])
+    evil_twin_proccess = subprocess.Popen(["python", evil_twin_location, "30", wifi_adapter])
     
     try:
         while True:

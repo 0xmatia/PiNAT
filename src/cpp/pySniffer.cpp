@@ -38,10 +38,10 @@ static int Sniffer_init(SnifferObject *self, PyObject *args, PyObject *kwds)
 	char* out;
 	char* mac;
 	char *kwlist[] = {(char*)"interface", (char*)"filter", (char*) "in", (char*) "out", (char*)"mac", NULL};
-
     if (! PyArg_ParseTupleAndKeywords(args, kwds, "sssss", kwlist, &interface, &filter, &in, &out, &mac))
 		return -1;
 
+	//std::cout << "In: " + std::string(in) + " Out: " + std::string(out) + " mac: " + std::string(mac) << std::endl;
 	try {
 		self->sniffer = new pinat::Sniffer(interface, filter, in, out, mac);
 	} catch(std::exception& e) {
