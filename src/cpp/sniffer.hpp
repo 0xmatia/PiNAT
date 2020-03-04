@@ -19,8 +19,8 @@ namespace pinat {
 	private:
 		Tins::HWAddress<6> _mac;
 		Tins::Sniffer* _sniffer;
-		Tins::NetworkInterface _in;
-		Tins::NetworkInterface _out;
+		Tins::NetworkInterface* _in;
+		Tins::NetworkInterface* _out;
 		Tins::PacketSender _packetSender;
         PacketPool* _packetPool;
 	};
