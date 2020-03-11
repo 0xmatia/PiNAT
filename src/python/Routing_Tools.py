@@ -31,10 +31,11 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
     Turns hotspot on
     """
     
-    subprocess.Popen(["create_ap", "-m", "bridge", wifi_adapter, etherent_adapter, \
-         ssid, password, "--daemon", "--no-virt"])
+    subprocess.Popen(["create_ap", "-m", "bridge", wifi_adapter, \
+        etherent_adapter, ssid, password, "--daemon", "--no-virt"])
 
-    subprocess.Popen(["ebtables", "-A", "FORWARD", "--logical-in", "br0", "-d", router_mac, "-j", "DROP"]).wait()
+    subprocess.Popen(["ebtables", "-A", "FORWARD", "--logical-in",\
+         "br0", "-d", router_mac, "-j", "DROP"]).wait()
 
     subprocess.Popen(["ethtool", "-K", wifi_adapter, "gso", "off"]).wait()
     subprocess.Popen(["ethtool", "-K", wifi_adapter, "gro", "off"]).wait()
@@ -48,7 +49,8 @@ def cleanup(wifi_interface, eth_interface, router_mac):
     Turns off the hotspot if neccessry
     """
     subprocess.Popen(["create_ap", "--stop", wifi_interface]).wait()
-    subprocess.Popen(["ebtables", "-D", "FORWARD", "--logical-in", "br0", "-d", router_mac, "-j", "DROP"]).wait()
+    subprocess.Popen(["ebtables", "-D", "FORWARD", "--logical-in", "br0", "-d",\
+         router_mac, "-j", "DROP"]).wait()
     subprocess.Popen(["ethtool", "-K", wifi_interface, "gso", "on"]).wait()
     subprocess.Popen(["ethtool", "-K", wifi_interface, "gro", "on"]).wait()
 
@@ -125,7 +127,8 @@ def init_hotspot(router_mac):
     else:
         print("password = {}".format(password))
     if not check_password(password):
-        raise Exception("Invalid WPA2 password: {}\nPassword must be 8-63 chars long".format(password))
+        raise Exception("Invalid WPA2 password:\
+             {}\nPassword must be 8-63 chars long".format(password))
     
 
     # Start hotspot:
