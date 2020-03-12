@@ -2,19 +2,22 @@
 
 
 namespace pinat{
-    Sniffer::Sniffer(string sniffingInterface, string filter, string sendingInterface, string mac) : _mac(mac)
+    Sniffer::Sniffer(const string sniffingInterface, const string filter, const string in, const string out, string mac) :
+     _mac(mac)
     {
         this->_sniffer = new Tins::Sniffer(sniffingInterface);
         this->_sniffer->set_filter(filter);
         this->_packetPool = new PacketPool();
-        this->_sender = new Tins::PacketSender(sendingInterface);
+        this->_in = new Tins::NetworkInterface(in);
+        this->_out = new Tins::NetworkInterface(out);
     }
 
     Sniffer::~Sniffer()
     {
         delete this->_sniffer;
         delete this->_packetPool;
-        delete this->_sender;
+        delete this->_in;
+        delete this->_out;
     }
 
     unsigned long Sniffer::getPacket() const
@@ -30,10 +33,17 @@ namespace pinat{
     {
         Tins::PDU* packet = _packetPool->getPacket(id);
         Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
-
-        if(eth && eth->dst_addr() == _mac)
+        
+        if(eth)
         {
-            _sender->send(*packet);
+            if(eth->dst_addr() == _mac)
+            {
+                this->_packetSender.send(*packet, *this->_out);
+            }
+            else if (eth->src_addr() == _mac)
+            {
+                this->_packetSender.send(*packet, *this->_in);
+            }
         }
         _packetPool->drop(id);
     }
