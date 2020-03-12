@@ -31,7 +31,7 @@ def main():
     plugins.sort(key=lambda x: x.priority)
 
     try:
-        sniffer = pynat.Sniffer("br0", "", wifi_adapter, eth_adapter, argv[1])
+        sniffer = pynat.Sniffer("br0", "", "ap0", eth_adapter, argv[1])
         pynat.init_core(sniffer.get_pool())
     except Exception:
         print_exc()

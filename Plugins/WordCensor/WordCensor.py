@@ -19,8 +19,7 @@ class WordCensor(plugin):
 
 
     def process(self, packet):
-        return packet
-        pynat.censor_words(packet, "-----", ["Saturday"])
+        pynat.censor_words(packet, "Pinat", ["Email"])
         return packet
 
 

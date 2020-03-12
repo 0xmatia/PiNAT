@@ -34,15 +34,16 @@ namespace pinat{
         Tins::PDU* packet = _packetPool->getPacket(id);
         Tins::EthernetII* eth = packet->find_pdu<Tins::EthernetII>();
         
-        if(eth && eth->dst_addr() == _mac)
+        if(eth)
         {
-            std::cout << "out: " << this->_out << std::endl;
-            this->_packetSender.send(*packet, *this->_out);
-        }
-        else if (eth && eth->src_addr() == _mac)
-        {
-            std::cout << "in: " << this->_in << std::endl;
-            this->_packetSender.send(*packet, *this->_in);
+            if(eth->dst_addr() == _mac)
+            {
+                this->_packetSender.send(*packet, *this->_out);
+            }
+            else if (eth->src_addr() == _mac)
+            {
+                this->_packetSender.send(*packet, *this->_in);
+            }
         }
         _packetPool->drop(id);
     }
