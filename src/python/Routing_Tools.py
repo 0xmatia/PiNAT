@@ -36,6 +36,7 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
     subprocess.Popen(["create_ap", "-m", "bridge", wifi_adapter, etherent_adapter,
                       ssid, password, "--daemon"])
 
+    sleep(6)
     subprocess.Popen(["ebtables", "-A", "FORWARD", "-j", "DROP",
                       "-o", "ap0", "-s", router_mac]).wait()
     subprocess.Popen(["ebtables", "-A", "FORWARD", "-j", "DROP",
@@ -47,11 +48,12 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
     subprocess.Popen(["ethtool", "-K", etherent_adapter, "gso", "off"]).wait()
     subprocess.Popen(["ethtool", "-K", etherent_adapter, "gro", "off"]).wait()
 
-    subprocess.Popen(["ifconfig", etherent_adapter, "mtu", "2000"]).wait()
-    subprocess.Popen(["ifconfig", "ap0", "mtu", "2000"]).wait()
+    subprocess.Popen(["ip", "link", "set", "dev", etherent_adapter, "mtu",
+                      "2000"]).wait()
+    subprocess.Popen(["ip", "link", "set", "dev", "ap0", "mtu", "2000"]).wait()
 
-    sleep(6)
-    subprocess.Popen(["ifconfig", "br0", "promisc"]).wait()
+    subprocess.Popen(["ip", "link", "set", "dev",
+                      "br0", "promisc", "on"]).wait()
     print("Hotspot has been activated")
 
 
@@ -71,8 +73,9 @@ def cleanup(wifi_interface, eth_interface, router_mac):
     subprocess.Popen(["ethtool", "-K", eth_interface, "gso", "on"]).wait()
     subprocess.Popen(["ethtool", "-K", eth_interface, "gro", "on"]).wait()
 
-    subprocess.Popen(["ifconfig", eth_interface, "mtu", "1500"]).wait()
-    subprocess.Popen(["ifconfig", "ap0", "mtu", "1500"]).wait()
+    subprocess.Popen(["ip", "link", "set", "dev", eth_interface, "mtu",
+                      "1500"]).wait()
+    subprocess.Popen(["ip", "link", "set", "dev", "ap0", "mtu", "1500"]).wait()
 
     print("Hotspot deactivated")
 
