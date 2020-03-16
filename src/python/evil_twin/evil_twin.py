@@ -1,4 +1,4 @@
-from wifi import Cell
+from wifi import Cell, exceptions
 from time import sleep
 from sys import argv
 import sqlite3
@@ -17,9 +17,16 @@ def scan_for_evil_twin(time, adapter):
     try:
         while True:
             duplicates = []
-            ssids = [cell.ssid for cell in Cell.all(adapter)]
+            ssids = []
+            try:
+                ssids = [cell.ssid for cell in Cell.all(adapter)]
+            except exceptions.InterfaceError:
+                # sometimes can't read, just skip
+                sleep(1)
+                continue
+
             for ssid in ssids:
-                if ssids.count(ssid) > 1 and ssid not in duplicates:
+                if ssids.count(ssid) > 1 and ssid not in duplicates and ssid != "":
                     duplicates.append(ssid)
 
             for duplicate in duplicates:
