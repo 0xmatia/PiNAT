@@ -1,5 +1,10 @@
 # Inspiration: https://github.com/gdiepen/python_plugin_example
-import os, importlib, pkgutil, sqlite3
+import os
+import importlib
+import pkgutil
+import sqlite3
+
+
 class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
@@ -23,13 +28,12 @@ class plugin:
         self.actions = actions
 
     # Now here we can add all the methods the plugin has to have:
-    
+
     def process(self, packet):
         """
         This method will be executed on each packet
         """
         raise NotImplementedError
-
 
     def setup(self):
         """
@@ -37,20 +41,17 @@ class plugin:
         """
         raise NotImplementedError
 
-
     def teardown(self):
         """
         This method will be executed once before the programs' end
         """
         raise NotImplementedError
 
-
     def get_actions(self):
         """
         Will return list of methods of the plugin
         """
         raise NotImplementedError
-
 
     def delete_database(self):
         """
@@ -66,7 +67,6 @@ class plugin_system:
     def __init__(self, plugins_location):
         self.plugins_location = plugins_location
 
-
     def reload(self):
         """Reset the list of all plugins and initiate the walk over the main
         provided plugin package to load all available plugins
@@ -77,26 +77,28 @@ class plugin_system:
             self.import_plugin(self.plugins_location + "." + plugin_folder)
         return self.plugins
 
-
     def import_plugin(self, plugin_folder):
         """Find the file which inherits 'plugin' and imports it
         """
         # Plugin_folder - the folder containing the plugins
         try:
-            plugin_module = importlib.import_module(plugin_folder+"."+plugin_folder[plugin_folder.index('.') + 1:])
-            plugin_class = plugin_module.__getattribute__(plugin_folder[plugin_folder.index('.') + 1:])
+            plugin_module = importlib.import_module(
+                plugin_folder+"."+plugin_folder[plugin_folder.index('.') + 1:])
+            plugin_class = plugin_module.__getattribute__(
+                plugin_folder[plugin_folder.index('.') + 1:])
 
             # Check if the module is not subclass of plugin or is plugin
             if not issubclass(plugin_class, plugin) or plugin_class is plugin:
                 del plugin_module
-                raise Exception(f"The plugin {plugin_class} is not a child of plugin or is plugin itself")
-            
+                raise Exception(f"The plugin {plugin_class} is not a child of\
+                     plugin or is plugin itself")
+
             # Create an instance
             print(f"Found plugin: {plugin_class}")
             instance = plugin_class()
             name = instance.name
             self.plugins[name] = instance
-            
+
         except ImportError as e:
             print(f"Er: {e}")
         except Exception as e:
