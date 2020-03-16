@@ -21,6 +21,7 @@ make install
 
 #add the library to the shared object path
 echo "/usr/local/lib" > /etc/ld.so.conf.d/libtins.conf
+ldconfig
 
 #remove the repo
 cd ../../
