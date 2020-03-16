@@ -1,4 +1,4 @@
-# PiNAT installer for arch-based distrs, initially writted for Manjaro
+# PiNAT installer for arch-based distros, initially writted for Manjaro
 
 # Run as root
 if [ "$EUID" -ne 0 ]
@@ -26,6 +26,7 @@ echo "/usr/local/lib" > /etc/ld.so.conf.d/libtins.conf
 cd ../../
 rm -rf libtins/
 
+cd ../
 #compile pinat
 make # build pinat library
 touch bin/__init__.py # for auto completetion
