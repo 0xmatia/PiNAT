@@ -36,7 +36,7 @@ def _turn_on(wifi_adapter, etherent_adapter, ssid, password, router_mac):
     subprocess.Popen(["create_ap", "-m", "bridge", wifi_adapter, etherent_adapter,
                       ssid, password, "--daemon"])
 
-    sleep(6)
+    sleep(8)
     subprocess.Popen(["ebtables", "-A", "FORWARD", "-j", "DROP",
                       "-o", "ap0", "-s", router_mac]).wait()
     subprocess.Popen(["ebtables", "-A", "FORWARD", "-j", "DROP",
