@@ -9,7 +9,7 @@ fi
 
 # Install dependencies
 apt update -y
-apt install cmake libpcap-dev libssl-dev ebtables ethtool python3-venv -y
+apt install cmake libpcap-dev libssl-dev ebtables ethtool python3-venv hostapd -y
 
 #create_ap
 git clone https://github.com/oblique/create_ap
