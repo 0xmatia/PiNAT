@@ -1,5 +1,5 @@
 #!/bin/bash
-# PiNAT installer for arch-based distros, initially writted for Manjaro
+# PiNAT installer for debian-based distros, initially writted for Kali
 
 # Run as root
 if [ "$EUID" -ne 0 ]
@@ -7,8 +7,16 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-# Install dependencies from arch repo
-pacman -Syy cmake libpcap openssl create_ap ebtables ethtool wireless_tools --noconfirm
+# Install dependencies
+apt update -y
+apt install cmake libpcap-dev libssl-dev ebtables ethtool python3-venv -y
+
+#create_ap
+git clone https://github.com/oblique/create_ap
+cd create_ap
+make install
+cd ../
+rm -rf create_ap
 
 # Install libtins
 
@@ -36,5 +44,6 @@ touch bin/__init__.py # for auto completetion
 #create python virtual environment and install depecdencies
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirments.txt
+pip install wheel
+pip install -r requirements.txt
 deactivate
