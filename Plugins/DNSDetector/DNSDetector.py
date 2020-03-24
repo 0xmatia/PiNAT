@@ -25,7 +25,6 @@ class DNSDetector(plugin):
         self.actions = ["get_log"]
         # default num of workers is number of cores
         self.executor = ThreadPoolExecutor(max_workers=32)
-
         self.db = ""
         self.known_ips = []
 
@@ -52,6 +51,8 @@ class DNSDetector(plugin):
         unmateched_ips = []
         resolver = dns.resolver.Resolver()
         resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
+        resolver.timeout = 1
+        resolver.lifetime = 1
 
         for dname in dns_info:
             ip_list = dns_info[dname]
