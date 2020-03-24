@@ -1,4 +1,5 @@
-from berserker_resolver import Resolver # can query multiple servers mutliple times easily
+#from berserker_resolver import Resolver # can query multiple servers mutliple times easily
+from dns.resolver import Resolver
 from dns.resolver import NXDOMAIN, Timeout
 from Plugin_Observer import plugin
 from concurrent.futures import ThreadPoolExecutor
@@ -25,11 +26,10 @@ class DNSDetector(plugin):
         self.priority = 324786
         self.actions = ["get_log"]
         # default num of workers is number of cores
-        self.executor = ThreadPoolExecutor(max_workers=32)
+        self.executor = ThreadPoolExecutor(max_workers=256)
         self.resolver = Resolver()
         self.resolver.nameservers = [
             "1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"]
-        self.resolver.tries = 1
         self.db = ""
         self.known_ips = []
 
@@ -58,21 +58,18 @@ class DNSDetector(plugin):
             ip_list = dns_info[dname]
 
             try:
-                print("AAA")
                 answer = self.resolver.query(dname, "A")
                 print(dname)
             except NXDOMAIN:
-                print("blue")
                 continue
             except Timeout:
-                print("red")
+                print("red: "+ dname)
                 continue
+            except:
+                print("ha?")
 
-            for item in answer:
+            for item in answer and item.to_text() != "":
                 dns_response.append(item.to_text())
-
-            if dname == "sdarot.tv":
-                print(dns_response)
 
             # compare
             for suspect in ip_list:
