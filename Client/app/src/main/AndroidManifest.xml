@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".General"></activity>
+        <activity
+            android:name=".General"
+            android:label="@string/title_activity_general"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Connect"
             android:screenOrientation="portrait"

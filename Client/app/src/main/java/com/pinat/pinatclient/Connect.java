@@ -83,7 +83,6 @@ public class Connect extends AppCompatActivity {
                         data.setTextColor(getResources().getColor(R.color.colorSuccess));
                         data.setText("Connected! Now loading...");
 
-                        // Switch activity
                         Intent intent = new Intent(context, General.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("response", response);

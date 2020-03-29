@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PiNAT Client</string>
     <string name="title_activity_main">Main</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_1">Connected Devices</string>
+    <string name="tab_text_2">Actions</string>
+    <string name="tab_text_3">Plugins</string>
+    <string name="title_activity_general">general</string>
 </resources>
