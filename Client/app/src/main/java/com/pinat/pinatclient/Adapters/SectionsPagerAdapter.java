@@ -1,4 +1,4 @@
-package com.pinat.pinatclient.ui.tabs;
+package com.pinat.pinatclient.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.google.gson.Gson;
 import com.pinat.pinatclient.R;
 import com.pinat.pinatclient.models.Response;
+import com.pinat.pinatclient.ui.tabs.FragmentTab1;
+import com.pinat.pinatclient.ui.tabs.FragmentTab2;
+import com.pinat.pinatclient.ui.tabs.FragmentTab3;
 
 import java.util.Arrays;
 

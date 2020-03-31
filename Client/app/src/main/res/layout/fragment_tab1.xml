@@ -5,6 +5,11 @@
     android:id="@+id/devicesLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSuccess"
     android:orientation="vertical"
-    tools:context=".ui.tabs.FragmentTab1" />
+    tools:context=".ui.tabs.FragmentTab1" >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/devicesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
