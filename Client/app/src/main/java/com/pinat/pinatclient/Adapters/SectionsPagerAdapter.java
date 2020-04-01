@@ -57,12 +57,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             }
             case 1:
             {
-                fragment = new FragmentTab2();
+                args.putString("actions", Arrays.toString(response.getActions()));
+                fragment = new FragmentTab2(mContext);
+                fragment.setArguments(args);
                 break;
             }
             case 2:
             {
-                fragment = new FragmentTab3();
+                args.putString("plugins", Arrays.toString(response.getPlugins()));
+                fragment = new FragmentTab3(mContext);
+                fragment.setArguments(args);
                 break;
             }
         }

@@ -12,22 +12,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.pinat.pinatclient.R;
 import java.util.List;
 
-public class DevicesTabAdapter extends RecyclerView.Adapter<DevicesTabAdapter.DevicesViewHolder> {
+public class TabAdapter extends RecyclerView.Adapter<TabAdapter.DevicesViewHolder> {
 
-    List<String> deviceMacs;
+    List<String> itemTextList;
     Context mContext;
+    View.OnClickListener listener;
 
-    public DevicesTabAdapter(List<String> deviceMacs, Context mContext) {
-        this.deviceMacs = deviceMacs;
+
+    public TabAdapter(List<String> itemTextList, Context mContext, View.OnClickListener onClickListener) {
+        this.itemTextList = itemTextList;
         this.mContext = mContext;
+        this.listener = onClickListener;
     }
 
     protected static class DevicesViewHolder extends RecyclerView.ViewHolder
     {
-        TextView mac;
+        TextView itemText;
         public DevicesViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.mac = itemView.findViewById(R.id.deviceMac);
+            this.itemText = itemView.findViewById(R.id.cardText);
         }
     }
 
@@ -35,19 +38,20 @@ public class DevicesTabAdapter extends RecyclerView.Adapter<DevicesTabAdapter.De
     @Override
     public DevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        View view = layoutInflater.inflate(R.layout.device_card, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_card, parent, false);
+        view.setOnClickListener(listener);
         return new DevicesViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DevicesViewHolder holder, int position) {
-        String mac = deviceMacs.get(position);
-        holder.mac.setText(mac);
+        String mac = itemTextList.get(position);
+        holder.itemText.setText(mac);
     }
 
     @Override
     public int getItemCount() {
-       return deviceMacs.size();
+       return itemTextList.size();
     }
 
 }

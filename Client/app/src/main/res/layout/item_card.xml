@@ -8,20 +8,24 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
         android:elevation="6dp"
-        app:cardCornerRadius="4dp">
+        app:cardCornerRadius="4dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="8dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/deviceMac"
+                android:id="@+id/cardText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="5sp"
                 android:text="MACMACMACMAC"
-                android:textSize="30sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
