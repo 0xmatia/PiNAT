@@ -29,8 +29,7 @@ class DNSDetector(plugin):
         # default num of workers is number of cores
         self.executor = ThreadPoolExecutor(max_workers=60)
         self.resolver = Resolver()
-        self.resolver.nameservers = [
-            "1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"]
+        self.resolver.nameservers = ["1.1.1.1", "1.0.0.1"]
         self.db = ""
         self.known_ips = []
 
@@ -80,35 +79,39 @@ class DNSDetector(plugin):
                 if suspect not in dns_response:
                     unmateched_ips.append(suspect)
 
-        #     if len(unmateched_ips) == 0:  # if empty, we are good
-        #         continue
+            if len(unmateched_ips) == 0:  # if empty, we are good
+                continue
 
-        #     # change nameserver
-        #     try:
-        #         answer = self.resolver.query(dname, "A")
-        #     except dns.resolver.NXDOMAIN:
-        #         continue
-        #     except dns.resolver.Timeout:
-        #         continue
+            # change nameserver
+            self.resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
+            try:
+                answer = self.resolver.query(dname, "A")
+            except NXDOMAIN:
+                continue
+            except Timeout:
+                continue
+            
+            for item in answer:
+                if item.to_text():
+                    dns_response.append(item.to_text())
+          
 
-        #     for item in answer:
-        #         dns_response.append(item.to_text())
+            for suspect in unmateched_ips:
+                if suspect in dns_response:
+                    unmateched_ips.remove(suspect)
 
-        #     for suspect in unmateched_ips:
-        #         if suspect in dns_response:
-        #             unmateched_ips.remove(suspect)
+            #### Static checking ####
+            for known_ip in self.known_ips:
+                if known_ip in unmateched_ips:
+                    unmateched_ips.remove(known_ip)
+            ####
 
-        #     for known_ip in self.known_ips:
-        #         if known_ip in unmateched_ips:
-        #             unmateched_ips.remove(known_ip)
-
-        #     if len(unmateched_ips) != 0:
             if len(unmateched_ips) > 0:
-                print("[DNSDetector] - WARNING: " + dname +
-                        " returned different result while checking against other servers ", end="")
-                print("Suspected IP(S): " + str(unmateched_ips))
-                print()
-                sys.stdout.flush()
+                # print("[DNSDetector] - WARNING: " + dname +
+                #         " returned different result while checking against other servers ", end="")
+                # print("Suspected IP(S): " + str(unmateched_ips))
+                # print()
+                # sys.stdout.flush()
 
                 pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES \
                     ('{}', '{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))"
