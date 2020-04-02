@@ -1,6 +1,7 @@
 package com.pinat.pinatclient.ui.tabs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pinat.pinatclient.Adapters.Tab2Adapter;
-import com.pinat.pinatclient.Adapters.Tab3Adapter;
+import com.pinat.pinatclient.EvilTwinLog;
 import com.pinat.pinatclient.R;
 
 import java.util.Arrays;
@@ -58,6 +59,11 @@ public class FragmentTab2 extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: Clicked: " + actionList.get(position));
+                Intent intent = new Intent(context, EvilTwinLog.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("action", actionList.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
         });
