@@ -26,7 +26,7 @@ class DNSDetector(plugin):
         self.priority = 324786
         self.actions = ["get_log"]
         # default num of workers is number of cores
-        self.executor = ThreadPoolExecutor(max_workers=256)
+        self.executor = ThreadPoolExecutor(max_workers=60)
         self.resolver = Resolver()
         self.resolver.nameservers = [
             "1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"]
@@ -65,8 +65,10 @@ class DNSDetector(plugin):
             except Timeout:
                 print("red: "+ dname)
                 continue
-            except:
+            except Exception as e:
                 print("ha?")
+                print(e)
+                continue
 
             for item in answer and item.to_text() != "":
                 dns_response.append(item.to_text())
