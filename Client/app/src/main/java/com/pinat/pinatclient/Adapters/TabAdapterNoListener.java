@@ -10,19 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pinat.pinatclient.R;
+
 import java.util.List;
 
-public class TabAdapter extends RecyclerView.Adapter<TabAdapter.DevicesViewHolder> {
+public class TabAdapterNoListener extends RecyclerView.Adapter<TabAdapterNoListener.DevicesViewHolder> {
 
     List<String> itemTextList;
     Context mContext;
-    View.OnClickListener listener;
 
 
-    public TabAdapter(List<String> itemTextList, Context mContext, View.OnClickListener onClickListener) {
+    public TabAdapterNoListener(List<String> itemTextList, Context mContext) {
         this.itemTextList = itemTextList;
         this.mContext = mContext;
-        this.listener = onClickListener;
     }
 
     protected static class DevicesViewHolder extends RecyclerView.ViewHolder
@@ -32,6 +31,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.DevicesViewHolde
             super(itemView);
             this.itemText = itemView.findViewById(R.id.cardText);
         }
+
     }
 
     @NonNull
@@ -39,7 +39,6 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.DevicesViewHolde
     public DevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.item_card, parent, false);
-        view.setOnClickListener(listener);
         return new DevicesViewHolder(view);
     }
 

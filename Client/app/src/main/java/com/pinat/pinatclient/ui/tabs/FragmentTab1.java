@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pinat.pinatclient.Adapters.TabAdapter;
+import com.pinat.pinatclient.Adapters.TabAdapterNoListener;
 import com.pinat.pinatclient.R;
 
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class FragmentTab1 extends Fragment {
 
+    private static final String TAG = "FragmentTab1";
     private static Context context;
 
     public FragmentTab1(Context c) {
@@ -46,14 +47,13 @@ public class FragmentTab1 extends Fragment {
         return rootView;
     }
 
-    public void updateTab(List<String> macs, View rootView)
+    public void updateTab(final List<String> macs, View rootView)
     {
         RecyclerView recyclerView = rootView.findViewById(R.id.devicesRecyclerView);
-        TabAdapter tabAdapter;
         recyclerView.hasFixedSize();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        tabAdapter = new TabAdapter(macs, context, null);
+
+        TabAdapterNoListener tabAdapter = new TabAdapterNoListener(macs, context);
         recyclerView.setAdapter(tabAdapter);
     }
 
