@@ -7,6 +7,7 @@ from bin import pynat
 import threading
 import socket
 import sqlite3
+import sys
 import os
 
 
@@ -70,8 +71,9 @@ class DNSDetector(plugin):
                 print(e)
                 continue
 
-            for item in answer and item.to_text() != "":
-                dns_response.append(item.to_text())
+            for item in answer:
+                if item.to_text():
+                    dns_response.append(item.to_text())
 
             # compare
             for suspect in ip_list:
@@ -101,14 +103,16 @@ class DNSDetector(plugin):
         #             unmateched_ips.remove(known_ip)
 
         #     if len(unmateched_ips) != 0:
-            print("[DNSDetector] - WARNING: " + dname +
-                    " returned different result while checking against other servers ", end="")
-            print("Suspected IP(S): " + str(unmateched_ips))
-            print()
+            if len(unmateched_ips) > 0:
+                print("[DNSDetector] - WARNING: " + dname +
+                        " returned different result while checking against other servers ", end="")
+                print("Suspected IP(S): " + str(unmateched_ips))
+                print()
+                sys.stdout.flush()
 
-            pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES \
-                ('{}', '{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))"
-                            .format(attacker_ip, dname, ','.join(unmateched_ips)))
+                pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES \
+                    ('{}', '{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))"
+                                .format(attacker_ip, dname, ','.join(unmateched_ips)))
 
 
     def setup(self):
