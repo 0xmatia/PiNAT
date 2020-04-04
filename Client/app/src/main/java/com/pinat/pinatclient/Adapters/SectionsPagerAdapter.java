@@ -26,6 +26,7 @@ import java.util.Arrays;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private static String SERVER_RESPONSE;
+    private static final String TAG = "SectionsPagerAdapter";
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,
             R.string.tab_text_3};
@@ -65,6 +66,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 2:
             {
                 args.putString("plugins", Arrays.toString(response.getPlugins()));
+                Log.d(TAG, "getItem: " + Arrays.toString(response.getPlugins()));
                 fragment = new FragmentTab3(mContext);
                 fragment.setArguments(args);
                 break;

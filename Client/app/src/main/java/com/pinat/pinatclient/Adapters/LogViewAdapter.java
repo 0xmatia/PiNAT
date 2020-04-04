@@ -14,21 +14,21 @@ import com.pinat.pinatclient.models.EvilTwinResponse;
 
 import java.util.List;
 
-public class EvilTwinAdapter extends RecyclerView.Adapter<EvilTwinAdapter.DevicesViewHolder> {
+public class LogViewAdapter extends RecyclerView.Adapter<LogViewAdapter.LogCardHolder> {
     //Todo: maybe change its name - it can also be an adapter of other log activities
     List<EvilTwinResponse.Log> log;
     Context mContext;
 
-    public EvilTwinAdapter(List<EvilTwinResponse.Log> logs, Context mContext) {
+    public LogViewAdapter(List<EvilTwinResponse.Log> logs, Context mContext) {
         this.log = logs;
         this.mContext = mContext;
     }
 
-    protected static class DevicesViewHolder extends RecyclerView.ViewHolder
+    protected static class LogCardHolder extends RecyclerView.ViewHolder
     {
         TextView timeStamp;
         TextView logContent;
-        public DevicesViewHolder(@NonNull View itemView) {
+        public LogCardHolder(@NonNull View itemView) {
             super(itemView);
             this.timeStamp = itemView.findViewById(R.id.timeStampID);
             this.logContent = itemView.findViewById(R.id.logContent);
@@ -38,14 +38,14 @@ public class EvilTwinAdapter extends RecyclerView.Adapter<EvilTwinAdapter.Device
 
     @NonNull
     @Override
-    public DevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LogCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.log_card, parent, false);
-        return new DevicesViewHolder(view);
+        return new LogCardHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DevicesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LogCardHolder holder, int position) {
         EvilTwinResponse.Log logEntry = log.get(position);
         holder.timeStamp.setText(logEntry.getTimeStamp());
         holder.logContent.setText(logEntry.getLogContent());

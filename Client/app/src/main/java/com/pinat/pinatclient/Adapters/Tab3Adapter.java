@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.pinat.pinatclient.R;
 import java.util.List;
 
-public class Tab3Adapter extends RecyclerView.Adapter<Tab3Adapter.DevicesViewHolder> {
+public class Tab3Adapter extends RecyclerView.Adapter<Tab3Adapter.CardHolder> {
 
+    //Exactly the same as tab2, but I can't have to different tabs using the same listener
     public static ClickListener clickListener;
     List<String> itemTextList;
     Context mContext;
@@ -27,11 +28,11 @@ public class Tab3Adapter extends RecyclerView.Adapter<Tab3Adapter.DevicesViewHol
         this.mContext = mContext;
     }
 
-    protected static class DevicesViewHolder extends RecyclerView.ViewHolder
+    protected static class CardHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener
     {
         TextView itemText;
-        public DevicesViewHolder(@NonNull View itemView) {
+        public CardHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             this.itemText = itemView.findViewById(R.id.cardText);
@@ -52,14 +53,14 @@ public class Tab3Adapter extends RecyclerView.Adapter<Tab3Adapter.DevicesViewHol
 
     @NonNull
     @Override
-    public DevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.item_card, parent, false);
-        return new DevicesViewHolder(view);
+        return new CardHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DevicesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CardHolder holder, int position) {
         String mac = itemTextList.get(position);
         holder.itemText.setText(mac);
     }

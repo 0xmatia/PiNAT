@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pinat.pinatclient.Adapters.Tab2Adapter;
+import com.pinat.pinatclient.Adapters.SimpleCardListAdapter;
 import com.pinat.pinatclient.EvilTwinLog;
 import com.pinat.pinatclient.R;
 
@@ -54,8 +54,8 @@ public class FragmentTab2 extends Fragment {
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        Tab2Adapter tab2Adapter = new Tab2Adapter(actionList, context);;
-        tab2Adapter.setOnItemClickListener(new Tab2Adapter.ClickListener() {
+        SimpleCardListAdapter simpleCardListAdapter = new SimpleCardListAdapter(actionList, context);;
+        simpleCardListAdapter.setOnItemClickListener(new SimpleCardListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: Clicked: " + actionList.get(position));
@@ -67,6 +67,6 @@ public class FragmentTab2 extends Fragment {
             }
 
         });
-        recyclerView.setAdapter(tab2Adapter);
+        recyclerView.setAdapter(simpleCardListAdapter);
     }
 }
