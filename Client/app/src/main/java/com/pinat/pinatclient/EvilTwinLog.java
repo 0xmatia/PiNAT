@@ -13,7 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.pinat.pinatclient.Adapters.LogViewAdapter;
+import com.pinat.pinatclient.Adapters.EvilTwinAdapter;
 import com.pinat.pinatclient.models.EvilTwinResponse;
 import com.pinat.pinatclient.utils.Constants;
 import com.pinat.pinatclient.utils.VolleySingleton;
@@ -73,7 +73,7 @@ public class EvilTwinLog extends AppCompatActivity {
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        LogViewAdapter logViewAdapter = new LogViewAdapter(logList, this);;
-        recyclerView.setAdapter(logViewAdapter);
+        EvilTwinAdapter evilTwinAdapter = new EvilTwinAdapter(logList, this);;
+        recyclerView.setAdapter(evilTwinAdapter);
     }
 }

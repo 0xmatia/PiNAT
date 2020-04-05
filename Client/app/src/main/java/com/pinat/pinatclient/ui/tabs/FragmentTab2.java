@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -53,7 +54,7 @@ public class FragmentTab2 extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.actions_recycler_view);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
+        Toast.makeText(context, "blablabla", Toast.LENGTH_SHORT).show();
         SimpleCardListAdapter simpleCardListAdapter = new SimpleCardListAdapter(actionList, context);;
         simpleCardListAdapter.setOnItemClickListener(new SimpleCardListAdapter.ClickListener() {
             @Override
@@ -61,6 +62,7 @@ public class FragmentTab2 extends Fragment {
                 Log.d(TAG, "onItemClick: Clicked: " + actionList.get(position));
                 Intent intent = new Intent(context, EvilTwinLog.class);
                 Bundle bundle = new Bundle();
+                Toast.makeText(getContext(), "LOL", Toast.LENGTH_SHORT).show();
                 bundle.putString("action", actionList.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);

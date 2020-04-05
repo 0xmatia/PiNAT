@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,15 +24,17 @@ import java.util.Arrays;
 
 public class PluginActions extends AppCompatActivity {
 
+    private static Context CONTEXT = null;
     private static final String TAG = "PluginActions";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plugin_actions);
+        CONTEXT = this;
 
         Bundle params = getIntent().getExtras();
         if (params == null) return;
-        String plugin = params.getString("plugin"); // Get response, pass to the adapter
+        final String plugin = params.getString("plugin"); // Get response, pass to the adapter
         String url = Constants.ENDPOINT + "/" + plugin;
 
         Log.d(TAG, "onCreate: " + url);
@@ -42,7 +46,7 @@ public class PluginActions extends AppCompatActivity {
                         Log.d(TAG, "onResponse: " + response);
                         Gson gson = new Gson();
                         PluginActionModel pluginActionModel = gson.fromJson(response, PluginActionModel.class);
-                        showActions(pluginActionModel.getActions());
+                        showActions(pluginActionModel.getActions(), plugin);
                     }
                 }, new Response.ErrorListener() {
 
@@ -57,12 +61,12 @@ public class PluginActions extends AppCompatActivity {
        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    void showActions(final String[] actions)
+    void showActions(final String[] actions, final String plugin)
     {
         RecyclerView recyclerView = findViewById(R.id.plugin_action_recycler_view);
-        SimpleCardListAdapter adapter = new SimpleCardListAdapter(Arrays.asList(actions), this);
+        SimpleCardListAdapter adapter = new SimpleCardListAdapter(Arrays.asList(actions), CONTEXT);
         recyclerView.hasFixedSize();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(CONTEXT));
         recyclerView.setAdapter(adapter);
 
 
@@ -70,6 +74,10 @@ public class PluginActions extends AppCompatActivity {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: " + actions[position]);
+                Intent intent = new Intent(CONTEXT, ActionLog.class);
+                intent.putExtra("action", actions[position]);
+                intent.putExtra("plugin", plugin);
+                startActivity(intent);
             }
         });
     }
