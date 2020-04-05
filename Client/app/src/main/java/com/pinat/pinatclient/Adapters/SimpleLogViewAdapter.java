@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pinat.pinatclient.R;
 import com.pinat.pinatclient.models.EvilTwinResponse;
+import com.pinat.pinatclient.models.SimpleLogEntry;
 
 import java.util.List;
 
-public class LogViewAdapter extends RecyclerView.Adapter<LogViewAdapter.LogCardHolder> {
+public class SimpleLogViewAdapter extends RecyclerView.Adapter<SimpleLogViewAdapter.LogCardHolder> {
     //Todo: maybe change its name - it can also be an adapter of other log activities
-    List<EvilTwinResponse.Log> log;
+    List<SimpleLogEntry> log;
     Context mContext;
 
-    public LogViewAdapter(List<EvilTwinResponse.Log> logs, Context mContext) {
+    public SimpleLogViewAdapter(List<SimpleLogEntry> logs, Context mContext) {
         this.log = logs;
         this.mContext = mContext;
     }
@@ -46,9 +47,9 @@ public class LogViewAdapter extends RecyclerView.Adapter<LogViewAdapter.LogCardH
 
     @Override
     public void onBindViewHolder(@NonNull LogCardHolder holder, int position) {
-        EvilTwinResponse.Log logEntry = log.get(position);
-        holder.timeStamp.setText(logEntry.getTimeStamp());
-        holder.logContent.setText(logEntry.getLogContent());
+        SimpleLogEntry logEntry = log.get(position);
+        holder.timeStamp.setText(logEntry.getTimestamp());
+        holder.logContent.setText(logEntry.getLog());
     }
 
     @Override
