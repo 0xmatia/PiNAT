@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pinat.pinatclient.Adapters.SimpleCardListAdapter;
+import com.pinat.pinatclient.Adapters.ActionViewAdapter;
 import com.pinat.pinatclient.EvilTwinLog;
 import com.pinat.pinatclient.R;
 
@@ -55,8 +55,8 @@ public class FragmentTab2 extends Fragment {
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         Toast.makeText(context, "blablabla", Toast.LENGTH_SHORT).show();
-        SimpleCardListAdapter simpleCardListAdapter = new SimpleCardListAdapter(actionList, context);;
-        simpleCardListAdapter.setOnItemClickListener(new SimpleCardListAdapter.ClickListener() {
+        ActionViewAdapter actionViewAdapter = new ActionViewAdapter(actionList, context);;
+        actionViewAdapter.setOnItemClickListener(new ActionViewAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: Clicked: " + actionList.get(position));
@@ -69,6 +69,6 @@ public class FragmentTab2 extends Fragment {
             }
 
         });
-        recyclerView.setAdapter(simpleCardListAdapter);
+        recyclerView.setAdapter(actionViewAdapter);
     }
 }

@@ -2,6 +2,7 @@ package com.pinat.pinatclient.ui.tabs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +40,21 @@ public class FragmentTab1 extends Fragment {
 
         int len = getArguments().getString("devices").length();
         String[] macs = getArguments().getString("devices").
-                substring(1, len-1).split(",");
+                substring(1, len-1).split(", ");
 
         List<String> macList = Arrays.asList(macs);
+        Log.d(TAG, "onCreateView: ed" +len);
 
-        updateTab(macList, rootView);
+        if (macList.size() > 0)
+        {
+            updateTab(macList, rootView);
+        }
         return rootView;
     }
 
     public void updateTab(final List<String> macs, View rootView)
     {
+        Log.d(TAG, "updateTab: " + macs.size());
         RecyclerView recyclerView = rootView.findViewById(R.id.devicesRecyclerView);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));

@@ -71,9 +71,9 @@ public class EvilTwinLog extends AppCompatActivity {
         List<EvilTwinResponse.Log> logList = Arrays.asList(evilTwinResponse.getLog());
         RecyclerView recyclerView = findViewById(R.id.evilTwinRecyclerView);
         recyclerView.hasFixedSize();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        EvilTwinAdapter evilTwinAdapter = new EvilTwinAdapter(logList, this);;
+        EvilTwinAdapter evilTwinAdapter = new EvilTwinAdapter(logList, getApplicationContext());;
         recyclerView.setAdapter(evilTwinAdapter);
     }
 }

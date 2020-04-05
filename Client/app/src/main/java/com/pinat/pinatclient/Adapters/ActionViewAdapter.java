@@ -13,7 +13,7 @@ import com.pinat.pinatclient.R;
 
 import java.util.List;
 
-public class SimpleCardListAdapter extends RecyclerView.Adapter<SimpleCardListAdapter.CardHolder> {
+public class ActionViewAdapter extends RecyclerView.Adapter<ActionViewAdapter.CardHolder> {
 
     public static ClickListener clickListener;
     List<String> cardText;
@@ -23,7 +23,7 @@ public class SimpleCardListAdapter extends RecyclerView.Adapter<SimpleCardListAd
         void onItemClick(int position, View v);
     }
 
-    public SimpleCardListAdapter(List<String> cardText, Context mContext) {
+    public ActionViewAdapter(List<String> cardText, Context mContext) {
         this.cardText = cardText;
         this.mContext = mContext;
     }
@@ -40,7 +40,7 @@ public class SimpleCardListAdapter extends RecyclerView.Adapter<SimpleCardListAd
 
         @Override
         public void onClick(View v) {
-            if (SimpleCardListAdapter.clickListener != null)
+            if (ActionViewAdapter.clickListener != null)
             {
                 clickListener.onItemClick(getAdapterPosition(), v);
             }

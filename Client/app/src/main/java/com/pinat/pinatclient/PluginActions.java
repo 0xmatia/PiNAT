@@ -15,7 +15,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.pinat.pinatclient.Adapters.SimpleCardListAdapter;
+import com.pinat.pinatclient.Adapters.ActionViewAdapter;
+import com.pinat.pinatclient.Adapters.PluginActionsListAdapter;
 import com.pinat.pinatclient.models.PluginActionModel;
 import com.pinat.pinatclient.utils.Constants;
 import com.pinat.pinatclient.utils.VolleySingleton;
@@ -64,13 +65,13 @@ public class PluginActions extends AppCompatActivity {
     void showActions(final String[] actions, final String plugin)
     {
         RecyclerView recyclerView = findViewById(R.id.plugin_action_recycler_view);
-        SimpleCardListAdapter adapter = new SimpleCardListAdapter(Arrays.asList(actions), CONTEXT);
+        PluginActionsListAdapter adapter = new PluginActionsListAdapter(Arrays.asList(actions), CONTEXT);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(CONTEXT));
         recyclerView.setAdapter(adapter);
 
 
-        adapter.setOnItemClickListener(new SimpleCardListAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new PluginActionsListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: " + actions[position]);
