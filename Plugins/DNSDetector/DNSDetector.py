@@ -59,7 +59,6 @@ class DNSDetector(plugin):
 
             try:
                 answer = self.resolver.query(dname, "A")
-                print(dname)
             except NXDOMAIN:
                 continue
             except Timeout:
@@ -125,16 +124,24 @@ class DNSDetector(plugin):
              (ATTACKER_IP TEXT NOT NULL, DOMAIN TEXT NOT NULL, SPOOFED_IPS TEXT NOT NULL,\
                   TIME TEXT NOT NULL, UNIQUE(ATTACKER_IP, DOMAIN, SPOOFED_IPS, TIME))")
         #pynat.exec_db(self.db, "CREATE TABLE IF NOT EXISTS KNOWN (IP TEXT NOT NULL, UNIQUE(IP))")
+        
+        try:
+            res = pynat.select_db(self.db, "SELECT * FROM KNOWN_IPS")
+            for result in res:
+                self.known_ips.append(result[1].strip())
+            print(self.known_ips)
+        except RuntimeError:
+            print("Couldn't find known ip's table, skipping")
 
-        with open(file_location + "/known_ips.txt", 'r') as f:
-            self.known_ips = [line.rstrip() for line in f]
-        #self.known_ips = [row[0] for row in pynat.select_db(self.db, "SELECT * FROM KNOWN")]
+
 
     def teardown(self):
         pynat.close_db(self.db)
 
+
     def get_actions(self):
         return self.actions
+
 
     def get_log(self):
         answer_array = []
