@@ -1,3 +1,4 @@
+#!/bin/bash
 # PiNAT installer for arch-based distros, initially writted for Manjaro
 
 # Run as root

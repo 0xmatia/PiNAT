@@ -181,6 +181,12 @@ extern "C"
                     
                     std::string dname = resource.dname();
                     std::string ip = resource.data();
+
+                    if (ip.find(":") != std::string::npos)
+                    {
+                        // skip ipv6 stuff
+                        continue;
+                    }
                     if (dnsInfo->find(dname) == dnsInfo->end()) 
                     {
                         //if the dname doesn't exist in the map, add it.
@@ -189,7 +195,6 @@ extern "C"
                     (*dnsInfo)[dname]->push_back(ip);
                 }
             }
-
             return dnsInfo;
         }
         

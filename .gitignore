@@ -4,6 +4,7 @@ obj/
 libtins/
 config.txt
 *.db
+!DNSDetector.db
 __pycache__
 *.pyc
 *.pyo
