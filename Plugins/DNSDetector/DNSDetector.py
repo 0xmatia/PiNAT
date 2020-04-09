@@ -129,7 +129,6 @@ class DNSDetector(plugin):
             res = pynat.select_db(self.db, "SELECT * FROM KNOWN_IPS")
             for result in res:
                 self.known_ips.append(result[1].strip())
-            print(self.known_ips)
         except RuntimeError:
             print("Couldn't find known ip's table, skipping")
 

@@ -7,7 +7,7 @@ import json
 class WordCensor(plugin):
 
     def __init__(self):
-        self.name = "Word censor"
+        self.name = "WordCensor"
         self.type = "censor"
         self.version = 1.0
         self.description = "censors any given words"

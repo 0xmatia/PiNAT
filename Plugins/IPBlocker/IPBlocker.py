@@ -62,8 +62,8 @@ class IPBlocker(plugin):
 
     def get_blocked_stats(self):
         answer_array = []
-        db_res = pynat.exec_db("SELECT * FROM LOG")
-
+        db_res = pynat.exec_db(self.db, "SELECT * FROM LOG")
+        
         for entry in db_res:
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})
 
