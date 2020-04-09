@@ -17,6 +17,7 @@ PyMethodDef core_methods[] = {
     {"close_db", (PyCFunction)py_closeDB, METH_VARARGS, "closes connection to database"},
     {"exec_db", (PyCFunction)py_execDB, METH_VARARGS, "executes a command in the database"},
     {"select_db", (PyCFunction)py_selectDB, METH_VARARGS, "executes a command in the database and returns the result"},
+    {"censor_words", (PyCFunction)py_censorWords, METH_VARARGS, "Censores a list of words"},
     {NULL}  /* Sentinel */
 };
 
