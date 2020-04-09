@@ -52,7 +52,7 @@ def get_log():
 
     for entry in result:
         log.append({"SSID": entry[0], "Time": entry[1]})
-    return log
+    return {"result": log}
 
 
 def delete_log():
@@ -61,7 +61,9 @@ def delete_log():
     cursor = conn.cursor()
     cursor.execute("DELETE FROM LOG")
     conn.commit()
-    conn.close() 
+    conn.close()
+
+    return {"status": "success"}
 
 
 def main():
