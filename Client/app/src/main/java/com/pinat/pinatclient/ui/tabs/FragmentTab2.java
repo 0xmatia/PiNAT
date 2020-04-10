@@ -42,10 +42,13 @@ public class FragmentTab2 extends Fragment {
         // Convert to list of actions
         int len = getArguments().getString("actions").length();
         String[] actions = getArguments().getString("actions").
-                substring(1, len - 1).split(",");
+                substring(1, len - 1).split(", ");
         List<String> actionList = Arrays.asList(actions);
-
-
+        actionList.remove("network_status"); //hacky I now, but I don't want to display
+        // network_status again
+        //Todo: check if we receive a result array. If we don't we tell the user the action
+        // completed successfully but there is noting to show. If the action returned result array,
+        // populate the card like I know.
         updateTab(actionList, rootView);
         return rootView;
     }
@@ -54,7 +57,6 @@ public class FragmentTab2 extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.actions_recycler_view);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        Toast.makeText(context, "blablabla", Toast.LENGTH_SHORT).show();
         ActionViewAdapter actionViewAdapter = new ActionViewAdapter(actionList, context);;
         actionViewAdapter.setOnItemClickListener(new ActionViewAdapter.ClickListener() {
             @Override
@@ -62,7 +64,6 @@ public class FragmentTab2 extends Fragment {
                 Log.d(TAG, "onItemClick: Clicked: " + actionList.get(position));
                 Intent intent = new Intent(context, EvilTwinLog.class);
                 Bundle bundle = new Bundle();
-                Toast.makeText(getContext(), "LOL", Toast.LENGTH_SHORT).show();
                 bundle.putString("action", actionList.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);

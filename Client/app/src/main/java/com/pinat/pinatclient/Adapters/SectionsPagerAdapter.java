@@ -51,9 +51,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         {
             case 0:
             {
-                args.putString("devices", Arrays.toString(response.getEntities()));
                 fragment = new FragmentTab1(mContext);
-                fragment.setArguments(args);
                 break;
             }
             case 1:

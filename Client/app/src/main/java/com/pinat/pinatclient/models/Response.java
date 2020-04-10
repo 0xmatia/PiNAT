@@ -4,17 +4,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class Response {
     private String status;
-    @SerializedName("connected entities")
-    private String[] entities;
+    private boolean online;
     private String[] actions;
     private String[] plugins;
+
+    public Response(String status, boolean online, String[] actions, String[] plugins) {
+        this.status = status;
+        this.online = online;
+        this.actions = actions;
+        this.plugins = plugins;
+    }
 
     public String getStatus() {
         return status;
     }
 
-    public String[] getEntities() {
-        return entities;
+    public boolean isOnline() {
+        return online;
     }
 
     public String[] getActions() {
@@ -23,12 +29,5 @@ public class Response {
 
     public String[] getPlugins() {
         return plugins;
-    }
-
-    public Response(String status, String entities[], String[] actions, String[] plugins) {
-        this.status = status;
-        this.entities = entities;
-        this.actions = actions;
-        this.plugins = plugins;
     }
 }

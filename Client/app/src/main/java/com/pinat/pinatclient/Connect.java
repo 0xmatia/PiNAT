@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -83,7 +84,7 @@ public class Connect extends AppCompatActivity {
         Constants.ENDPOINT = url;
         Log.d("Log", Constants.ENDPOINT);
 
-        //construct request
+        //construct get request
         StringRequest stringRequest = new StringRequest(Request.Method.GET, Constants.ENDPOINT,
                 new Response.Listener<String>() {
                     @Override
