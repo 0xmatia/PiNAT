@@ -140,7 +140,7 @@ def print_config():
 
 
 def get_connected_devices():
-    ns.get_connected_devices("ap0")
+    return ns.get_connected_devices("ap0")
 
 
 def run_api(plugin_dictionary):
