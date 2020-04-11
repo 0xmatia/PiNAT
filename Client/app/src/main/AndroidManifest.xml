@@ -15,7 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".ActionLog"></activity>
         <activity android:name=".PluginActions" />
-        <activity android:name=".EvilTwinLog" />
+        <activity android:name=".RootActionLog" />
         <activity
             android:name=".General"
             android:label="@string/title_activity_general"

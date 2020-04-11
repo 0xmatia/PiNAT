@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pinat.pinatclient.R;
-import com.pinat.pinatclient.models.EvilTwinResponse;
 import com.pinat.pinatclient.models.SimpleLogEntry;
 
 import java.util.List;
