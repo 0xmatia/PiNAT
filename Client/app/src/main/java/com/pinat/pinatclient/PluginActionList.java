@@ -9,21 +9,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-import com.pinat.pinatclient.Adapters.ActionViewAdapter;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.pinat.pinatclient.Adapters.PluginActionsListAdapter;
-import com.pinat.pinatclient.models.PluginActionModel;
 import com.pinat.pinatclient.utils.Constants;
 import com.pinat.pinatclient.utils.VolleySingleton;
 
-import java.util.Arrays;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.LinkedList;
+import java.util.List;
 
-public class PluginActions extends AppCompatActivity {
+public class PluginActionList extends AppCompatActivity {
 
     private static Context CONTEXT = null;
     private static final String TAG = "PluginActions";
@@ -36,18 +38,33 @@ public class PluginActions extends AppCompatActivity {
         Bundle params = getIntent().getExtras();
         if (params == null) return;
         final String plugin = params.getString("plugin"); // Get response, pass to the adapter
-        String url = Constants.ENDPOINT + "/" + plugin;
+        String url = Constants.ENDPOINT + "/plugin/" + plugin;
 
         Log.d(TAG, "onCreate: " + url);
+        final List<String> actions = new LinkedList<>();
         // make a request
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject> () {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response);
-                        Gson gson = new Gson();
-                        PluginActionModel pluginActionModel = gson.fromJson(response, PluginActionModel.class);
-                        showActions(pluginActionModel.getActions(), plugin);
+                        try {
+                            String status = response.getString("status");
+                            if (status.equals("success"))
+                            {
+                                JSONArray jsonArray = response.getJSONArray("actions");
+                                for (int i = 0; i < jsonArray.length(); i++)
+                                {
+                                    actions.add(jsonArray.get(i).toString());
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(PluginActionList.this,
+                                    "Something wrong and unexpected has happened",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        showActions(actions, plugin);
                     }
                 }, new Response.ErrorListener() {
 
@@ -62,10 +79,10 @@ public class PluginActions extends AppCompatActivity {
        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    void showActions(final String[] actions, final String plugin)
+    void showActions(final List<String> actions, final String plugin)
     {
         RecyclerView recyclerView = findViewById(R.id.plugin_action_recycler_view);
-        PluginActionsListAdapter adapter = new PluginActionsListAdapter(Arrays.asList(actions), CONTEXT);
+        PluginActionsListAdapter adapter = new PluginActionsListAdapter(actions, CONTEXT);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(CONTEXT));
         recyclerView.setAdapter(adapter);
@@ -74,9 +91,8 @@ public class PluginActions extends AppCompatActivity {
         adapter.setOnItemClickListener(new PluginActionsListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Log.d(TAG, "onItemClick: " + actions[position]);
-                Intent intent = new Intent(CONTEXT, ActionLog.class);
-                intent.putExtra("action", actions[position]);
+                Intent intent = new Intent(CONTEXT, PluginActionLog.class);
+                intent.putExtra("action", actions.get(position));
                 intent.putExtra("plugin", plugin);
                 startActivity(intent);
             }

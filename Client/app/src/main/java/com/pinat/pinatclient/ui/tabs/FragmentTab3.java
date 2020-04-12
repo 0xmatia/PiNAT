@@ -14,12 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pinat.pinatclient.Adapters.Tab3Adapter;
-import com.pinat.pinatclient.PluginActions;
+import com.pinat.pinatclient.PluginActionList;
 import com.pinat.pinatclient.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,7 +59,7 @@ public class FragmentTab3 extends Fragment {
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick: Clicked: " + pluginList.get(position));
                 //Get action list:
-                Intent intent = new Intent(mContext, PluginActions.class);
+                Intent intent = new Intent(mContext, PluginActionList.class);
                 intent.putExtra("plugin", pluginList.get(position));
                 startActivity(intent);
             }

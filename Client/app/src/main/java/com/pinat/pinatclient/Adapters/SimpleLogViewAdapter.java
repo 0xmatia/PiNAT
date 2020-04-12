@@ -15,7 +15,6 @@ import com.pinat.pinatclient.models.SimpleLogEntry;
 import java.util.List;
 
 public class SimpleLogViewAdapter extends RecyclerView.Adapter<SimpleLogViewAdapter.LogCardHolder> {
-    //Todo: maybe change its name - it can also be an adapter of other log activities
     List<SimpleLogEntry> log;
     Context mContext;
 
@@ -24,10 +23,10 @@ public class SimpleLogViewAdapter extends RecyclerView.Adapter<SimpleLogViewAdap
         this.mContext = mContext;
     }
 
-    protected static class LogCardHolder extends RecyclerView.ViewHolder
-    {
+    protected static class LogCardHolder extends RecyclerView.ViewHolder {
         TextView timeStamp;
         TextView logContent;
+
         public LogCardHolder(@NonNull View itemView) {
             super(itemView);
             this.timeStamp = itemView.findViewById(R.id.timeStampID);
@@ -53,7 +52,7 @@ public class SimpleLogViewAdapter extends RecyclerView.Adapter<SimpleLogViewAdap
 
     @Override
     public int getItemCount() {
-       return log.size();
+        return log.size();
     }
 
 }

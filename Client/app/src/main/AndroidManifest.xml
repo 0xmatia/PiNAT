@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ActionLog"></activity>
-        <activity android:name=".PluginActions" />
+        <activity android:name=".PluginActionLog"></activity>
+        <activity android:name=".PluginActionList" />
         <activity android:name=".RootActionLog" />
         <activity
             android:name=".General"

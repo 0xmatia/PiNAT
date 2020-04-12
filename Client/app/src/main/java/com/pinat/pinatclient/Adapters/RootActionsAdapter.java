@@ -16,7 +16,6 @@ import com.pinat.pinatclient.models.SimpleLogEntry;
 import java.util.List;
 
 public class RootActionsAdapter extends RecyclerView.Adapter<RootActionsAdapter.LogCardHolder> {
-    //Todo: maybe change its name - it can also be an adapter of other log activities
     List<SimpleLogEntry> log;
     Context mContext;
     private static final String TAG = "RootActionsAdapter";
