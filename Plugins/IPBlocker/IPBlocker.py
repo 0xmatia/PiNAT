@@ -13,7 +13,7 @@ class IPBlocker(plugin):
         self.description = "Blocks certain external ip addresses"
         self.author = "Ofri Marx"
         self.priority = 1000
-        self.actions = ["get_blocked_ips", "get_blocked_stats"]
+        self.actions = ["get_blocked_ips", "get_blocked_stats", "delete_database"]
         
         self.blacklist = []
         self.db = ""
@@ -54,6 +54,7 @@ class IPBlocker(plugin):
 
     def delete_database(self):
         pynat.exec_db(self.db, "DELETE FROM LOG")
+        return {"status": "success"}
 
 
     def get_blocked_ips(self):
@@ -62,7 +63,7 @@ class IPBlocker(plugin):
 
     def get_blocked_stats(self):
         answer_array = []
-        db_res = pynat.exec_db(self.db, "SELECT * FROM LOG")
+        db_res = pynat.select_db(self.db, "SELECT * FROM LOG")
         
         for entry in db_res:
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})

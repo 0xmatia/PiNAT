@@ -134,13 +134,14 @@ def print_config():
     for line in data:
         info = line.split("=")
         if len(info) == 2:
-            config_data.append(info)
+            config_data.append({info[0]: info[1]})
+            print(config_data)
     
     return {"status":"success", "result": config_data}
 
 
 def get_connected_devices():
-    return {"devices": ns.get_connected_devices("ap0")}
+    return {"status": "success", "result": ns.get_connected_devices("ap0")}
 
 
 def run_api(plugin_dictionary):

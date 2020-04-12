@@ -25,7 +25,7 @@ class DNSDetector(plugin):
         self.description = "Alerts if DNS poisoning occured"
         self.author = "Elad Matia"
         self.priority = 324786
-        self.actions = ["get_log"]
+        self.actions = ["get_log", "delete_database"]
         # default num of workers is number of cores
         self.executor = ThreadPoolExecutor(max_workers=60)
         self.resolver = Resolver()
@@ -154,3 +154,4 @@ class DNSDetector(plugin):
 
     def delete_database(self):
         pynat.exec_db(self.db, "DELETE FROM LOG")
+        return {"status": "success"}
