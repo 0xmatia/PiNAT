@@ -22,7 +22,9 @@ import com.pinat.pinatclient.utils.VolleySingleton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -42,6 +44,49 @@ public class PluginActionLog extends AppCompatActivity {
 
         String url = Constants.ENDPOINT + "/plugin/" + plugin + "/" + action;
         Log.d(TAG, "onCreate: " + url);
+        verifyArgs(url, action, plugin);
+    }
+
+    void verifyArgs(final String url, final String action, final String plugin) {
+        final List<String> args = new LinkedList<>();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String status = response.getString("status");
+                            if (status.equals("success")) {
+                                JSONArray jsonArray = response.getJSONArray("args");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    args.add(jsonArray.get(i).toString());
+                                }
+                                makeRequest(url, action, plugin, args);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "onResponse: " + args);
+                    }
+
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error != null) {
+                    Log.e(TAG, "onErrorResponse: Failure:" + error.getMessage());
+
+                }
+            }
+        });
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
+    }
+
+    void makeRequest(final String url, final String action, final String plugin, List<String> args) {
+        //At this point I request arguments from the user, but at this point this option is not supported.
+        if (args.size() != 0) {
+        } //do stuff
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -78,12 +123,9 @@ public class PluginActionLog extends AppCompatActivity {
                             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                             try {
                                 String status = response.getString("status");
-                                if (status.equals("success"))
-                                {
+                                if (status.equals("success")) {
                                     title.setText("Action completed successfully, that's all we know.");
-                                }
-                                else
-                                {
+                                } else {
                                     title.setText("Something went wrong: " + status);
                                 }
 
@@ -106,10 +148,9 @@ public class PluginActionLog extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    void showLog(List<SimpleLogEntry> logs, String plugin, String action)
-    {
+    void showLog(List<SimpleLogEntry> logs, String plugin, String action) {
         TextView logTitle = findViewById(R.id.log_title);
-        logTitle.setText(action+": " + plugin);
+        logTitle.setText(action + ": " + plugin);
         RecyclerView recyclerView = findViewById(R.id.action_log_recycler_view);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -22,6 +23,7 @@ import com.pinat.pinatclient.utils.VolleySingleton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class PluginActionList extends AppCompatActivity {
 
     private static Context CONTEXT = null;
     private static final String TAG = "PluginActions";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +47,15 @@ public class PluginActionList extends AppCompatActivity {
         final List<String> actions = new LinkedList<>();
         // make a request
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject> () {
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "onResponse: " + response);
                         try {
                             String status = response.getString("status");
-                            if (status.equals("success"))
-                            {
+                            if (status.equals("success")) {
                                 JSONArray jsonArray = response.getJSONArray("actions");
-                                for (int i = 0; i < jsonArray.length(); i++)
-                                {
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     actions.add(jsonArray.get(i).toString());
                                 }
                             }
@@ -70,17 +71,17 @@ public class PluginActionList extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error != null)
-                {
+                stopLoading();
+                if (error != null) {
                     Log.d(TAG, "onErrorResponse: " + error.getCause());
                 }
             }
         });
-       VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    void showActions(final List<String> actions, final String plugin)
-    {
+    void showActions(final List<String> actions, final String plugin) {
+        stopLoading();
         RecyclerView recyclerView = findViewById(R.id.plugin_action_recycler_view);
         PluginActionsListAdapter adapter = new PluginActionsListAdapter(actions, CONTEXT);
         recyclerView.hasFixedSize();
@@ -97,5 +98,14 @@ public class PluginActionList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    void stopLoading() {
+        // Stop loading symbol
+        ProgressBar pb = findViewById(R.id.progressBarPluginActions);
+        pb.setVisibility(View.INVISIBLE);
+        //Show recycle view
+        RecyclerView recyclerView = findViewById(R.id.plugin_action_recycler_view);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

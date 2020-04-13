@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RootActionLog extends AppCompatActivity {
@@ -38,10 +40,57 @@ public class RootActionLog extends AppCompatActivity {
         final String action = params.getString("action");
         Log.d(TAG, "onCreate: Action: " + action);
 
-
         // Make a request
         String url = Constants.ENDPOINT + "/action/" + action;
         Log.d(TAG, "onCreate: " + url);
+        verifyArgs(url, action);
+
+    }
+
+    void verifyArgs(final String url, final String action) {
+        final List<String> args = new LinkedList<>();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, "onResponse: BLU");
+                            String status = response.getString("status");
+                            if (status.equals("success")) {
+                                Log.d(TAG, "onResponse: HEY@");
+                                JSONArray jsonArray = response.getJSONArray("args");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    args.add(jsonArray.get(i).toString());
+                                }
+                                Log.d(TAG, "onResponse: " + args);
+                                makeRequest(url, action, args);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "onResponse: " + args);
+                    }
+
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error != null) {
+                    Log.e(TAG, "onErrorResponse: Failure:" + error.getStackTrace());
+
+                }
+            }
+        });
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
+    }
+
+    void makeRequest(final String url, final String action, List<String> args) {
+        //At this point I request arguments from the user, but at this point this option is not supported.
+        Log.d(TAG, "makeRequest: sdas");
+        if (args.size() != 0) {
+        } // do stuff
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -77,12 +126,9 @@ public class RootActionLog extends AppCompatActivity {
                             TextView title = findViewById(R.id.logTitle);
                             try {
                                 String status = response.getString("status");
-                                if (status.equals("success"))
-                                {
+                                if (status.equals("success")) {
                                     title.setText("Action completed successfully, that's all we know.");
-                                }
-                                else
-                                {
+                                } else {
                                     title.setText("Something went wrong: " + status);
                                 }
 
@@ -96,6 +142,7 @@ public class RootActionLog extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                stopLoading();
                 if (error != null) {
                     Log.d(TAG, "onErrorResponse: " + error.getMessage());
                 }
@@ -106,6 +153,7 @@ public class RootActionLog extends AppCompatActivity {
     }
 
     void showLog(List<SimpleLogEntry> logs, String action) {
+        stopLoading();
         TextView logTitle = findViewById(R.id.logTitle);
         logTitle.setText(action + ":");
         RecyclerView recyclerView = findViewById(R.id.rootActionsLogRecyclerView);
@@ -114,5 +162,16 @@ public class RootActionLog extends AppCompatActivity {
 
         RootActionsAdapter rootActionsAdapter = new RootActionsAdapter(logs, getApplicationContext());
         recyclerView.setAdapter(rootActionsAdapter);
+    }
+
+    void stopLoading() {
+        // Stop loading symbol
+        ProgressBar pb = findViewById(R.id.progressBarRootActionLog);
+        pb.setVisibility(View.INVISIBLE);
+        //Show recycle view + title
+        RecyclerView recyclerView = findViewById(R.id.rootActionsLogRecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
+        TextView view = findViewById(R.id.logTitle);
+        view.setVisibility(View.VISIBLE);
     }
 }

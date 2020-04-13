@@ -1,13 +1,12 @@
 package com.pinat.pinatclient.ui.tabs;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,11 +17,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.pinat.pinatclient.Adapters.TabAdapterNoListener;
-import com.pinat.pinatclient.General;
 import com.pinat.pinatclient.R;
-import com.pinat.pinatclient.models.SimpleLogEntry;
 import com.pinat.pinatclient.utils.Constants;
 import com.pinat.pinatclient.utils.VolleySingleton;
 
@@ -31,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,6 +57,7 @@ public class FragmentTab1 extends Fragment {
             Log.d(TAG, "updateTab: Why is the list null?");
             return;
         }
+        stopLoading(rootView);
         RecyclerView recyclerView = rootView.findViewById(R.id.devicesRecyclerView);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -97,13 +93,23 @@ public class FragmentTab1 extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                stopLoading(rootView);
                 if (error != null) {
                     Log.e(TAG, "onErrorResponse: Failure:" + error.getMessage());
-
                 }
             }
         });
         VolleySingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    void stopLoading(View rootView)
+    {
+        // Stop loading symbol
+        ProgressBar pb = rootView.findViewById(R.id.progressBarTab1);
+        pb.setVisibility(View.INVISIBLE);
+        //Show recycle view
+        RecyclerView recyclerView = rootView.findViewById(R.id.devicesRecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 }
