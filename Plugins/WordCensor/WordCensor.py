@@ -7,15 +7,15 @@ import json
 class WordCensor(plugin):
 
     def __init__(self):
-        self.name = "WordCensor"
-        self.type = "censor"
-        self.version = 1.0
-        self.description = "censors any given words"
-        self.author = "Elad Matia"
-        self.priority = 1000
-        self.actions = ["get_log"]
-        
-        self.db = ""
+        plugin.__init__(self,
+        "WordCensor",
+        "Elad Matia",
+        0.1,
+        "Censors any given words",
+        "Censor",
+        1000,
+        None,
+        [])
 
 
     def process(self, packet):

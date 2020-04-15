@@ -7,16 +7,16 @@ import json
 class IPBlocker(plugin):
 
     def __init__(self):
-        self.name = "IPBlocker"
-        self.type = "blocker"
-        self.version = 1.0
-        self.description = "Blocks certain external ip addresses"
-        self.author = "Ofri Marx"
-        self.priority = 1000
-        self.actions = ["get_blocked_ips", "get_blocked_stats", "delete_database"]
-        
+        plugin.__init__(self,
+        "IPBlocker",
+        "Ofri Marx",
+        0.1,
+        "Blocks certain external ip addresses",
+        "blocker",
+        1000,
+        None,
+        ["get_blocked_ips", "get_blocked_stats", "delete_database"])
         self.blacklist = []
-        self.db = ""
 
 
     def process(self, packet):

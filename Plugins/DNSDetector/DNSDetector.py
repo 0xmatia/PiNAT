@@ -19,18 +19,17 @@ import os
 class DNSDetector(plugin):
 
     def __init__(self):
-        self.name = "DNSDetector"
-        self.type = "Observer"  # adds specific packets to queue, another thread checks them
-        self.version = 0.1
-        self.description = "Alerts if DNS poisoning occured"
-        self.author = "Elad Matia"
-        self.priority = 324786
-        self.actions = ["get_log", "delete_database"]
-        # default num of workers is number of cores
+        plugin.__init__(self, "DNSDetector",
+         "Elad Matia",
+          0.1,
+         "Alerts if DNS poisoning occured", 
+         "Observer",
+         324786,
+         None,
+         ["get_log", "delete_database"])
         self.executor = ThreadPoolExecutor(max_workers=60)
         self.resolver = Resolver()
         self.resolver.nameservers = ["1.1.1.1", "1.0.0.1"]
-        self.db = ""
         self.known_ips = []
 
     def process(self, packet):
