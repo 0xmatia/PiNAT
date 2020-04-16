@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -122,8 +123,10 @@ public class RootActionLog extends AppCompatActivity {
                             }
                             showLog(logEntries, action);
                         } catch (JSONException e) {
+                            stopLoading();
                             Log.d(TAG, "onResponse: nothing to show");
                             TextView title = findViewById(R.id.logTitle);
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                             try {
                                 String status = response.getString("status");
                                 if (status.equals("success")) {
@@ -133,6 +136,7 @@ public class RootActionLog extends AppCompatActivity {
                                 }
 
                             } catch (JSONException ex) {
+                                stopLoading();
                                 ex.printStackTrace();
                                 title.setText("Unknown error.");
                             }

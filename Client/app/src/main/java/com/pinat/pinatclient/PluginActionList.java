@@ -60,6 +60,7 @@ public class PluginActionList extends AppCompatActivity {
                                 }
                             }
                         } catch (JSONException e) {
+                            stopLoading();
                             e.printStackTrace();
                             Toast.makeText(PluginActionList.this,
                                     "Something wrong and unexpected has happened",

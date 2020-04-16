@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -92,6 +94,7 @@ public class PluginActionLog extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         List<SimpleLogEntry> logEntries = new ArrayList<>();
+                        Log.d(TAG, "onResponse: " + response);
                         try {
                             JSONArray jsonArray = response.getJSONArray("result");
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -118,6 +121,7 @@ public class PluginActionLog extends AppCompatActivity {
                             }
                             showLog(logEntries, plugin, action);
                         } catch (JSONException e) {
+                            stopLoading();
                             Log.d(TAG, "onResponse: nothing to show");
                             TextView title = findViewById(R.id.log_title);
                             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -130,6 +134,7 @@ public class PluginActionLog extends AppCompatActivity {
                                 }
 
                             } catch (JSONException ex) {
+                                stopLoading();
                                 ex.printStackTrace();
                                 title.setText("Unknown error.");
                             }
@@ -140,6 +145,7 @@ public class PluginActionLog extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error != null) {
+                    stopLoading();
                     Log.d(TAG, "onErrorResponse: " + error.getMessage());
                 }
             }
@@ -149,6 +155,7 @@ public class PluginActionLog extends AppCompatActivity {
     }
 
     void showLog(List<SimpleLogEntry> logs, String plugin, String action) {
+        stopLoading();
         TextView logTitle = findViewById(R.id.log_title);
         logTitle.setText(action + ": " + plugin);
         RecyclerView recyclerView = findViewById(R.id.action_log_recycler_view);
@@ -157,5 +164,16 @@ public class PluginActionLog extends AppCompatActivity {
 
         RootActionsAdapter rootActionsAdapter = new RootActionsAdapter(logs, this);
         recyclerView.setAdapter(rootActionsAdapter);
+    }
+
+    void stopLoading() {
+        // Stop loading symbol
+        ProgressBar pb = findViewById(R.id.progressBarPluginActionLog);
+        pb.setVisibility(View.INVISIBLE);
+        //Show recycle view + title
+        RecyclerView recyclerView = findViewById(R.id.action_log_recycler_view);
+        recyclerView.setVisibility(View.VISIBLE);
+        TextView view = findViewById(R.id.log_title);
+        view.setVisibility(View.VISIBLE);
     }
 }
