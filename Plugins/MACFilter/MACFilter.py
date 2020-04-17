@@ -5,16 +5,8 @@ import os, subprocess
 class MACFilter(plugin):
 
     def __init__(self):
-        self.name = "MACFilter"
-        self.type = "Setup"
-        self.version = 1.0
-        self.description = "Blocks certain MAC Addresses from the local network"
-        self.author = "Ofri Marx"
-        self.priority = 1
-        self.actions = ["get_blacklist"]
-        
+        super().__init__("MACFilter", "Ofri Marx", 1.0, "Blocks certain MAC Addresses from the local network", "Setup", 1, None, ["get_blacklist"])
         self.maclist = []
-        self.db = 0
 
 
     def process(self, packet):
