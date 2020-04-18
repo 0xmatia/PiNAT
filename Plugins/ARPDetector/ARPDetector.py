@@ -58,3 +58,4 @@ class ARPDetector(plugin):
 
     def delete_database(self):
         pynat.exec_db(self.db, "DELETE FROM LOG")
+        return {"status": "success"}
