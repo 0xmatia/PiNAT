@@ -17,16 +17,18 @@
         app:layout_constraintEnd_toEndOf="@+id/log_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.00999999" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/action_log_recycler_view"
-        android:layout_width="413dp"
-        android:layout_height="552dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/log_title">
 
     </androidx.recyclerview.widget.RecyclerView>
 
