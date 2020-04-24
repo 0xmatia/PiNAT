@@ -24,7 +24,7 @@ class AdBlocker(plugin):
             return packet
 
         for dname in dns_info:
-            if dname in self.blacklist or dname.split(".", 1)[1] in self.blacklist:
+            if any(x in dname for x in self.blacklist):
                 pynat.drop_packet(packet)
                 return None
 
