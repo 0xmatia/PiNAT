@@ -135,7 +135,6 @@ def print_config():
         info = line.split("=")
         if len(info) == 2:
             config_data.append({info[0]: info[1]})
-            print(config_data)
     
     return {"status":"success", "result": config_data}
 
