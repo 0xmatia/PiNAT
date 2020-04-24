@@ -18,18 +18,17 @@ class AdBlocker(plugin):
         self.blacklist = []
 
 
-    # def process(self, packet):
-    #     src_addr = ""
-    #     dst_addr = ""
-    #     ips = pynat.get_ips(packet)
-    #     if ips == None: return packet
-    #     src_addr, dst_addr = ips[0], ips[1]
-    #     if dst_addr in self.blacklist:
-    #         pynat.exec_db(self.db, "INSERT OR IGNORE INTO LOG VALUES ('{}', '{}', strftime('%Y-%m-%d %H:%M', 'now', 'localtime'))".format(src_addr, dst_addr))
-    #         pynat.drop_packet(packet)
-    #         return None
+    def process(self, packet):
+        dns_info = pynat.get_dns_info(packet)
+        if not dns_info:
+            return packet
 
-    #     return packet
+        for dname in dns_info:
+            if dname in self.blacklist or dname.split(".", 1)[1] in self.blacklist:
+                pynat.drop_packet(packet)
+                return None
+
+        return packet
 
 
     def setup(self):
