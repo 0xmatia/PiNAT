@@ -6,6 +6,7 @@ config.txt
 *.db
 !DNSDetector.db
 !AdBlocker.db
+!IPBlocker.db
 __pycache__
 *.pyc
 *.pyo

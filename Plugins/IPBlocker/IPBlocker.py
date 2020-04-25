@@ -58,7 +58,10 @@ class IPBlocker(plugin):
 
 
     def get_blocked_ips(self):
-        return {"result": self.blacklist}
+        result = []
+        for blocked in self.blacklist:
+            result.append({"blocked_ip": blocked})
+        return {"result": result}
 
 
     def get_blocked_stats(self):
