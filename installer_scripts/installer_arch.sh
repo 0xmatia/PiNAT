@@ -36,5 +36,5 @@ touch bin/__init__.py # for auto completetion
 #create python virtual environment and install depecdencies
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirments.txt
+pip install -r requirements.txt
 deactivate
