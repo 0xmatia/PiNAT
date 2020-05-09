@@ -38,7 +38,7 @@ servers
 * A linux machine (Tested on Ubuntu and Arch)
 * Two network adapters - wired and wireless. The wireless adapter has to support Virtual AP mode, so the host machine would have internet connection as well, as it is required by some plugins.
 
-### installation Instruction
+### installation Instructions
 
 To make things easier, there are two installation scripts that should make the installation process much simpler. There is one for Ubuntu based systems and one for Arch based systems.
 To run them, go to the installer_scripts folder and run the correct one:
@@ -48,11 +48,50 @@ cd installer_scripts/
 ./installer_<arch/debian>.sh
 ```
 
-You should have now PiNAT installed!
+Now you should have PiNAT installed!
 
-### Using PiNAT
+## Using PiNAT
 
-There are two main scripts that 
+There are two main scripts used to operate the program: ```./run.sh``` and ```./run_api.sh```.
+
+### Running PiNAT
+
+> Note: Running PiNAT requires superuser privileges.
+
+First, make sure your machine is connected to the internet via etherent cable, and that you have you wireless adapter turned on.
+PiNAT requires four parameters to run:
+* Ethernet adapter name
+* Wireless adapter name
+* SSID
+* Network passphrase
+
+> Note: You can find your adapters' names with the IP command.
+
+Once you run the program with ```./run.sh``` you'll be asked to enter those parameters. After that, it should take a few seconds for the program to initialize itself.
+Now you can connect to the new WiFi network you just created and start using PiNAT!
+
+#### Using a config file
+
+Entering these four parameters eveytime you want to run PiNAT is annoying. Luckily, PiNAT can read these settings from a config file so you don't have to supply the them manually every run!
+To use the config file, create a file named ```config.txt``` in the root folder of PiNAT and supply the parameters in the following format:
+
+```
+hotspot_interface=<your wifi adapter name>
+internet_interface=<Ethernet adapter name>
+ssid=<wifi name>
+pass=<wifi password>
+```
+
+After you save the file and run PiNAT again, PiNAT should read the parameters from the config file and run automatically. Neat!
+
+> Note: You can stop the program at any time with ```Ctrl+C```. If for some reason the program crashes and you can't access the interent, run the following command: ```create_ap --stop <wifi_adapter_name>```
+
+### Using the RESTFul API
+
+PiNAT provides an easy way to access plugin logs and program information using a very simple API. Running is as easy as running ```./run_api.sh```.
+You can query the server using GET and POST methods to get reponses, it is very intuitive. Because it is an API, anyone could build a beautiful GUI interface that makes interacting with the program much more fun!
+We provide a user interface as an android application that simply connects to the server and displays the information nicely. Nothing special.
+You can build the apk from source, located in the Client directory.
 
 ## Built With
 
@@ -65,8 +104,7 @@ There are two main scripts that
 
 
 ## Internals
-a few words about how our project works
-
+The internals of the project are quite simple actually. The sniffer sniffs packets on the wifi interface, and passes them to plugins. Any plugins located in the Plugins folder will be loaded automatically and added to the loop. The plugins will proccess the packets - they have access to the packet through a special API: pynat which is a library written in C++ and compiled for python.
 
 ## Authors
 
@@ -76,11 +114,11 @@ a few words about how our project works
 
 ## License
 
-This project is licensed under the <> License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
 This project was written during our third year in the [Magshimim](https://www.magshimim.cyber.org.il/) 
 program with the help of several people from and out of Magshimim.
 
-Special thanks to [] and []
+Special thanks to [Saar Yakolav] and [Yaron Mor]
