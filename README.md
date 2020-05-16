@@ -2,7 +2,7 @@
 
 Open source, Modular Network Analyzing Tool
 
-![pinat](peanut.png?raw=true)
+![pinat](Resources/peanut.png?raw=true)
 
 ## What is PiNAT?
 
@@ -11,7 +11,7 @@ medium sized private networks. It connects to the router with an ethernet cable
 from one adapter, and opens an access point from another adapter for other devices
 to connect. 
 
-![struct](TopLevel.png?raw=true)
+![struct](Resources/TopLevel.png?raw=true)
 
 PiNAT serves as a transparent bridge between connected devices and the router, 
 with the options of sniffing network activity, blocking it and even modifying it
