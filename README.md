@@ -101,7 +101,17 @@ You can build the apk from source, located in the Client directory.
 
 
 ## Develop plugins
-Developing plugins is pretty straightforward. 
+Developing plugins is pretty straightforward. The best way to learn how to develop plugins is simply by looking at the plugins we supply, and at the example plugin located [here](Resources/Plugin.py).
+
+Things to note:
+* It is mandatory to import PyNAT and PluginObserver (the first two lines).
+* In order to create the .db file in the plugin's folder, some path calculations has to be made. The prefered way is to calculate the absolue path and add the plugin name + .db extenstion like shown in the setup method.
+* Don't forget to close the database in ```teardown```.
+* In the restful API functions: Function that has nothing to return has to return json object with key "status" and response "success" if the operation completed successfully. Other function has to return data in a json object where the key is "result".
+* Don't forget to implement all the actions specified in the action_log list.
+* Packet verdict: ```return None``` in the process method to drop, or ```return Packet``` in the process function to forward.
+* Inserting to db is done via the ```pynat.exec_db()``` method.
+
 
 ## Internals
 The [sniffer](##What is PiNAT?) component sniffs packets on the wifi interface, and passes them to the plugins. Plugins located inside the Plugins folder will be loaded at runtime, and any packets sniffed will go through them. Each plugin can decide whether to forward or drop each packet. The plugins have access to the packets through a library we coded in C++ and compiled to python. We sniff, craft and extract information from packets using the libtins library.
