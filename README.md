@@ -19,7 +19,7 @@ live. Network analysis is done by user written plugins and a few plugins which
 are supplied by us. The plugins are written in python, and are given access to 
 network activity through a python library which we developed. With the special 
 plugin system we constructed, every user is able to change the functionality of 
-the program to his specific needs, or add functionality to the defualt analasys 
+the program to his specific needs, or add functionality to the default analasys 
 done by our plugins.
 
 Some of the included plugins are:
@@ -101,10 +101,11 @@ You can build the apk from source, located in the Client directory.
 
 
 ## Develop plugins
-
+Developing plugins is pretty straightforward. 
 
 ## Internals
-The internals of the project are quite simple actually. The sniffer sniffs packets on the wifi interface, and passes them to plugins. Any plugins located in the Plugins folder will be loaded automatically and added to the loop. The plugins will proccess the packets - they have access to the packet through a special API: pynat which is a library written in C++ and compiled for python.
+The [sniffer](##What is PiNAT?) component sniffs packets on the wifi interface, and passes them to the plugins. Plugins located inside the Plugins folder will be loaded at runtime, and any packets sniffed will go through them. Each plugin can decide whether to forward or drop each packet. The plugins have access to the packets through a library we coded in C++ and compiled to python. We sniff, craft and extract information from packets using the libtins library.
+Routing and general network maniuplation is done through ebtables.
 
 ## Authors
 
@@ -121,4 +122,4 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LIC
 This project was written during our third year in the [Magshimim](https://www.magshimim.cyber.org.il/) 
 program with the help of several people from and out of Magshimim.
 
-Special thanks to [Saar Yakolav] and [Yaron Mor]
+Special thanks to *Saar Yakolav* and *Yaron Mor*
