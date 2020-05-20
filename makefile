@@ -34,7 +34,7 @@ ${ODIR}/%.o: ${SDIR}/%.cpp
 	${COMP} -c $< -o $@ -I${EDIR}
 
 ${DBIN}: ${DOBJ}
-	${COMP} -o $@ $^ ${EDIR}/sqlite3.o -L${EDIR} -ltins -lpthread -ldl
+	${COMP} -o $@ $^ ${EDIR}/sqlite3.o -L${EDIR} -ltins -lpthread -ldl -lnetfilter_queue
 
 clean:
 	@rm -rvf ${ODIR}
