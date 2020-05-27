@@ -1,0 +1,15 @@
+bin/
+obj/
+.vscode/
+libtins/
+config.txt
+*.db
+!DNSDetector.db
+!AdBlocker.db
+!IPBlocker.db
+__pycache__
+*.pyc
+*.pyo
+pinat/
+venv/
+
