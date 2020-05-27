@@ -5,16 +5,16 @@ import os, sqlite3
 class ARPDetector(plugin):
 
     def __init__(self):
-        self.name = "ARPDetector"
-        self.type = "Analyzer"
-        self.version = 1.0
-        self.description = "Detects suspicious arp activity"
-        self.author = "Ofri Marx"
-        self.priority = 5
-        self.actions = ["get_log"]
-        
+        plugin.__init__(self,
+        "ARPDetector", 
+        "Ofri Marx", 
+        1.0,
+        "Detects suspicious arp activity",
+        "Analyzer",
+        5,
+        None,
+        ["get_log", "delete_database"])
         self.arp_table = {}
-        self.db = ""
 
 
     def process(self, packet):
@@ -58,3 +58,4 @@ class ARPDetector(plugin):
 
     def delete_database(self):
         pynat.exec_db(self.db, "DELETE FROM LOG")
+        return {"status": "success"}

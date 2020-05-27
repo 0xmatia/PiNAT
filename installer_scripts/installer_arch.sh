@@ -1,3 +1,4 @@
+#!/bin/bash
 # PiNAT installer for arch-based distros, initially writted for Manjaro
 
 # Run as root
@@ -21,6 +22,7 @@ make install
 
 #add the library to the shared object path
 echo "/usr/local/lib" > /etc/ld.so.conf.d/libtins.conf
+ldconfig
 
 #remove the repo
 cd ../../
@@ -34,5 +36,5 @@ touch bin/__init__.py # for auto completetion
 #create python virtual environment and install depecdencies
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirments.txt
+pip install -r requirements.txt
 deactivate

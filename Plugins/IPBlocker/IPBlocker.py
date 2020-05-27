@@ -7,16 +7,16 @@ import json
 class IPBlocker(plugin):
 
     def __init__(self):
-        self.name = "IPBlocker"
-        self.type = "blocker"
-        self.version = 1.0
-        self.description = "Blocks certain external ip addresses"
-        self.author = "Ofri Marx"
-        self.priority = 1000
-        self.actions = ["get_blocked_ips", "get_blocked_stats"]
-        
+        plugin.__init__(self,
+        "IPBlocker",
+        "Ofri Marx",
+        0.1,
+        "Blocks certain external ip addresses",
+        "blocker",
+        1000,
+        None,
+        ["get_blocked_ips", "get_blocked_stats", "delete_database"])
         self.blacklist = []
-        self.db = ""
 
 
     def process(self, packet):
@@ -54,16 +54,20 @@ class IPBlocker(plugin):
 
     def delete_database(self):
         pynat.exec_db(self.db, "DELETE FROM LOG")
+        return {"status": "success"}
 
 
     def get_blocked_ips(self):
-        return {"result": self.blacklist}
+        result = []
+        for blocked in self.blacklist:
+            result.append({"blocked_ip": blocked})
+        return {"result": result}
 
 
     def get_blocked_stats(self):
         answer_array = []
-        db_res = pynat.exec_db("SELECT * FROM LOG")
-
+        db_res = pynat.select_db(self.db, "SELECT * FROM LOG")
+        
         for entry in db_res:
             answer_array.append({"src": entry[0], "dst": entry[1], "time": entry[2]})
 

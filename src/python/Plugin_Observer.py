@@ -9,7 +9,7 @@ class plugin:
     """All plugins will have to inherit this class and implement 
     its methods"""
 
-    def __init__(self, name, author, version, description, plugin_type, priority, dbname, actions):
+    def __init__(self, name, author, version, description, plugin_type, priority, db, actions):
         """In order to load a plugin, we need to have the following information:
         - name of the plugin
         - author/s of the plugin
@@ -24,7 +24,7 @@ class plugin:
         self.description = description
         self.type = plugin_type
         self.priority = priority
-        self.dbname = dbname
+        self.db = db
         self.actions = actions
 
     # Now here we can add all the methods the plugin has to have:
