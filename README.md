@@ -119,7 +119,7 @@ Routing and general network maniuplation is done through ebtables.
 
 ## Authors
 
-* **Elad Matia** - [JavaMatia](https://gitlab.com/JavaMatia)
+* **Elad Matia** - [0xmatia](https://gitlab.com/0xmatia)
 * **Ofri Marx** - [ofri_marx](https://gitlab.com/ofri_marx)
 
 
